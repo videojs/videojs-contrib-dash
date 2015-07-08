@@ -36,6 +36,6 @@
     "load-grunt-tasks": "^3.1.0",
     "qunitjs": "^1.17.1",
     "video.js": "^4.12.4",
-    "videojs-automation": "git+ssh://git@github.com:forbesjo/videojs-automation.git"
+    "videojs-automation": "git://github.com/forbesjo/videojs-automation"
   }
 }
