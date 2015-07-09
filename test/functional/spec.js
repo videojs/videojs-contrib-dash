@@ -1,7 +1,15 @@
 var url = require('url'),
   Player = require('videojs-automation');
 
-if (/chrome/i.test(browser.browserName)) {
+if (/explorer/i.test(browser.browserName) || /chrome/i.test(browser.browserName)) {
+  if (/chrome/i.test(browser.browserName)) {
+    suiteName = browser.name + ': DRM Widevine Perform Player';
+    pageUrl = url.resolve(browser.baseUrl, 'tests/functional/widevine-player.html');
+  } else {
+    suiteName = browser.name + ': DRM PlayReady Perform Player';
+    pageUrl = url.resolve(browser.baseUrl, 'tests/functional/playready-player.html');
+  }
+
   describe(browser.name + ': DRM Widevine Player', function() {
     var player;
 

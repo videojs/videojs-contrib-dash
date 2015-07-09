@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Test Player</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" href="../../node_modules/video.js/dist/video-js/video-js.css">
+  <link rel="stylesheet" href="../../src/css/videojs-dash.css">
+</head>
+<body>
+  <video id="example-video" width=600 height=300 class="video-js vjs-default-skin" controls>
+  </video>
+
+  <script src="../../node_modules/video.js/dist/video-js/video.novtt.dev.js"></script>
+
+  <!-- Dash.js -->
+  <script src="../../node_modules/dashjs/dist/dash.all.js"></script>
+
+  <!-- videojs-contrib-dash -->
+  <script src="../../src/js/videojs-dash.js"></script>
+  <script>
+    var player = videojs('example-video');
+    player.ready(function(){
+      player.src({
+        src: "http://bucket01.mscreentv.com.s3.amazonaws.com/prdash/slmulti-iistypetemplate/manifest3.mpd",
+        type: "application/dash+xml"
+      });
+    });
+  </script>
+</body>
+</html>
