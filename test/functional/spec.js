@@ -1,20 +1,21 @@
 var url = require('url'),
-  Player = require('videojs-automation');
+  Player = require('videojs-automation'),
+  suiteName, pageUrl;
 
-if (/explorer/i.test(browser.browserName) || /chrome/i.test(browser.browserName)) {
-  if (/chrome/i.test(browser.browserName)) {
-    suiteName = browser.name + ': DRM Widevine Perform Player';
-    pageUrl = url.resolve(browser.baseUrl, 'tests/functional/widevine-player.html');
-  } else {
-    suiteName = browser.name + ': DRM PlayReady Perform Player';
-    pageUrl = url.resolve(browser.baseUrl, 'tests/functional/playready-player.html');
-  }
+if (/chrome/i.test(browser.browserName)) {
+  suiteName = browser.name + ': MPEG-DASH Player w/ Widevine DRM';
+  pageUrl = url.resolve(browser.baseUrl, 'test/functional/drm-player.html');
+} else if (/explorer/i.test(browser.browserName)) {
+  suiteName = browser.name + ': MPEG-DASH Player';
+  pageUrl = url.resolve(browser.baseUrl, 'test/functional/no-drm-player.html');
+}
 
-  describe(browser.name + ': DRM Widevine Player', function() {
+if (suiteName && pageUrl) {
+  describe(suiteName, function() {
     var player;
 
     beforeEach(function() {
-      player = new Player(url.resolve(browser.baseUrl, 'test/functional/widevine-player.html'));
+      player = new Player(url.resolve(browser.baseUrl, pageUrl));
     });
 
     it('should have no console errors', function() {
