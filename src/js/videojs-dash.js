@@ -266,7 +266,11 @@
     // to allow `mediaKeys` to changed otherwise a DOMException is thrown.
     if (this.el_) {
       this.el_.src = '';
-      this.el_.setMediaKeys(null).then(callback, callback);
+      if (this.el_.setMediaKeys) {
+        this.el_.setMediaKeys(null).then(callback, callback);
+      } else {
+        callback();
+      }
     }
   };
 
