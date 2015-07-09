@@ -36,13 +36,13 @@ module.exports = function(grunt) {
         src: [
           'src/js/videojs-dash.js'
         ],
-        dest: 'tmp/<%= pkg.name %>.min.js'
+        dest: 'tmp/videojs-dash.min.js'
       }
     },
     cssmin: {
       target: {
         files: {
-          'dist/<%= pkg.name %>.css': [
+          'dist/videojs-dash.css': [
             'src/css/videojs-dash.css'
           ]
         }
@@ -54,15 +54,15 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          'tmp/<%= pkg.name %>.min.js'
+          'tmp/videojs-dash.min.js'
         ],
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'dist/videojs-dash.min.js'
       },
       debug: {
         src: [
           'src/js/videojs-dash.js'
         ],
-        dest: 'dist/<%= pkg.name %>.js'
+        dest: 'dist/videojs-dash.js'
       }
     },
     qunit: {
