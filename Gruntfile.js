@@ -76,7 +76,13 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
   grunt.loadNpmTasks('videojs-automation');
 
-  grunt.registerTask('test', ['qunit', 'videojs_automation']);
+  grunt.registerTask('test', function() {
+    if (!process.env.TRAVIS || process.env.TRAVIS_PULL_REQUEST === 'false') {
+      grunt.task.run(['qunit', 'videojs_automation']);
+    } else {
+      grunt.task.run('qunit');
+    }
+  });
   grunt.registerTask('build', ['clean', 'jshint', 'uglify', 'cssmin', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };

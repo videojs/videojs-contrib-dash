@@ -1,17 +1,12 @@
 var url = require('url'),
-  Player = require('videojs-automation'),
-  suiteName, pageUrl;
+  Player = require('videojs-automation');
 
-// Note: DRM is only supported on desktop browsers and DRM does not work in a VM
 if (/chrome/i.test(browser.browserName)) {
-  suiteName = browser.name + ': DRM Widevine Perform Player';
-  pageUrl = url.resolve(browser.baseUrl, 'test/functional/widevine-player.html');
-
-  describe(suiteName, function() {
+  describe(browser.name + ': DRM Widevine Player', function() {
     var player;
 
     beforeEach(function() {
-      player = new Player(pageUrl);
+      player = new Player(url.resolve(browser.baseUrl, 'test/functional/widevine-player.html'));
     });
 
     it('should have no console errors', function() {
