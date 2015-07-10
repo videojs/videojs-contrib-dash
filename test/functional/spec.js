@@ -5,9 +5,9 @@ var url = require('url'),
 if (/chrome/i.test(browser.browserName)) {
   suiteName = browser.name + ': MPEG-DASH Player w/ Widevine DRM';
   pageUrl = url.resolve(browser.baseUrl, 'test/functional/drm-player.html');
-} else if (/explorer/i.test(browser.browserName)) {
-  suiteName = browser.name + ': MPEG-DASH Player';
-  pageUrl = url.resolve(browser.baseUrl, 'test/functional/no-drm-player.html');
+} else {
+  // Exclude other browsers for now
+  return;
 }
 
 if (suiteName && pageUrl) {
