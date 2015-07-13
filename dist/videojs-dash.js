@@ -1,4 +1,4 @@
-/*! videojs-contrib-dash - v1.0.0 - 2015-07-13
+/*! videojs-contrib-dash - v1.0.1 - 2015-07-13
  * Copyright (c) 2015 Brightcove  */
 (function(window, videojs) {
   'use strict';
