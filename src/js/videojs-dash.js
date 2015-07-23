@@ -1,6 +1,36 @@
 (function(window, videojs) {
   'use strict';
 
+  var
+    isArray = function(a) {
+      return Object.prototype.toString.call(a) === '[object Array]';
+    },
+    isObject = function (a) {
+      return Object.prototype.toString.call(a) === '[object Object]';
+    },
+    mergeOptions = function(obj1, obj2){
+      var key, val1, val2, res;
+
+      // make a copy of obj1 so we're not overwriting original values.
+      // like prototype.options_ and all sub options objects
+      res = {};
+
+      for (key in obj2){
+        if (obj2.hasOwnProperty(key)) {
+          val1 = obj1[key];
+          val2 = obj2[key];
+
+          // Check if both properties are pure objects and do a deep merge if so
+          if (isObject(val1) && isObject(val2)) {
+            obj1[key] = mergeOptions(val1, val2);
+          } else {
+            obj1[key] = obj2[key];
+          }
+        }
+      }
+      return obj1;
+    };
+
   /**
    * videojs-contrib-dash
    *
@@ -70,7 +100,7 @@
     // We merge the two allowing the manifest to override any keySystemOptions provided via src()
     if (Html5DashJS.getWidevineProtectionData) {
       manifestProtectionData = Html5DashJS.getWidevineProtectionData(manifest);
-      this.keySystemOptions_ = videojs.obj.deepMerge(
+      this.keySystemOptions_ = mergeOptions(
         this.keySystemOptions_,
         manifestProtectionData);
     }
@@ -205,7 +235,7 @@
    * to reset MediaKeys in resetSrc_
    */
   Html5DashJS.hideErrors = function (el) {
-    videojs.addClass(el, 'vjs-dashjs-hide-errors');
+    el.className += 'vjs-dashjs-hide-errors';
   };
 
   /*
@@ -217,7 +247,7 @@
     // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
     // in my testing
     setTimeout(function () {
-      videojs.removeClass(el, 'vjs-dashjs-hide-errors');
+      el.className = el.className.replace('vjs-dashjs-hide-errors', '');
     }, 250);
   };
 
@@ -234,13 +264,13 @@
       i,
       output = {};
 
-    if (!keySystemOptions || !videojs.obj.isArray(keySystemOptions)) {
+    if (!keySystemOptions || !isArray(keySystemOptions)) {
       return output;
     }
 
     for (i = 0; i < keySystemOptions.length; i++) {
       keySystem = keySystemOptions[i];
-      options = videojs.obj.deepMerge({}, keySystem.options);
+      options = mergeOptions({}, keySystem.options);
 
       if (options.licenseUrl) {
         options.laURL = options.licenseUrl;
