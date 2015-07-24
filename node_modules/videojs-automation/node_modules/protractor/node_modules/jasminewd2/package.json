@@ -1,0 +1,66 @@
+{
+  "name": "jasminewd2",
+  "description": "WebDriverJS adapter for Jasmine2.",
+  "homepage": "https://github.com/angular/jasminewd",
+  "keywords": [
+    "test",
+    "testing",
+    "webdriver",
+    "webdriverjs",
+    "selenium",
+    "jasmine"
+  ],
+  "author": {
+    "name": "Julie Ralph",
+    "email": "ju.ralph@gmail.com"
+  },
+  "devDependencies": {
+    "jshint": "2.5.0",
+    "jasmine": "2.3.1",
+    "selenium-webdriver": "2.45.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/angular/jasminewd.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "pretest": "jshint index.js spec",
+    "test": "scripts/test.sh"
+  },
+  "license": "MIT",
+  "version": "0.0.5",
+  "gitHead": "521939b83e8d96ea4cb5d639d6c508e031fcd20c",
+  "bugs": {
+    "url": "https://github.com/angular/jasminewd/issues"
+  },
+  "_id": "jasminewd2@0.0.5",
+  "_shasum": "528609a124dfc688c1e3f434a638e047066cd63e",
+  "_from": "jasminewd2@0.0.5",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "angularcore",
+    "email": "angular-core+npm@google.com"
+  },
+  "maintainers": [
+    {
+      "name": "hankduan",
+      "email": "duan.hank@gmail.com"
+    },
+    {
+      "name": "angularcore",
+      "email": "angular-core+npm@google.com"
+    },
+    {
+      "name": "petebd",
+      "email": "pete@bacondarwin.com"
+    }
+  ],
+  "dist": {
+    "shasum": "528609a124dfc688c1e3f434a638e047066cd63e",
+    "tarball": "http://registry.npmjs.org/jasminewd2/-/jasminewd2-0.0.5.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/jasminewd2/-/jasminewd2-0.0.5.tgz",
+  "readme": "ERROR: No README data found!"
+}
