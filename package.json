@@ -10,7 +10,8 @@
     "name": "Brightcove"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "prepublish": "grunt build"
   },
   "keywords": [
     "videojs",
