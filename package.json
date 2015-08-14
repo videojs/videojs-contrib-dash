@@ -36,6 +36,6 @@
     "load-grunt-tasks": "^3.1.0",
     "qunitjs": "^1.17.1",
     "video.js": "^4.12.4",
-    "videojs-automation": "0.0.1"
+    "videojs-automation": "0.2.0"
   }
 }
