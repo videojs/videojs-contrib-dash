@@ -219,7 +219,7 @@
       handleSource: function (source, tech) {
         return new Html5DashJS(source, tech);
       }
-    });
+    }, 0);
   }
 
   videojs.Html5DashJS = Html5DashJS;
