@@ -51,6 +51,7 @@
           addChild: function(){},
           trigger: function(){}
         },
+        Html5,
         tech,
         contextObj = { fake: 'context' },
 
@@ -63,7 +64,8 @@
       expect(8);
 
       el.innerHTML = '<div />';
-      tech = new videojs.Html5(player, {});
+      Html5 = videojs.getComponent('Html5');
+      tech = new Html5({});
 
 
       Dash.di.DashContext = function () {
@@ -118,7 +120,7 @@
         return fn();
       };
 
-      var dashSourceHandler = videojs.Html5.selectSourceHandler(source);
+      var dashSourceHandler = videojs.getComponent('Html5').selectSourceHandler(source);
       dashSourceHandler.handleSource(source, tech);
     };
 
@@ -143,7 +145,7 @@
       type:'video/mp4'
     };
 
-    var dashSourceHandler = videojs.Html5.selectSourceHandler(dashSource);
+    var dashSourceHandler = videojs.getComponent('Html5').selectSourceHandler(dashSource);
 
     ok(dashSourceHandler, 'A DASH handler was found');
 
