@@ -124,7 +124,7 @@
    * to reset MediaKeys in resetSrc_
    */
   Html5DashJS.hideErrors = function (el) {
-    el.className += 'vjs-dashjs-hide-errors';
+    el.className += ' vjs-dashjs-hide-errors';
   };
 
   /*
@@ -136,7 +136,7 @@
     // 250ms is arbitrary but I haven't seen dash.js take longer than that to initialize
     // in my testing
     setTimeout(function () {
-      el.className = el.className.replace('vjs-dashjs-hide-errors', '');
+      el.className = el.className.replace(' vjs-dashjs-hide-errors', '');
     }, 250);
   };
 
