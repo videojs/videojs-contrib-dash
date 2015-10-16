@@ -1,13 +1,17 @@
 var url = require('url'),
   Player = require('videojs-automation'),
-  players = [{
+  players = [];
+
+if (/chrome|explorer/i.test(browser.browserName)) {
+  players.push({
     suiteName: browser.name + ': MPEG-DASH Player',
     source: {
       src: 'http://wams.edgesuite.net/media/' +
         'SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest(format=mpd-time-csf)',
       type: 'application/dash+xml'
     }
-  }];
+  });
+}
 
 if (/chrome/i.test(browser.browserName)) {
   players.push({
