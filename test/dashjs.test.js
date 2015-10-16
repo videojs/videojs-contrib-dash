@@ -37,20 +37,7 @@
         attachViewCalled = false,
         resetSrcCalled = false,
         el = document.createElement('div'),
-        player = {
-          id: function(){ return 'id'; },
-          el: function(){ return el; },
-          options_: {},
-          options: function(){ return this.options_; },
-          bufferedPercent: function() { return 0; },
-          controls: function(){ return false; },
-          usingNativeControls: function(){ return false; },
-          on: function(){ return this; },
-          off: function() { return this; },
-          ready: function(){},
-          addChild: function(){},
-          trigger: function(){}
-        },
+        parentEl = document.createElement('div'),
         Html5,
         tech,
         contextObj = { fake: 'context' },
@@ -63,10 +50,11 @@
 
       expect(8);
 
-      el.innerHTML = '<div />';
       Html5 = videojs.getComponent('Html5');
       tech = new Html5({});
-
+      tech.el = function() { return el; };
+      tech.triggerReady = function() { };
+      parentEl.appendChild(el);
 
       Dash.di.DashContext = function () {
         return contextObj;
@@ -120,7 +108,7 @@
         return fn();
       };
 
-      var dashSourceHandler = videojs.getComponent('Html5').selectSourceHandler(source);
+      var dashSourceHandler = Html5.selectSourceHandler(source);
       dashSourceHandler.handleSource(source, tech);
     };
 
