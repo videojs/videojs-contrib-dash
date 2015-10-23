@@ -9,7 +9,7 @@
   "dependencies": {
     "bootstrap": "^3.3.5",
     "dashjs": "git://github.com/Dash-Industry-Forum/dash.js",
-    "video.js": "^4.12.11",
-    "videojs-contrib-dash": "^1.0.0"
+    "video.js": "^5.0.0-rc.70",
+    "videojs-contrib-dash": "^2.0.0"
   }
 }
