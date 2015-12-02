@@ -38,7 +38,7 @@
    */
   function Html5DashJS (source, tech) {
     var
-      options = tech.options(),
+      options = tech.options_,
       manifestSource;
 
     this.tech_ = tech;
@@ -202,7 +202,7 @@
 
   // Only add the SourceHandler if the browser supports MediaSourceExtensions
   if (!!window.MediaSource) {
-    videojs.Html5.registerSourceHandler({
+    videojs.getComponent('Html5').registerSourceHandler({
       canHandleSource: function (source) {
         var dashTypeRE = /^application\/dash\+xml/i;
         var dashExtRE = /\.mpd/i;
