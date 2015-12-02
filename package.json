@@ -5,11 +5,17 @@
     "type": "git",
     "url": "git@github.com:videojs/videojs-contrib-dash.git"
   },
+  "scripts": {
+    "build": "./node_modules/.bin/grunt"
+  },
   "license": "Apache 2",
-  "dependencies": {
+  "devDependencies": {
     "bootstrap": "^3.3.5",
-    "dashjs": "git://github.com/Dash-Industry-Forum/dash.js",
-    "video.js": "^4.12.11",
-    "videojs-contrib-dash": "^1.0.0"
+    "dashjs": "git://github.com/Dash-Industry-Forum/dash.js#v1.5.1",
+    "video.js": "^5.2.1",
+    "videojs-contrib-dash": "^2.0.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-copy": "^0.8.2"
   }
 }
