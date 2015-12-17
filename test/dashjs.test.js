@@ -150,8 +150,8 @@
 
     var empty = videojs.Html5DashJS.buildDashJSProtData(undefined);
 
-    strictEqual(output['com.widevine.alpha'].laURL, 'https://example.com/license',
-      'licenceUrl converted to laURL');
+    strictEqual(output['com.widevine.alpha'].serverURL, 'https://example.com/license',
+      'licenceUrl converted to serverURL');
     deepEqual(empty, {}, 'undefined keySystemOptions returns empty object');
   });
 
@@ -165,7 +165,7 @@
       mergedKeySystemOptions = {
         'com.widevine.alpha': {
           extra: 'data',
-          laURL:'https://example.com/license'
+          serverURL:'https://example.com/license'
         }
       };
 

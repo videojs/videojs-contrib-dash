@@ -144,7 +144,7 @@
    * Iterate over the `keySystemOptions` array and convert each object into
    * the type of object Dash.js expects in the `protData` argument.
    *
-   * Also rename 'licenseUrl' property in the options to an 'laURL' property
+   * Also rename 'licenseUrl' property in the options to an 'serverURL' property
    */
   Html5DashJS.buildDashJSProtData = function (keySystemOptions) {
     var
@@ -162,7 +162,7 @@
       options = mergeOptions({}, keySystem.options);
 
       if (options.licenseUrl) {
-        options.laURL = options.licenseUrl;
+        options.serverURL = options.licenseUrl;
         delete options.licenseUrl;
       }
 
