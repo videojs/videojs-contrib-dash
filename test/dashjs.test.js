@@ -143,6 +143,11 @@
       'canHandleSource with expected extension returns "maybe"');
     strictEqual(dashSourceHandler.canHandleSource(nonDashSource), '',
       'canHandleSource with anything else returns ""');
+
+    strictEqual(dashSourceHandler.canPlayType(dashSource.type), 'probably',
+      'canPlayType with proper mime-type returns "probably"');
+    strictEqual(dashSourceHandler.canPlayType(nonDashSource.type), '',
+      'canPlayType with anything else returns ""');
   });
 
   test('validate buildDashJSProtData function', function() {
