@@ -221,7 +221,7 @@
       canPlayType: function (type) {
         return videojs.DashSourceHandler.canPlayType(type);
       }
-    }
+    };
   };
 
   videojs.DashSourceHandler.canPlayType = function (type) {
