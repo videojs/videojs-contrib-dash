@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Test Player</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" href="node_modules/video.js/dist/video-js.css">
+  <link rel="stylesheet" href="src/css/videojs-dash.css">
+  <script src="node_modules/video.js/dist/ie8/videojs-ie8.js"></script>
+</head>
+
+<body>
+  <script src="node_modules/video.js/dist/video.js"></script>
+  <script src="node_modules/dashjs/dist/dash.all.js"></script>
+  <script src="src/js/videojs-dash.js"></script>
+
+  <script>
+    var fixture;
+    fixture = document.createElement('div');
+    fixture.id = 'fixture';
+    document.body.appendChild(this.fixture);
+
+    var videoEl = document.createElement('video');
+    videoEl.id = 'vid';
+    videoEl.setAttribute('controls', '');
+    videoEl.setAttribute('width', '600');
+    videoEl.setAttribute('height', '300');
+    videoEl.className = 'video-js vjs-default-skin';
+    fixture.appendChild(videoEl);
+
+    var player = videojs('vid');
+
+    player.ready(function() {
+      player.src({
+        src: 'http://html5.cablelabs.com:8100/cenc/wv/dash.mpd',
+        type: 'application/dash+xml',
+        keySystemOptions: [{
+          name: 'com.widevine.alpha',
+          options: {
+            'licenseUrl': 'https://html5.cablelabs.com:8025'
+          }
+        }]
+      });
+    });
+  </script>
+</body>
+
+</html>
