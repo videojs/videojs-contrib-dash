@@ -1,5 +1,5 @@
 import videojs from 'video.js';
-import 'dashjs-es6-tmp';
+import '../../node_modules/dashjs/dist/dash.all.debug.js';
 
 /**
  * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
@@ -38,7 +38,7 @@ class Html5DashJS {
     Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = window.MediaPlayer(Html5DashJS.context_).create();
+    this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
     // Initialize the media player with the element and autoplay settings
     this.mediaPlayer_.initialize();

@@ -60,7 +60,7 @@ const testHandleSource = function(source, fakeManifest, expectedKeySystemOptions
 
   Html5DashJS.context_ = contextObj;
 
-  window.MediaPlayer = function(context) {
+  window.dashjs.MediaPlayer = function(context) {
     QUnit.deepEqual(context, contextObj, 'context is passed into MediaPlayer correctly');
 
     return {

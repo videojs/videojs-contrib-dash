@@ -82,8 +82,7 @@
     "test/"
   ],
   "dependencies": {
-    "video.js": "5.2.1",
-    "dashjs-es6-tmp": "^2.0.0-pre2"
+    "video.js": "5.2.1"
   },
   "devDependencies": {
     "babel": "^5.8.0",
@@ -112,6 +111,11 @@
     "sinon": "^1.0.0",
     "uglify-js": "^2.5.0",
     "videojs-standard": "^4.0.0",
-    "watchify": "^3.6.0"
+    "watchify": "^3.6.0",
+    "dashjs": "https://github.com/Dash-Industry-Forum/dash.js/archive/v2.0.0.tar.gz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/videojs/videojs-contrib-dash.git"
   }
 }
