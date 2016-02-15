@@ -20,8 +20,9 @@ module.exports = function(config) {
     browserStack: {
       name: process.env.TRAVIS_BUILD_NUMBER + process.env.TRAVIS_BRANCH,
       pollingTimeout: 30000
-    },
+    }
 
+    /*
     browsers: [
       'chrome_bs',
       'firefox_bs',
@@ -50,5 +51,6 @@ module.exports = function(config) {
         os_version: 'Yosemite'
       }
     }
+    */
   });
 };

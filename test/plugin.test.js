@@ -19,8 +19,8 @@ const sampleSrc = {
     {
       name: 'com.widevine.alpha',
       options: {
-	extra: 'data',
-	licenseUrl: 'https://example.com/license'
+        extra: 'data',
+        licenseUrl: 'https://example.com/license'
       }
     }
   ]
@@ -65,42 +65,42 @@ const testHandleSource = function(source, fakeManifest, expectedKeySystemOptions
 
     return {
       create() {
-	createCalled = true;
-	return this;
+        createCalled = true;
+        return this;
       },
       initialize() {
-	initializeCalled = true;
+        initializeCalled = true;
       },
       retrieveManifest(manifestUrl, callback) {
-	QUnit.strictEqual(manifestUrl, 'movie.mpd',
-	  'manifest url is requested via retrieveManifest');
+        QUnit.strictEqual(manifestUrl, 'movie.mpd',
+          'manifest url is requested via retrieveManifest');
 
-	return callback(fakeManifest, null);
+        return callback(fakeManifest, null);
       },
       attachView() {
-	attachViewCalled = true;
+        attachViewCalled = true;
       },
       setAutoPlay(autoplay) {
-	QUnit.strictEqual(autoplay, false, 'autoplay is set to false by default');
+        QUnit.strictEqual(autoplay, false, 'autoplay is set to false by default');
       },
       attachSource(manifest, keySystem, keySystemOptions) {
-	QUnit.deepEqual(keySystemOptions, expectedKeySystemOptions,
-	  'src and manifest key system options are merged');
-	QUnit.deepEqual(manifest, fakeManifest,
-	  'manifest object is sent to attachSource');
+        QUnit.deepEqual(keySystemOptions, expectedKeySystemOptions,
+          'src and manifest key system options are merged');
+        QUnit.deepEqual(manifest, fakeManifest,
+          'manifest object is sent to attachSource');
 
-	QUnit.strictEqual(createCalled, true, 'MediaPlayer.create was called');
-	QUnit.strictEqual(initializeCalled, true, 'MediaPlayer.initialize was called');
-	QUnit.strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
-	QUnit.strictEqual(resetSrcCalled, true, 'Html5DashJS#resetSrc_ was called');
+        QUnit.strictEqual(createCalled, true, 'MediaPlayer.create was called');
+        QUnit.strictEqual(initializeCalled, true, 'MediaPlayer.initialize was called');
+        QUnit.strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
+        QUnit.strictEqual(resetSrcCalled, true, 'Html5DashJS#resetSrc_ was called');
 
-	tech.dispose();
+        tech.dispose();
 
-	// Restore
-	Html5DashJS.context_ = origContext;
-	window.MediaPlayer = origMediaPlayer;
-	videojs.xhr = origVJSXHR;
-	Html5DashJS.prototype.resetSrc_ = origResetSrc;
+        // Restore
+        Html5DashJS.context_ = origContext;
+        window.MediaPlayer = origMediaPlayer;
+        videojs.xhr = origVJSXHR;
+        Html5DashJS.prototype.resetSrc_ = origResetSrc;
       }
     };
   };
@@ -175,13 +175,13 @@ QUnit.test('validate handleSource function with src-provided key options',
   function(assert) {
     const manifestWithProtection = {
       Period: {
-	AdaptationSet: []
+        AdaptationSet: []
       }
     };
     const mergedKeySystemOptions = {
       'com.widevine.alpha': {
-	extra: 'data',
-	serverURL: 'https://example.com/license'
+        extra: 'data',
+        serverURL: 'https://example.com/license'
       }
     };
 

@@ -38,7 +38,7 @@ class Html5DashJS {
     Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
+    this.mediaPlayer_ = window.dashjs.MediaPlayer(Html5DashJS.context_).create();
 
     // Initialize the media player with the element and autoplay settings
     this.mediaPlayer_.initialize();
@@ -127,8 +127,8 @@ class Html5DashJS {
       let options = videojs.mergeOptions({}, keySystem.options);
 
       if (options.licenseUrl) {
-	options.serverURL = options.licenseUrl;
-	delete options.licenseUrl;
+        options.serverURL = options.licenseUrl;
+        delete options.licenseUrl;
       }
 
       output[keySystem.name] = options;
@@ -151,9 +151,9 @@ class Html5DashJS {
     if (this.el_) {
       this.el_.src = '';
       if (this.el_.setMediaKeys) {
-	this.el_.setMediaKeys(null).then(callback, callback);
+        this.el_.setMediaKeys(null).then(callback, callback);
       } else {
-	callback();
+        callback();
       }
     }
   }
