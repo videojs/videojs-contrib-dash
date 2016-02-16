@@ -25,7 +25,7 @@
     "MPEG-DASH"
   ],
   "devDependencies": {
-    "dashjs": "git://github.com/Dash-Industry-Forum/dash.js",
+    "dashjs": "git://github.com/Dash-Industry-Forum/dash.js#v1.6.0",
     "grunt": "~0.4.1",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.4.0",
