@@ -1,6 +1,6 @@
 {
   "name": "videojs-contrib-dash-s1",
-  "version": "2.0.0",
+  "version": "2.1.2",
   "description": "A Video.js source-handler providing MPEG-DASH playback.",
   "main": "es5/plugin.js",
   "scripts": {
