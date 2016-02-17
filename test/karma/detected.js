@@ -14,9 +14,6 @@ module.exports = function(config) {
   };
 
   if (process.env.TRAVIS) {
-    settings.browserify.transform.push('browserify-istanbul');
-    settings.reporters.push('coverage');
-
     if (process.env.BROWSER_STACK_USERNAME) {
       settings.detectBrowsers.enabled = false;
       settings.browsers = [
