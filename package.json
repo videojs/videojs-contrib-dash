@@ -98,6 +98,8 @@
     "karma-chrome-launcher": "^0.2.0",
     "karma-detect-browsers": "^2.0.0",
     "karma-firefox-launcher": "^0.1.0",
+    "karma-opera-launcher": "~0.1.0",
+    "karma-browserstack-launcher": "^0.1.4",
     "karma-ie-launcher": "^0.2.0",
     "karma-qunit": "^0.1.0",
     "karma-safari-launcher": "^0.1.0",
