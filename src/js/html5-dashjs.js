@@ -1,5 +1,5 @@
 import videojs from 'video.js';
-import 'dashjs-npm';
+import 'dashjs/dist/dash.all.debug';
 
 /**
  * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
