@@ -10,37 +10,28 @@ module.exports = function(config) {
       pollingTimeout: 30000
     },
 
+    frameworks: ['detectBrowsers'],
+
+    detectBrowsers: {
+      enabled: false,
+      usePhantomJS: false
+    },
+
     customLaunchers: getCustomLaunchers()
   };
 
   if (process.env.TRAVIS) {
     if (process.env.BROWSER_STACK_USERNAME) {
-      settings.detectBrowsers.enabled = false;
       settings.browsers = [
         'chrome_bs',
         'firefox_bs',
         'safari_bs'
       ];
     } else {
-      settings.plugins = ['karma-firefox-launcher'];
       settings.browsers = ['Firefox'];
     }
   } else {
-    settings = {
-      frameworks: ['detectBrowsers'],
-
-      plugins: [
-        'karma-chrome-launcher',
-        'karma-detect-browsers',
-        'karma-firefox-launcher',
-        'karma-ie-launcher',
-        'karma-safari-launcher'
-      ],
-
-      detectBrowsers: {
-        usePhantomJS: false
-      }
-    };
+    settings.detectBrowsers.enabled = true;
   }
 
   config.set(common(settings));

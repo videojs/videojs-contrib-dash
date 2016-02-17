@@ -2,42 +2,17 @@ var merge = require('lodash-compat/object/merge');
 
 var DEFAULTS = {
   basePath: '../..',
-  frameworks: ['browserify', 'qunit'],
+  frameworks: ['qunit'],
 
   files: [
-      'dist/videojs-contrib-dash.css',
+    'dist/videojs-contrib-dash.css',
     'node_modules/sinon/pkg/sinon.js',
     'node_modules/sinon/pkg/sinon-ie.js',
     'node_modules/video.js/dist/video.js',
-    'test/**/*.js'
+    'dist-test/videojs-contrib-dash.js'
   ],
 
-  exclude: [
-    'test/bundle.js'
-  ],
-
-  plugins: [
-    'karma-browserify',
-    'karma-qunit'
-  ],
-
-  preprocessors: {
-    'test/**/*.js': ['browserify']
-  },
-
-  reporters: ['dots'],
-  port: 9876,
-  colors: true,
-  autoWatch: false,
-  singleRun: true,
-  concurrency: Infinity,
-
-  browserify: {
-    transform: [
-      'babelify',
-      'browserify-shim'
-    ]
-  }
+  singleRun: true
 };
 
 /**
