@@ -22,6 +22,7 @@ module.exports = function(config) {
         'safari_bs'
       ];
     } else {
+      settings.plugins = ['karma-firefox-launcher'];
       settings.browsers = ['Firefox'];
     }
   } else {
