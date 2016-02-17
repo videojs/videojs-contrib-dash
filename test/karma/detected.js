@@ -5,54 +5,6 @@ var common = require('./common');
 module.exports = function(config) {
 
   var settings = {
-    basePath: '',
-
-    frameworks: ['browserify', 'qunit', 'detectBrowsers'],
-    autoWatch: false,
-    singleRun: true,
-
-    // Compling tests here
-    files: [
-      '../../node_modules/sinon/lib/sinon.js',
-      '../../node_modules/video.js/dist/video.js',
-      '../plugin.test.js',
-      '../integration.test.js',
-      { pattern: '../../src/**/*.js', watched: true, included: false, served: false }
-    ],
-
-    preprocessors: {
-      '../*.js': [ 'browserify' ]
-    },
-
-    browserify: {
-      debug: true,
-      transform: [
-        require('babelify').configure({
-          sourceMapRelative: './',
-          loose: ['all']
-        })
-      ]
-    },
-
-    plugins: [
-      'karma-qunit',
-      'karma-chrome-launcher',
-      'karma-firefox-launcher',
-      'karma-ie-launcher',
-      'karma-opera-launcher',
-      'karma-safari-launcher',
-      'karma-browserstack-launcher',
-      'karma-browserify',
-      'karma-detect-browsers'
-    ],
-
-    detectBrowsers: {
-      enabled: true,
-      usePhantomJS: false
-    },
-
-    reporters: ['dots'],
-
     browserStack: {
       name: process.env.TRAVIS_BUILD_NUMBER + process.env.TRAVIS_BRANCH,
       pollingTimeout: 30000
@@ -75,9 +27,25 @@ module.exports = function(config) {
     } else {
       settings.browsers = ['Firefox'];
     }
+  } else {
+    settings = {
+      frameworks: ['detectBrowsers'],
+
+      plugins: [
+        'karma-chrome-launcher',
+        'karma-detect-browsers',
+        'karma-firefox-launcher',
+        'karma-ie-launcher',
+        'karma-safari-launcher'
+      ],
+
+      detectBrowsers: {
+        usePhantomJS: false
+      }
+    };
   }
 
-  config.set(settings);
+  config.set(common(settings));
 };
 
 function getCustomLaunchers(){
