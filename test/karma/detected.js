@@ -21,15 +21,15 @@ module.exports = function(config) {
   };
 
   if (process.env.TRAVIS) {
-    if (process.env.BROWSER_STACK_USERNAME) {
-      settings.browsers = [
-        'chrome_bs',
-        'firefox_bs',
-        'safari_bs'
-      ];
-    } else {
+//  if (process.env.BROWSER_STACK_USERNAME) {
+//    settings.browsers = [
+//      'chrome_bs',
+//      'firefox_bs',
+//      'safari_bs'
+//    ];
+//  } else {
       settings.browsers = ['Firefox'];
-    }
+//  }
   } else {
     settings.detectBrowsers.enabled = true;
   }
