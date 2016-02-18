@@ -1,9 +1,35 @@
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+._*
+
+# Editors
+*~
+*.swp
+*.tmproj
+*.tmproject
+*.sublime-*
+.idea/
+.project/
+.settings/
+.vscode/
+
 # Logs
+logs
 *.log
+npm-debug.log*
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
+# Dependency directories
+bower_components/
+node_modules/
 
-node_modules
-tmp
+# Yeoman meta-data
+.yo-rc.json
+
+# Build-related directories
 dist/
+dist-test/
+docs/api/
+es5/

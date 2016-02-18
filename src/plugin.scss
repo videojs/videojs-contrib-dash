@@ -1,0 +1,8 @@
+// Sass for videojs-contrib-dash
+
+// Hide errors when the contrib-dash plugin instructs to do so
+.vjs-dashjs-hide-errors {
+  .vjs-error-display {
+    display: none !important;
+  }
+}

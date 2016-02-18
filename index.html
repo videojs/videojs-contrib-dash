@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>videojs-contrib-dash Demo</title>
+  <link href="/node_modules/video.js/dist/video-js.css" rel="stylesheet">
+  <link href="/dist/videojs-contrib-dash.css" rel="stylesheet">
+</head>
+<body>
+  <video id="videojs-contrib-dash-player" class="video-js vjs-default-skin" controls autoplay width="800" height="450">
+    <source src="http://rdmedia.bbc.co.uk/dash/ondemand/testcard/1/client_manifest-events.mpd" type='application/dash+xml'>
+  </video>
+  <ul>
+    <li><a href="/test/">Run unit tests in browser.</a></li>
+
+  </ul>
+  <script src="/node_modules/video.js/dist/video.js"></script>
+  <script src="/dist/videojs-contrib-dash.js"></script>
+  <script>
+    (function(window, videojs) {
+      var player = window.player = videojs('videojs-contrib-dash-player');
+    }(window, window.videojs));
+  </script>
+</body>
+</html>
