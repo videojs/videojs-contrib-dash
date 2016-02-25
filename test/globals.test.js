@@ -16,8 +16,8 @@
 
   test('has expected globals', function() {
     ok(videojs.Html5DashJS, 'videojs has "Html5Dash" property');
-    ok(window.MediaPlayer, 'global has "MediaPlayer" property');
-    ok(window.Dash, 'global has "Dash" property');
+    ok(window.dashjs, 'global has "dashjs" property');
+    ok(window.dashjs.MediaPlayer, 'global has "dashjs.MediaPlayer" property');
   });
 
 })(window, window.videojs, window.QUnit);

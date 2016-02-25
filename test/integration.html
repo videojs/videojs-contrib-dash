@@ -14,12 +14,10 @@
   <script src="../node_modules/qunitjs/qunit/qunit.js"></script>
 
   <!-- Video.js -->
+  <link rel="stylesheet" href="../node_modules/video.js/dist/video-js/video-js.css" />
   <script src="../node_modules/video.js/dist/video-js/video.dev.js"></script>
 
-  <!-- Dash.js -->
   <script src="../node_modules/dashjs/dist/dash.all.debug.js"></script>
-
-  <!-- videojs-contrib-dash -->
   <script src="../src/js/videojs-dash.js"></script>
 </head>
 <body>
@@ -31,7 +29,6 @@
       ok(true, 'everything is swell');
     });
   </script>
-  <script src="globals.test.js"></script>
-  <script src="dashjs.test.js"></script>
+  <script src="integration.test.js"></script>
 </body>
 </html>

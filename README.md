@@ -17,7 +17,7 @@ Download [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/releases) and 
 <script src="video.js"></script>
 
 <!-- Dash.js -->
-<script src="dash.all.js"></script>
+<script src="dash.all.min.js"></script>
 
 <!-- videojs-contrib-dash stylesheet -->
 <link rel="stylesheet" href="videojs-dash.css"></link>
