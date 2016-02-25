@@ -69,14 +69,14 @@
     }
 
     // Save the context after the first initialization for subsequent instances
-    Html5DashJS.context_ = Html5DashJS.context_ || new Dash.di.DashContext();
+    Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = new MediaPlayer(Html5DashJS.context_);
+    this.mediaPlayer_ = window.dashjs.MediaPlayer(Html5DashJS.context_).create();
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
-    this.mediaPlayer_.startup();
+    this.mediaPlayer_.initialize();
     this.mediaPlayer_.attachView(this.el_);
 
     // Dash.js autoplays by default
@@ -112,7 +112,8 @@
       Html5DashJS.showErrors(this.elParent_);
 
       // Attach the source with any protection data
-      this.mediaPlayer_.attachSource(manifest, null, this.keySystemOptions_);
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(manifest);
 
       this.tech_.triggerReady();
     }));
@@ -144,7 +145,7 @@
    * Iterate over the `keySystemOptions` array and convert each object into
    * the type of object Dash.js expects in the `protData` argument.
    *
-   * Also rename 'licenseUrl' property in the options to an 'laURL' property
+   * Also rename 'licenseUrl' property in the options to an 'serverURL' property
    */
   Html5DashJS.buildDashJSProtData = function (keySystemOptions) {
     var
@@ -162,7 +163,7 @@
       options = mergeOptions({}, keySystem.options);
 
       if (options.licenseUrl) {
-        options.laURL = options.licenseUrl;
+        options.serverURL = options.licenseUrl;
         delete options.licenseUrl;
       }
 
