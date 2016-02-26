@@ -25,7 +25,7 @@
     "MPEG-DASH"
   ],
   "devDependencies": {
-    "dashjs": "git://github.com/Dash-Industry-Forum/dash.js#v1.6.0",
+    "dashjs": "^2.0.0",
     "grunt": "~0.4.1",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.4.0",
@@ -41,10 +41,8 @@
     "karma-detect-browsers": "^2.0.2",
     "karma-firefox-launcher": "^0.1.7",
     "karma-qunit": "^0.1.8",
-    "karma-safari-launcher": "^0.1.1",
     "load-grunt-tasks": "^3.1.0",
     "qunitjs": "^1.17.1",
-    "video.js": "^5.0.0",
-    "videojs-automation": "0.3.1"
+    "video.js": "^5.0.0"
   }
 }

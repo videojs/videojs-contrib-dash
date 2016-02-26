@@ -1,4 +1,4 @@
-(function(window, videojs) {
+(function(window, videojs, dashjs) {
   'use strict';
 
   var
@@ -62,21 +62,20 @@
     // we set src = '' in order to clear the mediaKeys
     Html5DashJS.hideErrors(this.elParent_);
 
-    // Must be before anything is initialized since we are overridding a global object
-    // injection
-    if (Html5DashJS.useVideoJSDebug) {
-      Html5DashJS.useVideoJSDebug(videojs);
-    }
-
     // Save the context after the first initialization for subsequent instances
-    Html5DashJS.context_ = Html5DashJS.context_ || new Dash.di.DashContext();
+    Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = new MediaPlayer(Html5DashJS.context_);
+    this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
+
+    // Log MedaPlayer messages through video.js
+    if (Html5DashJS.useVideoJSDebug) {
+      Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
+    }
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
-    this.mediaPlayer_.startup();
+    this.mediaPlayer_.initialize();
     this.mediaPlayer_.attachView(this.el_);
 
     // Dash.js autoplays by default
@@ -112,7 +111,8 @@
       Html5DashJS.showErrors(this.elParent_);
 
       // Attach the source with any protection data
-      this.mediaPlayer_.attachSource(manifest, null, this.keySystemOptions_);
+      this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+      this.mediaPlayer_.attachSource(manifest);
 
       this.tech_.triggerReady();
     }));
@@ -239,4 +239,4 @@
   }
 
   videojs.Html5DashJS = Html5DashJS;
-})(window, window.videojs);
+})(window, window.videojs, window.dashjs);
