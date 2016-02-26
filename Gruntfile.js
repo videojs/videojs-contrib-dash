@@ -65,24 +65,39 @@ module.exports = function(grunt) {
         dest: 'dist/videojs-dash.js'
       }
     },
-    qunit: {
-      all: ['test/index.html']
-    },
-    videojs_automation: {
-      test: ['test/functional/spec.js']
+    karma: {
+      options: {
+        configFile: 'test/karma.config.js'
+      },
+      unit: {
+        options: {
+          files: [
+            'node_modules/video.js/dist/video-js/video-js.css',
+            'node_modules/video.js/dist/video-js/video.dev.js',
+            'node_modules/dashjs/dist/dash.all.debug.js',
+            'src/js/videojs-dash.js',
+            'test/globals.test.js',
+            'test/dashjs.test.js'
+          ]
+        }
+      },
+      integration: {
+        options: {
+          files: [
+            'node_modules/video.js/dist/video-js/video-js.css',
+            'node_modules/video.js/dist/video-js/video.dev.js',
+            'node_modules/dashjs/dist/dash.all.debug.js',
+            'src/js/videojs-dash.js',
+            'test/integration.test.js'
+          ]
+        }
+      }
     }
   });
 
   require('load-grunt-tasks')(grunt);
-  grunt.loadNpmTasks('videojs-automation');
 
-  grunt.registerTask('test', function() {
-    if (!process.env.TRAVIS || process.env.TRAVIS_PULL_REQUEST === 'false') {
-      grunt.task.run(['qunit', 'videojs_automation']);
-    } else {
-      grunt.task.run('qunit');
-    }
-  });
+  grunt.registerTask('test', 'karma');
   grunt.registerTask('build', ['clean', 'jshint', 'uglify', 'cssmin', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };
