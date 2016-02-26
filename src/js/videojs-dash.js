@@ -1,4 +1,4 @@
-(function(window, videojs) {
+(function(window, videojs, dashjs) {
   'use strict';
 
   var
@@ -72,7 +72,7 @@
     Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = window.dashjs.MediaPlayer(Html5DashJS.context_).create();
+    this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
@@ -224,4 +224,4 @@
   }
 
   videojs.Html5DashJS = Html5DashJS;
-})(window, window.videojs);
+})(window, window.videojs, window.dashjs);
