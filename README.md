@@ -32,6 +32,24 @@ player.play();
 
 Checkout our [live example](http://videojs.github.io/videojs-contrib-dash/) if you're having trouble.
 
+## Configuring Dash.js
+
+Certian properties of Dash.js can be configured with the `dashOptions` value pass to `player.src()`.
+
+The following values can be set:
+
+* bufferTime - A number that indicates the maximum amount of time that should be in the buffer.
+
+```
+player.src({
+    src: 'http://example.com/my/manifest.mpd',
+    type: 'application/dash+xml',
+    dashOptions: {
+        bufferTime: 5
+    }
+});
+```
+
 ## Protected Content
 
 If the browser supports Encrypted Media Extensions and includes a Content Decryption Module for one of the protection schemes in the dash manifest, video.js will be able to playback protected content.
@@ -53,4 +71,32 @@ player.src({
     }
   ]
 });
+```
+
+## Extending Dash.js
+
+'Plugins' that utilze the Dash.js extension model can be included by using the `plugins` value passed to `player.src()`.
+
+```
+player.src({
+    src: 'http://example.com/my/manifest.mpd',
+    type: 'application/dash+xml',
+    plugins: [
+        videojs.dashAbrPlugin
+    ]
+});
+```
+
+Each object in the `plugins` array should have a method `initialize(mediaPlayer)`.  In the `initialize` method the plugin should use `mediaPlayer.extend()` to create the extension.
+
+```
+function SuperRequestModifier {
+    ...
+}
+
+var myPlugin = {
+    initialize: function (mediaPlayer) {
+        mediaPlayer.extend('RequestModifier', SuperRequestModifier, false);
+    }
+}
 ```
