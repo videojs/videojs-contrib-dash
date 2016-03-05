@@ -219,7 +219,7 @@
 
   // Only add the SourceHandler if the browser supports MediaSourceExtensions
   if (!!window.MediaSource) {
-    videojs.Html5.registerSourceHandler({
+    videojs.getTech('Html5').registerSourceHandler({
       canHandleSource: function (source) {
         var dashTypeRE = /^application\/dash\+xml/i;
         var dashExtRE = /\.mpd/i;
