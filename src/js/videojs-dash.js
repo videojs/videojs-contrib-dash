@@ -1,3 +1,5 @@
+/*! videojs-contrib-dash - v1.1.2 - 2016-03-07
+ * Copyright (c) 2016 Brightcove  */
 (function(window, videojs, dashjs) {
   'use strict';
 
@@ -19,10 +21,10 @@
      * function to accomodate the whitelisting of Representations
      */
     var CustomRulesController = function() {
-      globalManifest = this.factory.getSingvaronInstance(this.context, 'ManifestModel');
-      globalDashManifestModel = this.factory.getSingvaronInstance(this.context,
+      globalManifest = this.factory.getSingletonInstance(this.context, 'ManifestModel');
+      globalDashManifestModel = this.factory.getSingletonInstance(this.context,
                                                                   'DashManifestModel');
-      globalAdapter = this.factory.getSingvaronInstance(this.context, 'DashAdapter');
+      globalAdapter = this.factory.getSingletonInstance(this.context, 'DashAdapter');
       globalRulesController = this.parent;
       var ogApplyRules = this.parent.applyRules;
       return {
@@ -154,8 +156,9 @@
        * @param  {MediaPlayer} player - Dash MediaPlayer
        */
       initialize: function (player) {
+        this.initialized = true;
         player.extend('RulesController', CustomRulesController, true);
-        player.on(dashjs.MediaPlayer.events.PERIOD_SWITCH_COMPvarED, periodSwitch);
+        player.on(dashjs.MediaPlayer.events.PERIOD_SWITCH_COMPLETED, periodSwitch);
         globalPlayer = player;
 
         globalOgPlayerSetQuality = player.setQualityFor;
@@ -257,7 +260,8 @@
             return adaptation.Representation_asArray;
           }
         }
-      }
+      },
+      initialized: false
     };
   };
 
@@ -485,6 +489,14 @@
 
   Html5DashJS.prototype.getRepresentationsByType = function () {
     return this.whitelistPlugin.getRepresentationsByType();
+  };
+
+  // Dash.js API
+
+  Html5DashJS.prototype.setBufferTime = function (seconds) {
+    this.mediaPlayer_.setStableBufferTime(seconds);
+    this.mediaPlayer_.setBufferTimeAtTopQuality(seconds);
+    this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(seconds);
   };
 
   // Only add the SourceHandler if the browser supports MediaSourceExtensions
