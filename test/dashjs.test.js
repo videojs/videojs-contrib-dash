@@ -65,7 +65,7 @@
 
       dashjs.MediaPlayer = function () {
         return {
-          create : function () {
+          create: function () {
             return {
               initialize: function () {
                 startupCalled = true;

@@ -41,7 +41,6 @@
     "karma-detect-browsers": "^2.0.2",
     "karma-firefox-launcher": "^0.1.7",
     "karma-qunit": "^0.1.8",
-    "karma-safari-launcher": "^0.1.1",
     "load-grunt-tasks": "^3.1.0",
     "qunitjs": "^1.17.1",
     "video.js": "^4.12.4"
