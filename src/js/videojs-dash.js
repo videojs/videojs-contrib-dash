@@ -74,6 +74,14 @@
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
+    if (source.plugins) {
+      source.plugins.forEach(function (p) {
+        if (p.hasOwnProperty('initialize')) {
+          p.initialize(this.mediaPlayer_);
+        }
+      }.bind(this));
+    }
+
     // Must run controller before these two lines or else there is no
     // element to bind to.
     this.mediaPlayer_.initialize();
@@ -82,6 +90,14 @@
     // Dash.js autoplays by default
     if (!options.autoplay) {
       this.mediaPlayer_.setAutoPlay(false);
+    }
+
+    if (source.dashOptions) {
+      if (source.dashOptions.bufferTime !== undefined && !isNaN(source.dashOptions.bufferTime)) {
+        this.mediaPlayer_.setBufferTimeAtTopQuality(source.dashOptions.bufferTime);
+        this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(source.dashOptions.bufferTime);
+        this.mediaPlayer_.setStableBufferTime(source.dashOptions.bufferTime);
+      }
     }
 
     // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
@@ -203,7 +219,7 @@
 
   // Only add the SourceHandler if the browser supports MediaSourceExtensions
   if (!!window.MediaSource) {
-    videojs.Html5.registerSourceHandler({
+    videojs.getTech('Html5').registerSourceHandler({
       canHandleSource: function (source) {
         var dashTypeRE = /^application\/dash\+xml/i;
         var dashExtRE = /\.mpd/i;
