@@ -1,7 +1,7 @@
 {
   "name": "videojs-contrib-dash",
   "description": "A Video.js source-handler providing MPEG-DASH playback.",
-  "main": "./dist/videojs-dash.min.js",
+  "main": "src/js/videojs-dash.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/videojs/videojs-contrib-dash.git"
@@ -11,7 +11,7 @@
     "name": "Brightcove"
   },
   "scripts": {
-    "test": "grunt test",
+    "test": "grunt",
     "prepublish": "grunt build"
   },
   "keywords": [
@@ -24,9 +24,24 @@
     "dash",
     "MPEG-DASH"
   ],
-  "devDependencies": {
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "dashjs": "global:dashjs",
+    "video.js": "global:videojs"
+  },
+  "dependencies": {
     "dashjs": "^2.0.0",
+    "global": "^4.3.0",
+    "video.js": "^5.0.0"
+  },
+  "devDependencies": {
+    "browserify-shim": "^3.8.12",
     "grunt": "~0.4.1",
+    "grunt-browserify": "^4.0.1",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.4.0",
     "grunt-contrib-concat": "~0.3.0",
@@ -42,7 +57,6 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-qunit": "^0.1.8",
     "load-grunt-tasks": "^3.1.0",
-    "qunitjs": "^1.17.1",
-    "video.js": "^5.0.0"
+    "qunitjs": "^1.17.1"
   }
 }

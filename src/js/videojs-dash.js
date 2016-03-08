@@ -1,5 +1,7 @@
-(function(window, videojs, dashjs) {
-  'use strict';
+'use strict';
+var window_ = require('global/window');
+var videojs = require('video.js');
+var dashjs = require('dashjs');
 
   var
     isArray = function(a) {
@@ -234,9 +236,9 @@
   };
 
   // Only add the SourceHandler if the browser supports MediaSourceExtensions
-  if (!!window.MediaSource) {
+  if (!!window_.MediaSource) {
     videojs.getComponent('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
   }
 
   videojs.Html5DashJS = Html5DashJS;
-})(window, window.videojs, window.dashjs);
+module.exports = Html5DashJS;
