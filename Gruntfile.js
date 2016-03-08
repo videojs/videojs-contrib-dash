@@ -74,7 +74,7 @@ module.exports = function(grunt) {
           files: [
             'node_modules/video.js/dist/video-js.css',
             'node_modules/video.js/dist/video.js',
-            'node_modules/dashjs/dist/dash.all.js',
+            'node_modules/dashjs/dist/dash.all.debug.js',
             'src/js/videojs-dash.js',
             'test/globals.test.js',
             'test/dashjs.test.js'
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
           files: [
             'node_modules/video.js/dist/video-js.css',
             'node_modules/video.js/dist/video.js',
-            'node_modules/dashjs/dist/dash.all.js',
+            'node_modules/dashjs/dist/dash.all.debug.js',
             'src/js/videojs-dash.js',
             'test/integration.test.js'
           ]

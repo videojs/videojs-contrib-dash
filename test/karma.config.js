@@ -18,14 +18,14 @@ module.exports = function(config) {
     },
 
     browserStack: {
+      project: 'videojs-contrib-dash',
       name: process.env.TRAVIS_BUILD_NUMBER + process.env.TRAVIS_BRANCH,
       pollingTimeout: 30000
     },
 
     browsers: [
       'chrome_bs',
-      'firefox_bs',
-      'safari_bs'
+      'firefox_bs'
     ],
 
     customLaunchers: {
@@ -41,13 +41,6 @@ module.exports = function(config) {
         browser: 'firefox',
         os: 'Windows',
         os_version: '8.1'
-      },
-
-      safari_bs: {
-        base: 'BrowserStack',
-        browser: 'safari',
-        os: 'OS X',
-        os_version: 'Yosemite'
       }
     }
   });

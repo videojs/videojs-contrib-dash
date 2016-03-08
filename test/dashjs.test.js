@@ -1,4 +1,4 @@
-(function(window, videojs, qunit) {
+(function(window, videojs, dashjs, qunit) {
   'use strict';
 
   var
@@ -40,15 +40,13 @@
         parentEl = document.createElement('div'),
         Html5,
         tech,
-        contextObj = { fake: 'context' },
 
         //stubs
-        origContext = Dash.di.DashContext,
-        origMediaPlayer = MediaPlayer,
+        origMediaPlayer = dashjs.MediaPlayer,
         origVJSXHR = videojs.xhr,
         origResetSrc = videojs.Html5DashJS.prototype.resetSrc_;
 
-      expect(8);
+      expect(7);
 
       Html5 = videojs.getComponent('Html5');
       tech = new Html5({});
@@ -56,50 +54,46 @@
       tech.triggerReady = function() { };
       parentEl.appendChild(el);
 
-      Dash.di.DashContext = function () {
-        return contextObj;
-      };
-
-      window.MediaPlayer = function (context) {
-        deepEqual(context, contextObj, 'context is passed into MediaPlayer correctly');
-
+      dashjs.MediaPlayer = function () {
         return {
-          startup: function () {
-            startupCalled = true;
-          },
-          retrieveManifest: function (manifestUrl, callback) {
-            strictEqual(manifestUrl, 'movie.mpd', 'manifest url is requested via retrieveManifest');
+          create: function () {
+            return {
+              initialize: function () {
+                startupCalled = true;
+              },
+              retrieveManifest: function (manifestUrl, callback) {
+                strictEqual(manifestUrl, 'movie.mpd',
+                    'manifest url is requested via retrieveManifest');
 
-            return callback(fakeManifest, null);
-          },
-          attachView: function () {
-            attachViewCalled = true;
-          },
-          setAutoPlay: function (autoplay) {
-            strictEqual(autoplay, false, 'autoplay is set to false by default');
-          },
-          attachSource: function (manifest, keySystem, keySystemOptions) {
-            deepEqual(keySystemOptions, expectedKeySystemOptions,
-              'src and manifest key system options are merged');
-            deepEqual(manifest, fakeManifest, 'manifest object is sent to attachSource');
+                return callback(fakeManifest, null);
+              },
+              attachView: function () {
+                attachViewCalled = true;
+              },
+              setAutoPlay: function (autoplay) {
+                strictEqual(autoplay, false, 'autoplay is set to false by default');
+              },
+              setProtectionData: function (keySystemOptions) {
+                deepEqual(keySystemOptions, expectedKeySystemOptions,
+                  'src and manifest key system options are merged');
+              },
+              attachSource: function (manifest) {
+                deepEqual(manifest, fakeManifest, 'manifest object is sent to attachSource');
 
-            strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
-            strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
-            strictEqual(resetSrcCalled, true, 'Html5DashJS#resetSrc_ was called');
+                strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
+                strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
+                strictEqual(resetSrcCalled, true, 'Html5DashJS#resetSrc_ was called');
 
-            tech.dispose();
+                tech.dispose();
 
-            // Restore
-            Dash.di.DashContext = origContext;
-            window.MediaPlayer = origMediaPlayer;
-            videojs.xhr = origVJSXHR;
-            videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
+                // Restore
+                dashjs.MediaPlayer = origMediaPlayer;
+                videojs.xhr = origVJSXHR;
+                videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
+              }
+            };
           }
         };
-      };
-
-      window.MediaPlayer.utils = {
-        Debug: origMediaPlayer.utils.Debug
       };
 
       // We have to override this because PhantomJS does not have Encrypted Media Extensions
@@ -185,4 +179,4 @@
     testHandleSource(sampleSrcNoDRM, manifestWithProtection, mergedKeySystemOptions);
   });
 
-})(window, window.videojs, window.QUnit);
+})(window, window.videojs, window.dashjs, window.QUnit);
