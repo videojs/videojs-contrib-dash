@@ -87,7 +87,6 @@
     
     sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
 
-    assert.equal(sourceHandler.whitelistPluginInitialized(), true, 'plugin initialized');
     assert.equal(sourceHandler.getAdaptations().length, 4, 'four valid adaptations');
     assert.equal(sourceHandler.getRepresentationsByType('video').length, 13);
   });
