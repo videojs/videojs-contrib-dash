@@ -34,12 +34,12 @@
     "video.js": "global:videojs"
   },
   "dependencies": {
+    "browserify-shim": "^3.8.12",
     "dashjs": "^2.0.0",
     "global": "^4.3.0",
     "video.js": "^5.0.0"
   },
   "devDependencies": {
-    "browserify-shim": "^3.8.12",
     "grunt": "~0.4.1",
     "grunt-browserify": "^4.0.1",
     "grunt-cli": "^0.1.13",
