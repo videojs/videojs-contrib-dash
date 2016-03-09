@@ -31,10 +31,17 @@ module.exports = function(grunt) {
         src: ['test/**/*.js']
       }
     },
+    browserify: {
+      dist: {
+        files: {
+          'tmp/videojs-dash.js': ['src/js/videojs-dash.js']
+        }
+      }
+    },
     uglify: {
       dist: {
         src: [
-          'src/js/videojs-dash.js'
+          'tmp/videojs-dash.js'
         ],
         dest: 'tmp/videojs-dash.min.js'
       }
@@ -60,7 +67,7 @@ module.exports = function(grunt) {
       },
       debug: {
         src: [
-          'src/js/videojs-dash.js'
+          'tmp/videojs-dash.js'
         ],
         dest: 'dist/videojs-dash.js'
       }
@@ -75,7 +82,7 @@ module.exports = function(grunt) {
             'node_modules/video.js/dist/video-js.css',
             'node_modules/video.js/dist/video.js',
             'node_modules/dashjs/dist/dash.all.debug.js',
-            'src/js/videojs-dash.js',
+            'dist/videojs-dash.js',
             'test/globals.test.js',
             'test/dashjs.test.js'
           ]
@@ -87,7 +94,7 @@ module.exports = function(grunt) {
             'node_modules/video.js/dist/video-js.css',
             'node_modules/video.js/dist/video.js',
             'node_modules/dashjs/dist/dash.all.debug.js',
-            'src/js/videojs-dash.js',
+            'dist/videojs-dash.js',
             'test/integration.test.js'
           ]
         }
@@ -98,6 +105,6 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('test', 'karma');
-  grunt.registerTask('build', ['clean', 'jshint', 'uglify', 'cssmin', 'concat']);
+  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'uglify', 'cssmin', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };
