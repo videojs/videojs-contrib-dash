@@ -182,6 +182,17 @@
         }
       },
       /**
+       * Returns the currently playing AdaptationSet for a type.
+       * @return {[type]} Any valid Dash.js type (i.e., video or audio).
+       */
+      getCurrentAdaptationFor: function (type) {
+        var currentTrack = globalPlayer.getCurrentTrackFor(type);
+        return globalDashManifestModel.getAdaptationForIndex(
+                          currentTrack.index,
+                          globalManifest.getValue(),
+                          currentPeriodIndex);
+      },
+      /**
        * @param {AdaptationSet} - AdaptationSet object or string of AdaptationSet
        *                          id that you wish to set whitelist for
        * @param {function} - function to filter the representations in
