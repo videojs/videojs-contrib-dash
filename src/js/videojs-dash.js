@@ -140,6 +140,10 @@ var WhitelistPlugin = require('./whitelist-ext');
     return whitelistPlugin.getAdaptations();
   };
 
+  Html5DashJS.prototype.getCurrentAdaptationFor = function (type) {
+    return whitelistPlugin.getCurrentAdaptationFor(type);
+  };
+
   Html5DashJS.prototype.setWhiteListRepresentations = function (set, representationFilter) {
     whitelistPlugin.setWhiteListRepresentations(set, representationFilter);
   };
@@ -153,6 +157,10 @@ var WhitelistPlugin = require('./whitelist-ext');
   };
 
   // Dash.js API
+
+  Html5DashJS.prototype.setAutoSwitchQuality = function (value) {
+    this.mediaPlayer_.setAutoSwitchQuality(value);
+  };
 
   Html5DashJS.prototype.setBufferTime = function (seconds) {
     this.mediaPlayer_.setStableBufferTime(seconds);
