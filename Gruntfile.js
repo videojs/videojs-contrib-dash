@@ -34,6 +34,7 @@ module.exports = function(grunt) {
     uglify: {
       dist: {
         src: [
+          'src/js/whitelist-ext.js',
           'src/js/videojs-dash.js'
         ],
         dest: 'tmp/videojs-dash.min.js'
@@ -60,6 +61,7 @@ module.exports = function(grunt) {
       },
       debug: {
         src: [
+          'src/js/whitelist-ext.js',
           'src/js/videojs-dash.js'
         ],
         dest: 'dist/videojs-dash.js'
