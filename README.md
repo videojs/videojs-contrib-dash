@@ -4,9 +4,22 @@
 
 A video.js source handler for supporting MPEG-DASH playback through a video.js player on browsers with support for Media Source Extensions.
 
+### Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Getting Started](#getting-started)
+  - [Running Tests](#running-tests)
+  - [Tag and Release](#tag-and-release)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Getting Started
 
-Download [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/releases) and [videojs-contrib-dash](https://github.com/videojs/videojs-contrib-dash/releases). Include them both in your web page along with video.js:
+Download [videojs-contrib-dash](https://github.com/videojs/videojs-contrib-dash/releases). Include it in your web page along with video.js:
 
 ```html
 <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls>
@@ -20,15 +33,17 @@ Download [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/releases) and 
 <script src="dash.all.min.js"></script>
 
 <!-- videojs-contrib-dash stylesheet -->
-<link rel="stylesheet" href="videojs-dash.css"></link>
+<link rel="stylesheet" href="videojs-contrib-dash.css"></link>
 <!-- videojs-contrib-dash script -->
-<script src="videojs-dash.min.js"></script>
+<script src="videojs-contrib-dash.min.js"></script>
 
 <script>
 var player = videojs('example-video');
 player.play();
 </script>
 ```
+
+Note that `videojs-contrib-dash` contains the code of Dash.js, so there is no need to load it separately.
 
 Checkout our [live example](http://videojs.github.io/videojs-contrib-dash/) if you're having trouble.
 
@@ -54,3 +69,19 @@ player.src({
   ]
 });
 ```
+
+### Running Tests
+
+- In all available and supported browsers: `npm test`
+- In a specific browser: `npm run test:chrome`, `npm run test:firefox`, etc.
+- While development server is running, navigate to [`http://localhost:9999/test/`](http://localhost:9999/test/) (_note:_ port may vary, check console output)
+
+### Tag and Release
+
+1. Make sure everything is committed.
+1. `npm version *` where `*` is `major`, `minor`, `patch`, etc. [Read more about versioning.](https://github.com/videojs/generator-videojs-plugin/docs/standards.md#versioning)
+1. `npm publish`
+
+## License
+
+Apache-2.0. Copyright (c) Brightcove, Inc.

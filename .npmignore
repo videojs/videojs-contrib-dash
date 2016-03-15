@@ -1,9 +1,3 @@
-# Logs
-*.log
-
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-node_modules
-tmp
-test/**
+# Intentionally left blank, so that npm does not ignore anything by default,
+# but relies on the package.json "files" array to explicitly define what ends
+# up in the package.

@@ -1,21 +1,45 @@
 {
   "name": "videojs-contrib-dash",
-  "description": "A Video.js source-handler providing MPEG-DASH playback.",
-  "main": "src/js/videojs-dash.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/videojs/videojs-contrib-dash.git"
-  },
   "version": "2.1.0",
-  "author": {
-    "name": "Brightcove"
-  },
+  "description": "A Video.js source-handler providing MPEG-DASH playback.",
+  "main": "es5/plugin.js",
   "scripts": {
-    "test": "grunt",
-    "prepublish": "grunt build"
+    "prebuild": "npm run clean",
+    "build": "npm-run-all -p build:*",
+    "build:css": "npm-run-all mkdirs build:css:sass build:css:bannerize",
+    "build:css:bannerize": "bannerize dist/videojs-contrib-dash.css --banner=scripts/banner.ejs",
+    "build:css:sass": "node-sass --output-style=compressed --linefeed=lf src/plugin.scss -o dist &&  mv dist/plugin.css dist/videojs-contrib-dash.css",
+    "build:js": "npm-run-all mkdirs build:js:babel build:js:browserify build:js:bannerize build:js:uglify",
+    "build:js:babel": "babel src -d es5",
+    "build:js:bannerize": "bannerize dist/videojs-contrib-dash.js --banner=scripts/banner.ejs",
+    "build:js:browserify": "browserify . -s videojs-contrib-dash -o dist/videojs-contrib-dash.js",
+    "build:js:uglify": "uglifyjs dist/videojs-contrib-dash.js --comments --compress --mangle -o dist/videojs-contrib-dash.min.js",
+    "build:test": "npm-run-all mkdirs build:test:browserify",
+    "build:test:browserify": "browserify  `find test -name '*.test.js'` -t babelify -o dist-test/videojs-contrib-dash.js",
+    "clean": "rm -rf dist dist-test es5",
+    "lint": "vjsstandard",
+    "mkdirs": "mkdir -p dist dist-test es5",
+    "prestart": "npm run build",
+    "start": "npm-run-all -p start:serve watch",
+    "start:serve": "babel-node scripts/server.js",
+    "pretest": "npm-run-all lint build:test",
+    "test": "karma start test/karma/detected.js",
+    "test:chrome": "npm run pretest && karma start test/karma/chrome.js",
+    "test:firefox": "npm run pretest && karma start test/karma/firefox.js",
+    "test:ie": "npm run pretest && karma start test/karma/ie.js",
+    "test:safari": "npm run pretest && karma start test/karma/safari.js",
+    "preversion": "npm test",
+    "version": "npm run build",
+    "postversion": "git push origin master && git push origin --tags",
+    "watch": "npm run mkdirs && npm-run-all -p watch:*",
+    "watch:css": "node-sass --output-style=nested --linefeed=lf src/plugin.scss -o dist -w src && mv dist/plugin.css dist/videojs-contrib-dash.css",
+    "watch:js": "watchify src/plugin.js -t babelify -v -o dist/videojs-contrib-dash.js",
+    "watch:test": "watchify `find test -name '*.test.js'` -t babelify -o dist-test/videojs-contrib-dash.js",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "videojs",
+    "videojs-plugin",
     "dashjs",
     "video.js",
     "dash.js",
@@ -24,15 +48,39 @@
     "dash",
     "MPEG-DASH"
   ],
+  "author": "Brightcove, Inc.",
+  "license": "Apache-2.0",
   "browserify": {
     "transform": [
       "browserify-shim"
     ]
   },
   "browserify-shim": {
-    "dashjs": "global:dashjs",
+    "qunit": "global:QUnit",
+    "sinon": "global:sinon",
     "video.js": "global:videojs"
   },
+  "vjsstandard": {
+    "ignore": [
+      "dist",
+      "dist-test",
+      "docs",
+      "es5",
+      "test/karma",
+      "scripts"
+    ]
+  },
+  "files": [
+    "CONTRIBUTING.md",
+    "dist-test/",
+    "dist/",
+    "docs/",
+    "es5/",
+    "index.html",
+    "scripts/",
+    "src/",
+    "test/"
+  ],
   "dependencies": {
     "browserify-shim": "^3.8.12",
     "dashjs": "^2.0.0",
@@ -40,23 +88,38 @@
     "video.js": "^5.0.0"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-browserify": "^4.0.1",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-cssmin": "^0.12.3",
-    "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-watch": "~0.4.0",
-    "grunt-karma": "^0.12.1",
-    "karma": "^0.13.15",
-    "karma-browserstack-launcher": "^0.1.9",
-    "karma-chrome-launcher": "^0.2.2",
-    "karma-detect-browsers": "^2.0.2",
-    "karma-firefox-launcher": "^0.1.7",
-    "karma-qunit": "^0.1.8",
-    "load-grunt-tasks": "^3.1.0",
-    "qunitjs": "^1.17.1"
+    "babel": "^5.8.0",
+    "babelify": "^6.0.0",
+    "bannerize": "^1.0.0",
+    "browserify": "^11.0.0",
+    "browserify-shim": "^3.0.0",
+    "connect": "^3.4.0",
+    "cowsay": "^1.1.0",
+    "global": "^4.3.0",
+    "karma": "^0.13.0",
+    "karma-browserify": "^4.4.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-detect-browsers": "^2.0.0",
+    "karma-firefox-launcher": "^0.1.0",
+    "karma-opera-launcher": "~0.1.0",
+    "karma-browserstack-launcher": "^0.1.4",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-qunit": "^0.1.0",
+    "karma-safari-launcher": "^0.1.0",
+    "lodash-compat": "^3.10.0",
+    "minimist": "^1.2.0",
+    "node-sass": "^3.4.0",
+    "npm-run-all": "~1.2.0",
+    "portscanner": "^1.0.0",
+    "qunitjs": "^1.0.0",
+    "serve-static": "^1.10.0",
+    "sinon": "1.14.1",
+    "uglify-js": "^2.5.0",
+    "videojs-standard": "^4.0.0",
+    "watchify": "^3.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/videojs/videojs-contrib-dash.git"
   }
 }

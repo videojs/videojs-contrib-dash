@@ -1,82 +1,76 @@
-(function(videojs, q) {
-  var when = function(element, type, fn, condition) {
-    var func = function() {
-      if (condition()) {
-        element.off(type, func);
-        fn.apply(this, arguments);
-      }
-    };
+import document from 'global/document';
 
-    element.on(type, func);
+import QUnit from 'qunit';
+import videojs from 'video.js';
+import '../src/plugin';
+import '../node_modules/dashjs/dist/dash.all.debug.js';
+
+let when = function(element, type, fn, condition) {
+  let func = function() {
+    if (condition()) {
+      element.off(type, func);
+      fn.apply(this, arguments);
+    }
   };
 
-  q.module('Integration', {
-    beforeEach: function(assert) {
-      var
-        done = assert.async(),
-        videoEl,
-        player;
+  element.on(type, func);
+};
 
-      this.fixture = document.createElement('div');
-      document.body.appendChild(this.fixture);
+QUnit.module('Integration', {
+  beforeEach(assert) {
+    let done = assert.async();
+    let videoEl;
+    let player;
 
-      videoEl = document.createElement('video');
-      videoEl.id = 'vid';
-      videoEl.setAttribute('controls', '');
-      videoEl.setAttribute('width', '600');
-      videoEl.setAttribute('height', '300');
-      videoEl.className = 'video-js vjs-default-skin';
-      this.fixture.appendChild(videoEl);
+    this.fixture = document.createElement('div');
+    document.body.appendChild(this.fixture);
 
-      player = videojs('vid');
-      this.player = player;
+    videoEl = document.createElement('video');
+    videoEl.id = 'vid';
+    videoEl.setAttribute('controls', '');
+    videoEl.setAttribute('width', '600');
+    videoEl.setAttribute('height', '300');
+    videoEl.className = 'video-js vjs-default-skin';
+    this.fixture.appendChild(videoEl);
 
-      player.ready(function() {
-        player.one('loadstart', done);
+    player = videojs('vid');
+    this.player = player;
 
-        player.src({
-          src: 'http://wams.edgesuite.net/media/' +
-            'SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest(format=mpd-time-csf)',
-          type: 'application/dash+xml'
-        });
+    player.ready(function() {
+      player.one('loadstart', done);
+
+      player.src({
+        src: 'http://wams.edgesuite.net/media/' +
+          'SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/' +
+          'manifest(format=mpd-time-csf)',
+        type: 'application/dash+xml'
       });
-    },
-    afterEach: function() {
-      this.player.dispose();
-      this.fixture.innerHTML = '';
-    }
-  });
-
-  q.test('should play', function(assert) {
-    var
-      done = assert.async(),
-      player = this.player;
-
-    assert.expect(4);
-
-    when(player, 'timeupdate', function() {
-      assert.ok(true, 'played for at least two seconds');
-
-      when(player, 'timeupdate', function() {
-        assert.ok(true, 'seeked to 15s');
-
-        when(player, 'timeupdate', function() {
-          assert.ok(!player.paused(), 'continued playing');
-          assert.equal(player.error(), null, 'has no player errors');
-
-          done();
-        }, function() {
-          return Math.floor(player.currentTime()) > 15;
-        });
-      }, function() {
-        return Math.floor(player.currentTime()) === 15;
-      });
-
-      player.currentTime(15);
-    }, function() {
-      return player.currentTime() >= 2;
     });
+  },
+  afterEach() {
+    this.player.dispose();
+    this.fixture.innerHTML = '';
+  }
+});
 
-    player.play();
+QUnit.test('should play', function(assert) {
+  let done = assert.async();
+  let player = this.player;
+
+  player.one('seeked', function() {
+    player.one('timeupdate', function() {
+      assert.ok(true, 'seeked to 15s and continued playing');
+      assert.equal(player.error(), null, 'has no player errors');
+      done();
+    });
   });
-})(window.videojs, window.QUnit);
+
+  when(player, 'timeupdate', function() {
+    assert.ok(true, 'played for at least two seconds');
+    player.currentTime(15);
+  }, function() {
+    return player.currentTime() >= 2;
+  });
+
+  player.play();
+});
