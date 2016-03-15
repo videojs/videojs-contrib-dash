@@ -84,7 +84,7 @@
       player = this.player,
       sourceHandler = player.tech.sourceHandler_;
       sourceHandler.setBufferTime(5);
-    
+
     sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
 
     assert.equal(sourceHandler.getAdaptations().length, 4, 'four valid adaptations');
@@ -120,7 +120,7 @@
 
     sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', true);
     sourceHandler.setBufferTime(2);
-    
+
 
     //nonHD filter function
     var filterFunc = function(item) {
