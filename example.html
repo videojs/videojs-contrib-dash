@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width">
 
   <link rel="stylesheet" href="node_modules/video.js/dist/video-js.css">
-  <link rel="stylesheet" href="src/css/videojs-dash.css">
+  <link rel="stylesheet" href="dist/videojs-contrib-dash.css">
   <script src="node_modules/video.js/dist/ie8/videojs-ie8.js"></script>
 </head>
 
 <body>
   <script src="node_modules/video.js/dist/video.js"></script>
-  <script src="node_modules/dashjs/dist/dash.all.js"></script>
-  <script src="src/js/videojs-dash.js"></script>
+  <script src="node_modules/dashjs/dist/dash.all.debug.js"></script>
+  <script src="dist/videojs-contrib-dash.js"></script>
 
   <script>
     var fixture;
@@ -35,14 +35,8 @@
 
     player.ready(function() {
       player.src({
-        src: 'http://html5.cablelabs.com:8100/cenc/wv/dash.mpd',
-        type: 'application/dash+xml',
-        keySystemOptions: [{
-          name: 'com.widevine.alpha',
-          options: {
-            'licenseUrl': 'https://html5.cablelabs.com:8025'
-          }
-        }]
+        src: 'http://media.streamonecloud.net/dash/account=2zhpQ4DUe5oB/item=OB5psqlNP0MR/OB5psqlNP0MR.mpd',
+        type: 'application/dash+xml'
       });
     });
   </script>

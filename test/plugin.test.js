@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import videojs from 'video.js';
 import '../src/plugin';
 import Html5DashJS from '../src/js/html5-dashjs';
+import '../node_modules/dashjs/dist/dash.all.debug.js';
 
 QUnit.test('the environment is sane', function(assert) {
   assert.strictEqual(typeof Array.isArray, 'function', 'es5 exists');

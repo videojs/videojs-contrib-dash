@@ -1,6 +1,6 @@
 {
   "name": "videojs-contrib-dash",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A Video.js source-handler providing MPEG-DASH playback.",
   "main": "es5/plugin.js",
   "scripts": {
@@ -82,7 +82,10 @@
     "test/"
   ],
   "dependencies": {
-    "video.js": "^5.2.1"
+    "browserify-shim": "^3.8.12",
+    "dashjs": "^2.0.0",
+    "global": "^4.3.0",
+    "video.js": "^5.0.0"
   },
   "devDependencies": {
     "babel": "^5.8.0",
@@ -113,8 +116,7 @@
     "sinon": "1.14.1",
     "uglify-js": "^2.5.0",
     "videojs-standard": "^4.0.0",
-    "watchify": "^3.6.0",
-    "dashjs": "^2.0.0"
+    "watchify": "^3.6.0"
   },
   "repository": {
     "type": "git",

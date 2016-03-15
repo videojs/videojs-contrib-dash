@@ -29,6 +29,9 @@ Download [videojs-contrib-dash](https://github.com/videojs/videojs-contrib-dash/
 </video>
 <script src="video.js"></script>
 
+<!-- Dash.js -->
+<script src="dash.all.min.js"></script>
+
 <!-- videojs-contrib-dash stylesheet -->
 <link rel="stylesheet" href="videojs-contrib-dash.css"></link>
 <!-- videojs-contrib-dash script -->

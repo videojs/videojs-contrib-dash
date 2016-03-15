@@ -3,6 +3,7 @@ import document from 'global/document';
 import QUnit from 'qunit';
 import videojs from 'video.js';
 import '../src/plugin';
+import '../node_modules/dashjs/dist/dash.all.debug.js';
 
 let when = function(element, type, fn, condition) {
   let func = function() {

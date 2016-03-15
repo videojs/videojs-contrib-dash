@@ -1,5 +1,4 @@
 import videojs from 'video.js';
-import 'dashjs/dist/dash.all.debug.js';
 
 /**
  * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
@@ -28,17 +27,17 @@ class Html5DashJS {
     // we set src = '' in order to clear the mediaKeys
     this.hideErrors();
 
-    // Must be before anything is initialized since we are overridding a global object
-    // injection
-    if (Html5DashJS.useVideoJSDebug) {
-      Html5DashJS.useVideoJSDebug(videojs);
-    }
-
     // Save the context after the first initialization for subsequent instances
     Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = window.dashjs.MediaPlayer(Html5DashJS.context_).create();
+
+    // Must be before anything is initialized since we are overridding a global object
+    // injection
+    if (Html5DashJS.useVideoJSDebug) {
+      Html5DashJS.useVideoJSDebug(videojs);
+    }
 
     // Initialize the media player with the element and autoplay settings
     this.mediaPlayer_.initialize();
@@ -49,8 +48,8 @@ class Html5DashJS {
       this.mediaPlayer_.setAutoPlay(false);
     }
 
-    // Fetches and parses the manifest - WARNING the callback is non-standard
-    // "error-last" style
+    // Fetches and parses the manifest -
+    // WARNING the callback is non-standard "error-last" style
     this.mediaPlayer_.retrieveManifest(manifestSource,
       videojs.bind(this, this.initializeDashJS));
   }
@@ -71,8 +70,8 @@ class Html5DashJS {
     if (Html5DashJS.getWidevineProtectionData) {
       manifestProtectionData = Html5DashJS.getWidevineProtectionData(manifest);
       this.keySystemOptions_ = videojs.mergeOptions(
-	this.keySystemOptions_,
-	manifestProtectionData);
+        this.keySystemOptions_,
+        manifestProtectionData);
     }
 
     // We have to reset any mediaKeys before the attachSource call below
