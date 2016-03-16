@@ -138,7 +138,18 @@ var currentAdaptation = sourceHandler.getCurrentAdaptationSetFor('video');
 
 ## Rendition Whitelisting
 
-The renditions that are available for playback (using manual switching and automatic bitrate switching) can be filtered so that only a 'whitelisted' subset can be played.  This can be accomplished by using the `setWhiteListRepresentations(id, filter)` method on the `sourceHandler`.  The `id` arugment is the id value of the adaptation set to be affected by the whitelist.  The `filter` argument is a function which will be called for each representation object and should return `true` or `false`, determing whether or not the representation can be played.
+The renditions that are available for playback (using manual switching and automatic bitrate switching) can be filtered so that only a 'whitelisted' subset can be played.  This can be accomplished by using the `setWhiteListRepresentations(set, filter)` method on the `sourceHandler`.  The value passed as the `set` arugment should either be the ID of the AdaptationSet or the entire AdaptationSet object.  The `filter` argument is a function which will be called for each representation object in the specified AdaptationSet and should return `true` or `false`, indicating whether or not the representation can be played.
+
+```
+var sourceHandler = player.tech.sourceHandler_;
+
+var hdFilter = function (rep) {
+    return (item.height >= 720);
+};
+
+// Using a known ID.
+sourceHandler.setWhiteListRepresentations('primary_video', hdFilter);
+```
 
 ```
 var sourceHandler = player.tech.sourceHandler_;
@@ -148,6 +159,7 @@ var hdFilter = function (rep) {
     return (item.height >= 720);
 };
 
+// Using the video AdaptationSet that is currently playing.
 sourceHandler.setWhiteListRepresentations(currentAdaptation, hdFilter);
 ```
 
