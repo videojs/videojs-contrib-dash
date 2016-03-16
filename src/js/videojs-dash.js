@@ -1,4 +1,6 @@
-(function(window, videojs, dashjs) {
+/*! videojs-contrib-dash - v1.1.2 - 2016-03-07
+ * Copyright (c) 2016 Brightcove  */
+(function(window, videojs, dashjs, whitelistPlugin) {
   'use strict';
 
   var
@@ -62,15 +64,21 @@
     // we set src = '' in order to clear the mediaKeys
     Html5DashJS.hideErrors(this.elParent_);
 
+    // Must be before anything is initialized since we are overridding a global object
+    // injection
+    if (Html5DashJS.useVideoJSDebug) {
+      Html5DashJS.useVideoJSDebug(videojs);
+    }
+
     // Save the context after the first initialization for subsequent instances
     Html5DashJS.context_ = Html5DashJS.context_ || {};
 
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
-    // Log MedaPlayer messages through video.js
-    if (Html5DashJS.useVideoJSDebug) {
-      Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
+    // Set up plugins.
+    if (whitelistPlugin !== null && whitelistPlugin !== undefined) {
+      whitelistPlugin.initialize(this.mediaPlayer_);
     }
 
     // Must run controller before these two lines or else there is no
@@ -200,6 +208,44 @@
     this.resetSrc_(function noop(){});
   };
 
+  // Whitelist API
+
+  Html5DashJS.prototype.setSelector = function (sFunc) {
+    whitelistPlugin.setSelector(sFunc);
+  };
+
+  Html5DashJS.prototype.getAdaptations = function () {
+    return whitelistPlugin.getAdaptations();
+  };
+
+  Html5DashJS.prototype.getCurrentAdaptationFor = function (type) {
+    return whitelistPlugin.getCurrentAdaptationFor(type);
+  };
+
+  Html5DashJS.prototype.setWhiteListRepresentations = function (set, representationFilter) {
+    whitelistPlugin.setWhiteListRepresentations(set, representationFilter);
+  };
+
+  Html5DashJS.prototype.setQualityFor = function (type, value) {
+    whitelistPlugin.setQualityFor(type, value);
+  };
+
+  Html5DashJS.prototype.getRepresentationsByType = function (type) {
+    return whitelistPlugin.getRepresentationsByType(type);
+  };
+
+  // Dash.js API
+
+  Html5DashJS.prototype.setAutoSwitchQuality = function (value) {
+    this.mediaPlayer_.setAutoSwitchQuality(value);
+  };
+
+  Html5DashJS.prototype.setBufferTime = function (seconds) {
+    this.mediaPlayer_.setStableBufferTime(seconds);
+    this.mediaPlayer_.setBufferTimeAtTopQuality(seconds);
+    this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(seconds);
+  };
+
   // Only add the SourceHandler if the browser supports MediaSourceExtensions
   if (!!window.MediaSource) {
     videojs.Html5.registerSourceHandler({
@@ -223,4 +269,4 @@
   }
 
   videojs.Html5DashJS = Html5DashJS;
-})(window, window.videojs, window.dashjs);
+})(window, window.videojs, window.dashjs, window.whitelistDashPlugin);
