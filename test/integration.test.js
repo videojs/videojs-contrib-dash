@@ -35,8 +35,7 @@
         player.one('loadstart', done);
 
         player.src({
-          src: 'http://wams.edgesuite.net/media/' +
-            'SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest(format=mpd-time-csf)',
+          src: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd',
           type: 'application/dash+xml'
         });
       });
