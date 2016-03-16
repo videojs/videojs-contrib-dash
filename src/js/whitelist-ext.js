@@ -29,6 +29,26 @@
         currentPeriodIndex,
         selectorFunction,
 
+        CustomDashManifestModel = function () {
+          /* jshint ignore:start */
+          return {
+             getAdaptationForId: function(id, manifest, periodIndex) {
+                var adaptations = manifest.Period_asArray[periodIndex].AdaptationSet_asArray,
+                    i,
+                    len;
+
+                for (i = 0, len = adaptations.length; i < len; i++) {
+                    if (adaptations[i].hasOwnProperty('id') && adaptations[i].id == id) {
+                        return adaptations[i];
+                    }
+                }
+
+                return null;
+            }
+          };
+          /* jshint ignore:end */
+        },
+
         /**
          * Custom object overriding the RulesController, specifically the applyRules
          * function to accomodate the whitelisting of Representations
@@ -176,6 +196,7 @@
        */
       initialize: function (player) {
         this.initialized = true;
+        player.extend('DashManifestModel', CustomDashManifestModel, true);
         player.extend('RulesController', CustomRulesController, true);
         player.on(dashjs.MediaPlayer.events.PERIOD_SWITCH_COMPLETED, periodSwitch);
         globalPlayer = player;
@@ -207,7 +228,7 @@
                           currentPeriodIndex);
       },
       /**
-       * @param {AdaptationSet} - AdaptationSet object or string of AdaptationSet
+       * @param {AdaptationSet} - AdaptationSet object or AdaptationSet
        *                          id that you wish to set whitelist for
        * @param {function} - function to filter the representations in
        *                     order to create your whitelist
@@ -227,7 +248,7 @@
           throw new Error('AdaptationSet must be defined.');
         }
 
-        if (typeof set === 'string') {
+        if (typeof set !== 'object') {
           setId = set;
         }
         else {
