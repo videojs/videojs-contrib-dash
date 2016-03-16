@@ -24,6 +24,19 @@ var WhitelistPlugin = function () {
       currentPeriodIndex,
       selectorFunction,
 
+      /**
+       * We are replacing this method with a *slightly* modified version.
+       * When Dash.js parses the representations and adaptations, it appears
+       * that if the `id` field is a number (i.e., "1" or "2") that it is
+       * set to a `number` JavaScript type.  The `id` field should *not* be
+       * a number though since it's a string the specification.
+       * This leads to problems when we are searching for an adaptation by `id`.
+       * If the user provides the string '1' and the id is parsed by Dash.js
+       * as `1`, then we can't reliably get the adaptation set by `id`.
+       * This method uses *non-strict* equality so that `1` and '1' are
+       * considered equal.
+       * JSHint is being told to ignore this, since this is a specific exception.
+       */
       CustomDashManifestModel = function () {
         /* jshint ignore:start */
         return {
@@ -33,6 +46,7 @@ var WhitelistPlugin = function () {
                   len;
 
               for (i = 0, len = adaptations.length; i < len; i++) {
+                  // Use non-strict equality here.
                   if (adaptations[i].hasOwnProperty('id') && adaptations[i].id == id) {
                       return adaptations[i];
                   }
