@@ -73,30 +73,9 @@ module.exports = function(grunt) {
       }
     },
     karma: {
-      options: {
-        configFile: 'test/karma.config.js'
-      },
-      unit: {
+      test: {
         options: {
-          files: [
-            'node_modules/video.js/dist/video-js.css',
-            'node_modules/video.js/dist/video.js',
-            'node_modules/dashjs/dist/dash.all.debug.js',
-            'dist/videojs-dash.js',
-            'test/globals.test.js',
-            'test/dashjs.test.js'
-          ]
-        }
-      },
-      integration: {
-        options: {
-          files: [
-            'node_modules/video.js/dist/video-js.css',
-            'node_modules/video.js/dist/video.js',
-            'node_modules/dashjs/dist/dash.all.debug.js',
-            'dist/videojs-dash.js',
-            'test/integration.test.js'
-          ]
+          configFile: 'test/karma.config.js'
         }
       }
     }
