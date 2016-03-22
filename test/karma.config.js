@@ -13,20 +13,20 @@ module.exports = function(config) {
     browserNoActivityTimeout: 300000,
 
     detectBrowsers: {
-      enabled: !process.env.BROWSER_STACK_USERNAME,
+      enabled: !(process.env.BROWSER_STACK_USERNAME || process.env.TRAVIS),
       usePhantomJS: false
     },
 
     browserStack: {
-      project: 'videojs-contrib-dash',
+      project: process.env.npm_package_name,
       name: process.env.TRAVIS_BUILD_NUMBER + process.env.TRAVIS_BRANCH,
       pollingTimeout: 30000
     },
 
-    browsers: [
+    browsers: process.env.BROWSER_STACK_USERNAME ? [
       'chrome_bs',
       'firefox_bs'
-    ],
+    ] : ['Firefox'],
 
     customLaunchers: {
       chrome_bs: {
