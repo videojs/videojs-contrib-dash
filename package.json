@@ -34,6 +34,7 @@
     "video.js": "^5.0.0"
   },
   "devDependencies": {
+    "babelify": "^6.0.1",
     "browserify-shim": "^3.8.12",
     "grunt": "~0.4.1",
     "grunt-browserify": "^4.0.1",

@@ -37,7 +37,12 @@ module.exports = function(grunt) {
           'tmp/videojs-dash.js': ['src/js/videojs-dash.js']
         },
         options: {
-          transform: ['browserify-shim']
+          transform: [
+            ['babelify', {
+              loose: 'all'
+            }],
+            'browserify-shim'
+          ]
         }
       }
     },
