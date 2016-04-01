@@ -39,18 +39,9 @@ module.exports = function(config) {
     ],
 
     customLaunchers: {
-      chrome_bs: {
-        base: 'BrowserStack',
-        browser: 'chrome',
-        os: 'Windows',
-        os_version: '8.1'
-      },
-
-      firefox_bs: {
-        base: 'BrowserStack',
-        browser: 'firefox',
-        os: 'Windows',
-        os_version: '8.1'
+      travisChrome: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
       }
     }
   });
