@@ -12,45 +12,16 @@ module.exports = function(config) {
       'test/dashjs.test.js'
     ],
 
-    frameworks: ['qunit', 'detectBrowsers'],
+    frameworks: ['qunit'],
 
     singleRun: true,
 
-    browserDisconnectTolerance: 3,
-
-    captureTimeout: 300000,
-
-    browserNoActivityTimeout: 300000,
-
-    detectBrowsers: {
-      enabled: !process.env.BROWSER_STACK_USERNAME,
-      usePhantomJS: false
-    },
-
-    browserStack: {
-      project: 'videojs-contrib-dash',
-      name: process.env.TRAVIS_BUILD_NUMBER + process.env.TRAVIS_BRANCH,
-      pollingTimeout: 30000
-    },
-
-    browsers: [
-      'chrome_bs',
-      'firefox_bs'
-    ],
+    browsers: process.env.TRAVIS ? ['travisChrome'] : ['Chrome'],
 
     customLaunchers: {
-      chrome_bs: {
-        base: 'BrowserStack',
-        browser: 'chrome',
-        os: 'Windows',
-        os_version: '8.1'
-      },
-
-      firefox_bs: {
-        base: 'BrowserStack',
-        browser: 'firefox',
-        os: 'Windows',
-        os_version: '8.1'
+      travisChrome: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
       }
     }
   });
