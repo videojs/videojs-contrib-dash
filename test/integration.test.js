@@ -35,7 +35,7 @@
         player.one('loadstart', done);
 
         player.src({
-          src: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd',
+          src: 'http://rdmedia.bbc.co.uk/dash/ondemand/testcard/1/client_manifest-events.mpd',
           type: 'application/dash+xml'
         });
       });

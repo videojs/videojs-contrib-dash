@@ -90,11 +90,14 @@
                 dashjs.MediaPlayer = origMediaPlayer;
                 videojs.xhr = origVJSXHR;
                 videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
-              }
+              },
+              extend: function() {},
+              on: function() {}
             };
           }
         };
       };
+      dashjs.MediaPlayer.events = origMediaPlayer.events;
 
       // We have to override this because PhantomJS does not have Encrypted Media Extensions
       videojs.Html5DashJS.prototype.resetSrc_ = function (fn) {
