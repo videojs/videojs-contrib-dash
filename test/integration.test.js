@@ -82,7 +82,7 @@
   q.test('abr plugin functions', function(assert) {
     var
       player = this.player,
-      sourceHandler = player.tech.sourceHandler_;
+      sourceHandler = player.tech_.sourceHandler_;
       sourceHandler.setBufferTime(5);
 
     sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
@@ -95,7 +95,7 @@
     var
       done = assert.async(),
       player = this.player,
-      sourceHandler = player.tech.sourceHandler_,
+      sourceHandler = player.tech_.sourceHandler_,
       getQualityFor = sourceHandler.mediaPlayer_.getQualityFor;
 
     sourceHandler.setBufferTime(2);
@@ -115,7 +115,7 @@
     var
       done = assert.async(),
       player = this.player,
-      sourceHandler = player.tech.sourceHandler_,
+      sourceHandler = player.tech_.sourceHandler_,
       getQualityFor = sourceHandler.mediaPlayer_.getQualityFor;
 
     sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', true);
