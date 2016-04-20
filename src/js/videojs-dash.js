@@ -77,10 +77,7 @@ var WhitelistPlugin = require('./whitelist-ext');
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
 
-    // Set up plugins.
-    if (whitelistPlugin !== null && whitelistPlugin !== undefined) {
-      whitelistPlugin.initialize(this.mediaPlayer_);
-    }
+    whitelistPlugin.initialize(this.mediaPlayer_);
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
