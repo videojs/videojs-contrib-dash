@@ -51,6 +51,7 @@
     "grunt-contrib-watch": "~0.4.0",
     "grunt-karma": "^0.12.1",
     "karma": "^0.13.15",
+    "karma-browserstack-launcher": "^0.1.9",
     "karma-chrome-launcher": "^0.2.2",
     "karma-detect-browsers": "^2.0.2",
     "karma-firefox-launcher": "^0.1.7",
