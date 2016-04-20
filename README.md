@@ -55,12 +55,16 @@ player.src({
 });
 ```
 
+## Note on API methods below
+
+In the examples below, the tech is retrieved from the player by passing in { IWillNotUseThisInPlugins: true }. For more information on why this is required, please refer to [video.js issue 2617](https://github.com/videojs/video.js/issues/2617).
+
 ## Setting the Buffer Time
 
 The buffer time value specifies how many seconds of video to keep in the video buffer.  This value can be set by using the `setBufferTime(seconds)` method on the `sourceHandler`.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 sourceHandler.setBufferTime(5);
 ```
 
@@ -71,7 +75,7 @@ sourceHandler.setBufferTime(5);
 To get the set of renditions that are currently in use for a particular type, use the `getRepresentationsByType(type)` method on the `sourceHandler`.  This will return a list of `rendition` objects.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 var renditions = sourceHandler.getRepresentationsByType('video');
 ```
 
@@ -82,7 +86,7 @@ Any type accepted by Dash.js can be used.  The most commonly used types are `vid
 By default, Dash.js will automatically switch between playing renditions depending on the user's environment.  Use the `setAutoSwitchQuality(boolean)` method to disable/enable this feature.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 sourceHandler.setAutoSwitchQuality(false);
 ```
 
@@ -91,7 +95,7 @@ sourceHandler.setAutoSwitchQuality(false);
 The currently playing rendition can be manually set by using the `setQualityFor(type, value)` method on the `sourceHandler`.  Like `getRepresentationsByType(type)`, any valid `type` value from Dash.js can be used.  The `quality` value should the index value of the representation from the Array returned by `getRepresentationsByType(type)`.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 var renditions = sourceHandler.getRepresentationsByType('video');
 var hdIndex = renditions.findIndex(function (ren) {
     return (ren.width === 1920 && ren.height == 1080);
@@ -111,14 +115,14 @@ A few things to note when setting the bitrate manually:
 All available adaptation sets can be retrieved by using the `getAdaptations()` method on the `sourceHandler`.  This will return all adaptation sets for the current Period, even if the adaptation set is not currently being played.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 var adaptations = sourceHandler.getAdaptations();
 ```
 
 To get the currently playing adaptation set only, use the `getCurrentAdaptationFor(type)` method on the `sourceHandler`.  The type may be any valid Dash.js type.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 var currentAdaptation = sourceHandler.getCurrentAdaptationFor('video');
 ```
 
@@ -127,7 +131,7 @@ var currentAdaptation = sourceHandler.getCurrentAdaptationFor('video');
 The renditions that are available for playback (using manual switching and automatic bitrate switching) can be filtered so that only a 'whitelisted' subset can be played.  This can be accomplished by using the `setWhiteListRepresentations(set, filter)` method on the `sourceHandler`.  The value passed as the `set` arugment should either be the ID of the AdaptationSet or the entire AdaptationSet object.  The `filter` argument is a function which will be called for each representation object in the specified AdaptationSet and should return `true` or `false`, indicating whether or not the representation can be played.
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 
 var hdFilter = function (rep) {
     return (rep.height >= 720);
@@ -138,7 +142,7 @@ sourceHandler.setWhiteListRepresentations('primary_video', hdFilter);
 ```
 
 ```
-var sourceHandler = player.tech.sourceHandler_;
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
 var currentAdaptation = sourceHandler.getCurrentAdaptationFor('video');
 
 var hdFilter = function (rep) {
