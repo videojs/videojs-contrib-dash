@@ -115,11 +115,11 @@ var sourceHandler = player.tech.sourceHandler_;
 var adaptations = sourceHandler.getAdaptations();
 ```
 
-To get the currently playing adaptation set only, use the `getCurrentAdaptationSetFor(type)` method on the `sourceHandler`.  The type may be any valid Dash.js type.
+To get the currently playing adaptation set only, use the `getCurrentAdaptationFor(type)` method on the `sourceHandler`.  The type may be any valid Dash.js type.
 
 ```
 var sourceHandler = player.tech.sourceHandler_;
-var currentAdaptation = sourceHandler.getCurrentAdaptationSetFor('video');
+var currentAdaptation = sourceHandler.getCurrentAdaptationFor('video');
 ```
 
 ## Rendition Whitelisting
@@ -130,7 +130,7 @@ The renditions that are available for playback (using manual switching and autom
 var sourceHandler = player.tech.sourceHandler_;
 
 var hdFilter = function (rep) {
-    return (item.height >= 720);
+    return (rep.height >= 720);
 };
 
 // Using a known ID.
@@ -139,10 +139,10 @@ sourceHandler.setWhiteListRepresentations('primary_video', hdFilter);
 
 ```
 var sourceHandler = player.tech.sourceHandler_;
-var currentAdaptation = sourceHandler.getCurrentAdaptationSetFor('video');
+var currentAdaptation = sourceHandler.getCurrentAdaptationFor('video');
 
 var hdFilter = function (rep) {
-    return (item.height >= 720);
+    return (rep.height >= 720);
 };
 
 // Using the video AdaptationSet that is currently playing.
