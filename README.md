@@ -68,7 +68,20 @@ var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandle
 sourceHandler.setBufferTime(5);
 ```
 
-## Interacting with Renditions
+## Interacting with representations
+
+### Get all of the representations and enable/disable them
+
+To get all of the available representations, call the `representations()` method on the `sourceHandler`. This will return a list of plain objects, each with `width`, `height`, `bandwidth`, and `id` properties, and an `enabled()` method.
+
+```
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
+var representations = sourceHandler.represnetations();
+```
+
+To see whether the representation is enabled or disabled, call its `enabled()` method with no arguments. To set whether it is enabled/disabled, call its `enabled()` method and pass in a boolean value.
+
+## Interacting with Dash.js' renditions
 
 ### Get all of the currently playing renditions.
 
