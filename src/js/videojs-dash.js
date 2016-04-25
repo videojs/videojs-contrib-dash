@@ -129,6 +129,48 @@ var WhitelistPlugin = require('./whitelist-ext');
 
   // Whitelist API
 
+  Html5DashJS.prototype.representations = function() {
+    var
+      currentVideoAdaptation = this.getCurrentAdaptationFor('video'),
+      representations = currentVideoAdaptation.Representation;
+
+    this.enabledRepresentationIds = this.enabledRepresentationIds ||
+                                    representations.map(function(rep) {
+      return rep.id;
+    });
+
+    return representations.map(function(rep) {
+      return {
+        width: rep.width,
+        height: rep.height,
+        bandwidth: rep.bandwidth,
+        id: rep.id,
+        enabled: function(enable) {
+          var currentlyEnabled = this.enabledRepresentationIds.indexOf(rep.id) > -1;
+
+          if (enable === undefined) {
+            return currentlyEnabled;
+          }
+
+          if ((enable && currentlyEnabled) || (!enable && !currentlyEnabled)) {
+            return;
+          }
+
+          if (enable) {
+            this.enabledRepresentationIds.push(rep.id);
+          } else {
+            this.enabledRepresentationIds.splice(
+              this.enabledRepresentationIds.indexOf(rep.id), 1);
+          }
+
+          this.setWhiteListRepresentations(currentVideoAdaptation, function(proposedRep) {
+            return this.enabledRepresentationIds.indexOf(proposedRep.id) > -1;
+          }.bind(this));
+        }.bind(this)
+      };
+    }.bind(this));
+  };
+
   Html5DashJS.prototype.setSelector = function (sFunc) {
     whitelistPlugin.setSelector(sFunc);
   };

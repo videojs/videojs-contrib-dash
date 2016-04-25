@@ -141,4 +141,40 @@
       done();
     }, 10000);
   });
+
+  q.test('representations API', function(assert) {
+    var
+      player = this.player,
+      sourceHandler = player.tech_.sourceHandler_,
+      numEnabledReps = 0;
+
+    assert.equal(sourceHandler.representations().length, 13, 'have all representations');
+
+    sourceHandler.representations().forEach(function(rep) {
+      assert.ok(rep.id, 'representation has a valid id');
+      assert.ok(rep.width, 'representation has a valid width');
+      assert.ok(rep.height, 'representation has a valid height');
+      assert.ok(rep.bandwidth, 'representation has a valid bandwidth');
+      assert.ok(rep.enabled(), 'all representations start enabled');
+    });
+
+    sourceHandler.representations().forEach(function(rep) {
+      if (rep.height >= 720) {
+        rep.enabled(false);
+      }
+    });
+
+    sourceHandler.representations().forEach(function(rep) {
+      if (rep.enabled()) {
+        numEnabledReps++;
+        if (rep.height >= 720) {
+          throw new Error('representation should not be enabled');
+        }
+      }
+    });
+
+    assert.equal(numEnabledReps,
+                 11,
+                 'has the correct number of enabled representations');
+  });
 })(window.videojs, window.QUnit);
