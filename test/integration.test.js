@@ -79,69 +79,6 @@
     player.play();
   });
 
-  q.test('abr plugin functions', function(assert) {
-    var
-      player = this.player,
-      sourceHandler = player.tech_.sourceHandler_;
-      sourceHandler.setBufferTime(5);
-
-    sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
-
-    assert.equal(sourceHandler.getAdaptations().length, 4, 'four valid adaptations');
-    assert.equal(sourceHandler.getRepresentationsByType('video').length, 13);
-  });
-
-  q.test('set quality test', function(assert) {
-    var
-      done = assert.async(),
-      player = this.player,
-      sourceHandler = player.tech_.sourceHandler_,
-      getQualityFor = sourceHandler.mediaPlayer_.getQualityFor;
-
-    sourceHandler.setBufferTime(2);
-    sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
-
-    sourceHandler.setQualityFor('video', 6);
-
-    player.play();
-
-    setTimeout(function() {
-      assert.equal(getQualityFor('video'), 6, 'quality should be set to 6');
-      done();
-    }, 5000);
-  });
-
-  q.test('set whitelist', function(assert) {
-    var
-      done = assert.async(),
-      player = this.player,
-      sourceHandler = player.tech_.sourceHandler_,
-      getQualityFor = sourceHandler.mediaPlayer_.getQualityFor;
-
-    sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', true);
-    sourceHandler.setBufferTime(2);
-
-
-    //nonHD filter function
-    var filterFunc = function(item) {
-        if( item.height < 720) {
-            return true;
-        }
-        return false;
-    };
-    //set whitelist that removes HD representations (last 2 qualities)
-    sourceHandler.setWhiteListRepresentations('1', filterFunc);
-    sourceHandler.setQualityFor('video', 12);
-
-    player.play();
-
-    setTimeout(function(){
-      assert.notEqual(getQualityFor('video'), 12, 'quality should never be above 10');
-      assert.notEqual(getQualityFor('video'), 11, 'quality should never be above 10');
-      done();
-    }, 10000);
-  });
-
   q.test('representations API', function(assert) {
     var
       player = this.player,
@@ -176,5 +113,28 @@
     assert.equal(numEnabledReps,
                  11,
                  'has the correct number of enabled representations');
+  });
+
+  q.test('set buffer time', function(assert) {
+    var
+      done = assert.async(),
+      player = this.player,
+      sourceHandler = player.tech_.sourceHandler_,
+      getQualityFor = sourceHandler.mediaPlayer_.getQualityFor,
+      originalQuality;
+
+    originalQuality = getQualityFor('video');
+
+    player.play();
+
+    sourceHandler.representations()[originalQuality].enabled(false);
+    sourceHandler.setBufferTime(1);
+
+    setTimeout(function(){
+      assert.notEqual(getQualityFor('video'),
+                      originalQuality,
+                      'quality should be different');
+      done();
+    }, 2);
   });
 })(window.videojs, window.QUnit);
