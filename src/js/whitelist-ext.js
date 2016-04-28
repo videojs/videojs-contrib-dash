@@ -165,7 +165,9 @@ var WhitelistPlugin = function () {
           beforeDelta = proposedRepresentation.bandwidth - before;
           afterDelta = current - proposedRepresentation.bandwidth;
           if (beforeDelta < afterDelta) {
-            index = i = 0 ? 1 : i + 1;
+            index = (i === 0) ? 1
+              : (i === len - 1) ? i
+              : i + 1;
             bestMatchedRep = whiteListSet[index];
             break;
           }
