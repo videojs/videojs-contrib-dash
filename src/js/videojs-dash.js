@@ -72,7 +72,7 @@ var WhitelistPlugin = require('./whitelist-ext');
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
-    // Log MedaPlayer messages through video.js
+    // Log MediaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
@@ -210,7 +210,7 @@ var WhitelistPlugin = require('./whitelist-ext');
 
   Html5DashJS.prototype.representations = function() {
     var
-      currentVideoAdaptation = this.getCurrentAdaptationFor('video'),
+      currentVideoAdaptation = whitelistPlugin.getCurrentAdaptationFor('video'),
       representations = currentVideoAdaptation.Representation;
 
     this.enabledRepresentationIds = this.enabledRepresentationIds ||
@@ -242,7 +242,8 @@ var WhitelistPlugin = require('./whitelist-ext');
               this.enabledRepresentationIds.indexOf(rep.id), 1);
           }
 
-          this.setWhiteListRepresentations(currentVideoAdaptation, function(proposedRep) {
+          whitelistPlugin.setWhiteListRepresentations(currentVideoAdaptation,
+                                                      function(proposedRep) {
             return this.enabledRepresentationIds.indexOf(proposedRep.id) > -1;
           }.bind(this));
         }.bind(this)
@@ -250,35 +251,7 @@ var WhitelistPlugin = require('./whitelist-ext');
     }.bind(this));
   };
 
-  Html5DashJS.prototype.setSelector = function (sFunc) {
-    whitelistPlugin.setSelector(sFunc);
-  };
-
-  Html5DashJS.prototype.getAdaptations = function () {
-    return whitelistPlugin.getAdaptations();
-  };
-
-  Html5DashJS.prototype.getCurrentAdaptationFor = function (type) {
-    return whitelistPlugin.getCurrentAdaptationFor(type);
-  };
-
-  Html5DashJS.prototype.setWhiteListRepresentations = function (set, representationFilter) {
-    whitelistPlugin.setWhiteListRepresentations(set, representationFilter);
-  };
-
-  Html5DashJS.prototype.setQualityFor = function (type, value) {
-    whitelistPlugin.setQualityFor(type, value);
-  };
-
-  Html5DashJS.prototype.getRepresentationsByType = function (type) {
-    return whitelistPlugin.getRepresentationsByType(type);
-  };
-
   // Dash.js API
-
-  Html5DashJS.prototype.setAutoSwitchQuality = function (value) {
-    this.mediaPlayer_.setAutoSwitchQuality(value);
-  };
 
   Html5DashJS.prototype.setBufferTime = function (seconds) {
     this.mediaPlayer_.setStableBufferTime(seconds);

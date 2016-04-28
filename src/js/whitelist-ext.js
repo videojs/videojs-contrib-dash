@@ -192,17 +192,6 @@ var WhitelistPlugin = function () {
 
   return {
     /**
-     * Sets the selector function to use when choosing a bitrate.
-     * When Dash.js attempts to go to a bitrate that isn't in the whitelist,
-     * the selector function is used to determine which bitrate to go to
-     * instead.
-     *
-     * @param {[type]} sFunc - The function to use when selecting whitelisted bitrates.
-     */
-    setSelector: function (sFunc) {
-      selectorFunction = sFunc;
-    },
-    /**
      * Initialize plugin.
      *
      * @param  {MediaPlayer} player - Dash MediaPlayer
@@ -218,16 +207,6 @@ var WhitelistPlugin = function () {
 
       // Patch the player object so that the original setQualityFor cannot be used.
       player.setQualityFor = this.setQualityFor;
-    },
-    /**
-     * Returns all adaptations for the currently playing period.
-     * @return {Array} - Array of Representations
-     */
-    getAdaptations: function() {
-      if (globalManifest) {
-        var manifest = Object.assign({}, globalManifest.getValue());
-        return manifest.Period_asArray[currentPeriodIndex].AdaptationSet_asArray;
-      }
     },
     /**
      * Returns the currently playing AdaptationSet for a type.
@@ -336,17 +315,6 @@ var WhitelistPlugin = function () {
           else {
             globalOgPlayerSetQuality(type, value);
           }
-        }
-      }
-    },
-    getRepresentationsByType: function(type) {
-      if (this.initialized) {
-        if (globalManifest) {
-          var manifest = Object.assign({}, globalManifest.getValue()),
-              adaptation = globalDashManifestModel.getAdaptationForType(manifest,
-                                                                        currentPeriodIndex,
-                                                                        type);
-          return adaptation.Representation_asArray;
         }
       }
     },
