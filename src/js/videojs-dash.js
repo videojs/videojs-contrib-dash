@@ -43,6 +43,7 @@ var WhitelistPlugin = require('./whitelist-ext');
   function Html5DashJS (source, tech) {
     var
       options = tech.options_,
+      player = videojs(options.playerId),
       manifestSource;
 
     this.tech_ = tech;
@@ -91,6 +92,11 @@ var WhitelistPlugin = require('./whitelist-ext');
 
     // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
     this.mediaPlayer_.retrieveManifest(manifestSource, videojs.bind(this, this.initializeDashJS));
+
+    player.dash = player.dash || {
+      representations: this.representations.bind(this),
+      setBufferTime: this.setBufferTime.bind(this)
+    };
   }
 
   Html5DashJS.prototype.initializeDashJS = function (manifest, err) {
