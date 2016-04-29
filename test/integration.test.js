@@ -79,66 +79,60 @@
     player.play();
   });
 
-  q.test('abr plugin functions', function(assert) {
+  q.test('representations API', function(assert) {
     var
       player = this.player,
-      sourceHandler = player.tech_.sourceHandler_;
-      sourceHandler.setBufferTime(5);
+      numEnabledReps = 0;
 
-    sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
+    assert.equal(player.dash.representations().length, 13, 'have all representations');
 
-    assert.equal(sourceHandler.getAdaptations().length, 4, 'four valid adaptations');
-    assert.equal(sourceHandler.getRepresentationsByType('video').length, 13);
-  });
+    player.dash.representations().forEach(function(rep) {
+      assert.ok(rep.id, 'representation has a valid id');
+      assert.ok(rep.width, 'representation has a valid width');
+      assert.ok(rep.height, 'representation has a valid height');
+      assert.ok(rep.bandwidth, 'representation has a valid bandwidth');
+      assert.ok(rep.enabled(), 'all representations start enabled');
+    });
 
-  q.test('set quality test', function(assert) {
-    var
-      done = assert.async(),
-      player = this.player,
-      sourceHandler = player.tech_.sourceHandler_,
-      getQualityFor = sourceHandler.mediaPlayer_.getQualityFor;
+    player.dash.representations().forEach(function(rep) {
+      if (rep.height >= 720) {
+        rep.enabled(false);
+      }
+    });
 
-    sourceHandler.setBufferTime(2);
-    sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', false);
-
-    sourceHandler.setQualityFor('video', 6);
-
-    player.play();
-
-    setTimeout(function() {
-      assert.equal(getQualityFor('video'), 6, 'quality should be set to 6');
-      done();
-    }, 5000);
-  });
-
-  q.test('set whitelist', function(assert) {
-    var
-      done = assert.async(),
-      player = this.player,
-      sourceHandler = player.tech_.sourceHandler_,
-      getQualityFor = sourceHandler.mediaPlayer_.getQualityFor;
-
-    sourceHandler.mediaPlayer_.setAutoSwitchQualityFor('video', true);
-    sourceHandler.setBufferTime(2);
-
-
-    //nonHD filter function
-    var filterFunc = function(item) {
-        if( item.height < 720) {
-            return true;
+    player.dash.representations().forEach(function(rep) {
+      if (rep.enabled()) {
+        numEnabledReps++;
+        if (rep.height >= 720) {
+          throw new Error('representation should not be enabled');
         }
-        return false;
-    };
-    //set whitelist that removes HD representations (last 2 qualities)
-    sourceHandler.setWhiteListRepresentations('1', filterFunc);
-    sourceHandler.setQualityFor('video', 12);
+      }
+    });
+
+    assert.equal(numEnabledReps,
+                 11,
+                 'has the correct number of enabled representations');
+  });
+
+  q.test('set buffer time', function(assert) {
+    var
+      done = assert.async(),
+      player = this.player,
+      getQualityFor = player.tech_.sourceHandler_.mediaPlayer_.getQualityFor,
+      originalQuality;
+
+    originalQuality = getQualityFor('video');
 
     player.play();
+
+    player.dash.representations()[originalQuality].enabled(false);
+    player.dash.setBufferTime(1);
 
     setTimeout(function(){
-      assert.notEqual(getQualityFor('video'), 12, 'quality should never be above 10');
-      assert.notEqual(getQualityFor('video'), 11, 'quality should never be above 10');
+      assert.notEqual(getQualityFor('video'),
+                      originalQuality,
+                      'quality should be different');
       done();
-    }, 10000);
+    }, 2);
   });
 })(window.videojs, window.QUnit);

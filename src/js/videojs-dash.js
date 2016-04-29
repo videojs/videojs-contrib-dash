@@ -43,6 +43,7 @@ var WhitelistPlugin = require('./whitelist-ext');
   function Html5DashJS (source, tech) {
     var
       options = tech.options_,
+      player = videojs(options.playerId),
       manifestSource;
 
     this.tech_ = tech;
@@ -72,7 +73,7 @@ var WhitelistPlugin = require('./whitelist-ext');
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
-    // Log MedaPlayer messages through video.js
+    // Log MediaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
@@ -91,6 +92,11 @@ var WhitelistPlugin = require('./whitelist-ext');
 
     // Fetches and parses the manifest - WARNING the callback is non-standard "error-last" style
     this.mediaPlayer_.retrieveManifest(manifestSource, videojs.bind(this, this.initializeDashJS));
+
+    player.dash = player.dash || {
+      representations: this.representations.bind(this),
+      setBufferTime: this.setBufferTime.bind(this)
+    };
   }
 
   Html5DashJS.prototype.initializeDashJS = function (manifest, err) {
@@ -208,35 +214,50 @@ var WhitelistPlugin = require('./whitelist-ext');
 
   // Whitelist API
 
-  Html5DashJS.prototype.setSelector = function (sFunc) {
-    whitelistPlugin.setSelector(sFunc);
-  };
+  Html5DashJS.prototype.representations = function() {
+    var
+      currentVideoAdaptation = whitelistPlugin.getCurrentAdaptationFor('video'),
+      representations = currentVideoAdaptation.Representation;
 
-  Html5DashJS.prototype.getAdaptations = function () {
-    return whitelistPlugin.getAdaptations();
-  };
+    this.enabledRepresentationIds = this.enabledRepresentationIds ||
+                                    representations.map(function(rep) {
+      return rep.id;
+    });
 
-  Html5DashJS.prototype.getCurrentAdaptationFor = function (type) {
-    return whitelistPlugin.getCurrentAdaptationFor(type);
-  };
+    return representations.map(function(rep) {
+      return {
+        width: rep.width,
+        height: rep.height,
+        bandwidth: rep.bandwidth,
+        id: rep.id,
+        enabled: function(enable) {
+          var currentlyEnabled = this.enabledRepresentationIds.indexOf(rep.id) > -1;
 
-  Html5DashJS.prototype.setWhiteListRepresentations = function (set, representationFilter) {
-    whitelistPlugin.setWhiteListRepresentations(set, representationFilter);
-  };
+          if (enable === undefined) {
+            return currentlyEnabled;
+          }
 
-  Html5DashJS.prototype.setQualityFor = function (type, value) {
-    whitelistPlugin.setQualityFor(type, value);
-  };
+          if ((enable && currentlyEnabled) || (!enable && !currentlyEnabled)) {
+            return;
+          }
 
-  Html5DashJS.prototype.getRepresentationsByType = function (type) {
-    return whitelistPlugin.getRepresentationsByType(type);
+          if (enable) {
+            this.enabledRepresentationIds.push(rep.id);
+          } else {
+            this.enabledRepresentationIds.splice(
+              this.enabledRepresentationIds.indexOf(rep.id), 1);
+          }
+
+          whitelistPlugin.setWhiteListRepresentations(currentVideoAdaptation,
+                                                      function(proposedRep) {
+            return this.enabledRepresentationIds.indexOf(proposedRep.id) > -1;
+          }.bind(this));
+        }.bind(this)
+      };
+    }.bind(this));
   };
 
   // Dash.js API
-
-  Html5DashJS.prototype.setAutoSwitchQuality = function (value) {
-    this.mediaPlayer_.setAutoSwitchQuality(value);
-  };
 
   Html5DashJS.prototype.setBufferTime = function (seconds) {
     this.mediaPlayer_.setStableBufferTime(seconds);
