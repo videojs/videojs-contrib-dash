@@ -16,7 +16,10 @@ var WhitelistPlugin = require('./whitelist-ext');
    * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
    */
   function Html5DashJS (source, tech) {
-    var manifestSource;
+    var
+      options = tech.options_,
+      player = videojs(options.playerId),
+      manifestSource;
 
     this.tech_ = tech;
     this.el_ = tech.el();
@@ -63,6 +66,11 @@ var WhitelistPlugin = require('./whitelist-ext');
     // Attach the source with any protection data
     this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
     this.mediaPlayer_.attachSource(manifestSource);
+
+    player.dash = player.dash || {
+      representations: this.representations.bind(this),
+      setBufferTime: this.setBufferTime.bind(this)
+    };
 
     this.tech_.triggerReady();
   }

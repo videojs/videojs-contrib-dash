@@ -82,12 +82,11 @@
   q.test('representations API', function(assert) {
     var
       player = this.player,
-      sourceHandler = player.tech_.sourceHandler_,
       numEnabledReps = 0;
 
-    assert.equal(sourceHandler.representations().length, 13, 'have all representations');
+    assert.equal(player.dash.representations().length, 13, 'have all representations');
 
-    sourceHandler.representations().forEach(function(rep) {
+    player.dash.representations().forEach(function(rep) {
       assert.ok(rep.id, 'representation has a valid id');
       assert.ok(rep.width, 'representation has a valid width');
       assert.ok(rep.height, 'representation has a valid height');
@@ -95,13 +94,13 @@
       assert.ok(rep.enabled(), 'all representations start enabled');
     });
 
-    sourceHandler.representations().forEach(function(rep) {
+    player.dash.representations().forEach(function(rep) {
       if (rep.height >= 720) {
         rep.enabled(false);
       }
     });
 
-    sourceHandler.representations().forEach(function(rep) {
+    player.dash.representations().forEach(function(rep) {
       if (rep.enabled()) {
         numEnabledReps++;
         if (rep.height >= 720) {
@@ -119,16 +118,15 @@
     var
       done = assert.async(),
       player = this.player,
-      sourceHandler = player.tech_.sourceHandler_,
-      getQualityFor = sourceHandler.mediaPlayer_.getQualityFor,
+      getQualityFor = player.tech_.sourceHandler_.mediaPlayer_.getQualityFor,
       originalQuality;
 
     originalQuality = getQualityFor('video');
 
     player.play();
 
-    sourceHandler.representations()[originalQuality].enabled(false);
-    sourceHandler.setBufferTime(1);
+    player.dash.representations()[originalQuality].enabled(false);
+    player.dash.setBufferTime(1);
 
     setTimeout(function(){
       assert.notEqual(getQualityFor('video'),
