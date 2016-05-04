@@ -46,7 +46,7 @@
         origVJSXHR = videojs.xhr,
         origResetSrc = videojs.Html5DashJS.prototype.resetSrc_;
 
-      expect(7);
+      expect(5);
 
       Html5 = videojs.getComponent('Html5');
       tech = new Html5({});
@@ -78,11 +78,10 @@
                   'src and manifest key system options are merged');
               },
               attachSource: function (manifest) {
-                deepEqual(manifest, fakeManifest, 'manifest object is sent to attachSource');
+                deepEqual(manifest, source.src, 'manifest url is sent to attachSource');
 
                 strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
                 strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
-                strictEqual(resetSrcCalled, true, 'Html5DashJS#resetSrc_ was called');
 
                 tech.dispose();
 

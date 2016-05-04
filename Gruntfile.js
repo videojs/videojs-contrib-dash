@@ -49,15 +49,6 @@ module.exports = function(grunt) {
         dest: 'tmp/videojs-dash.min.js'
       }
     },
-    cssmin: {
-      target: {
-        files: {
-          'dist/videojs-dash.css': [
-            'src/css/videojs-dash.css'
-          ]
-        }
-      }
-    },
     concat: {
       options: {
         banner: '<%= banner %>'
@@ -87,6 +78,6 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('test', 'karma');
-  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'uglify', 'cssmin', 'concat']);
+  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'uglify', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };
