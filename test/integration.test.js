@@ -35,7 +35,7 @@
         player.one('loadstart', done);
 
         player.src({
-          src: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd',
+          src: 'http://rdmedia.bbc.co.uk/dash/ondemand/testcard/1/client_manifest-events.mpd',
           type: 'application/dash+xml'
         });
       });
@@ -77,5 +77,62 @@
     });
 
     player.play();
+  });
+
+  q.test('representations API', function(assert) {
+    var
+      player = this.player,
+      numEnabledReps = 0;
+
+    assert.equal(player.dash.representations().length, 13, 'have all representations');
+
+    player.dash.representations().forEach(function(rep) {
+      assert.ok(rep.id, 'representation has a valid id');
+      assert.ok(rep.width, 'representation has a valid width');
+      assert.ok(rep.height, 'representation has a valid height');
+      assert.ok(rep.bandwidth, 'representation has a valid bandwidth');
+      assert.ok(rep.enabled(), 'all representations start enabled');
+    });
+
+    player.dash.representations().forEach(function(rep) {
+      if (rep.height >= 720) {
+        rep.enabled(false);
+      }
+    });
+
+    player.dash.representations().forEach(function(rep) {
+      if (rep.enabled()) {
+        numEnabledReps++;
+        if (rep.height >= 720) {
+          throw new Error('representation should not be enabled');
+        }
+      }
+    });
+
+    assert.equal(numEnabledReps,
+                 11,
+                 'has the correct number of enabled representations');
+  });
+
+  q.test('set buffer time', function(assert) {
+    var
+      done = assert.async(),
+      player = this.player,
+      getQualityFor = player.tech_.sourceHandler_.mediaPlayer_.getQualityFor,
+      originalQuality;
+
+    originalQuality = getQualityFor('video');
+
+    player.play();
+
+    player.dash.representations()[originalQuality].enabled(false);
+    player.dash.setBufferTime(1);
+
+    setTimeout(function(){
+      assert.notEqual(getQualityFor('video'),
+                      originalQuality,
+                      'quality should be different');
+      done();
+    }, 2);
   });
 })(window.videojs, window.QUnit);

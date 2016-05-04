@@ -48,11 +48,16 @@
 
       expect(7);
 
+      el.setAttribute('id', 'test-vid');
+      parentEl.appendChild(el);
+      document.body.appendChild(parentEl);
+
       Html5 = videojs.getComponent('Html5');
-      tech = new Html5({});
+      tech = new Html5({
+        playerId: el.getAttribute('id')
+      });
       tech.el = function() { return el; };
       tech.triggerReady = function() { };
-      parentEl.appendChild(el);
 
       dashjs.MediaPlayer = function () {
         return {
@@ -90,11 +95,14 @@
                 dashjs.MediaPlayer = origMediaPlayer;
                 videojs.xhr = origVJSXHR;
                 videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
-              }
+              },
+              extend: function() {},
+              on: function() {}
             };
           }
         };
       };
+      dashjs.MediaPlayer.events = origMediaPlayer.events;
 
       // We have to override this because PhantomJS does not have Encrypted Media Extensions
       videojs.Html5DashJS.prototype.resetSrc_ = function (fn) {
