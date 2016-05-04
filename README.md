@@ -54,3 +54,17 @@ player.src({
   ]
 });
 ```
+
+You may also manipulate the source object by setting the `videojs.Html5DashJS.updateSourceData` function. This function takes a source object as an argument and should return a source object.
+
+```javascript
+videojs.Html5DashJS.updateSourceData = function(source) {
+  source.keySystemOptions = [{
+    name: 'com.widevine.alpha',
+    options: {
+      serverURL:'https://example.com/anotherlicense'
+    }
+  }];
+  return source;
+};
+```
