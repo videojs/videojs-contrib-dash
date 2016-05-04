@@ -53,7 +53,7 @@ var dashjs = require('dashjs');
     this.mediaPlayer_.initialize();
     this.mediaPlayer_.attachView(this.el_);
 
-    // Dash.js autoplays by default
+    // Dash.js autoplays by default, video.js will handle autoplay
     this.mediaPlayer_.setAutoPlay(false);
 
     // Attach the source with any protection data
