@@ -105,6 +105,7 @@
 
     },
     teardown: function() {
+      videojs.Html5DashJS.updateSourceData = undefined;
     }
   });
 
@@ -163,6 +164,26 @@
     var mergedKeySystemOptions = {};
 
     testHandleSource(sampleSrcNoDRM, mergedKeySystemOptions);
+  });
+
+  test('update the source keySystemOptions', function() {
+    var mergedKeySystemOptions = {
+        'com.widevine.alpha': {
+          serverURL:'https://example.com/anotherlicense'
+        }
+    };
+
+    videojs.Html5DashJS.updateSourceData = function(source) {
+      source.keySystemOptions = [{
+        name: 'com.widevine.alpha',
+        options: {
+          serverURL:'https://example.com/anotherlicense'
+        }
+      }];
+      return source;
+    };
+
+    testHandleSource(sampleSrc, mergedKeySystemOptions);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
