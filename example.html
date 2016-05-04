@@ -8,7 +8,6 @@
   <meta name="viewport" content="width=device-width">
 
   <link rel="stylesheet" href="node_modules/video.js/dist/video-js.css">
-  <link rel="stylesheet" href="src/css/videojs-dash.css">
   <script src="node_modules/video.js/dist/ie8/videojs-ie8.js"></script>
 </head>
 
@@ -35,14 +34,8 @@
 
     player.ready(function() {
       player.src({
-        src: 'http://html5.cablelabs.com:8100/cenc/wv/dash.mpd',
-        type: 'application/dash+xml',
-        keySystemOptions: [{
-          name: 'com.widevine.alpha',
-          options: {
-            'licenseUrl': 'https://html5.cablelabs.com:8025'
-          }
-        }]
+        src: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd',
+        type: 'application/dash+xml'
       });
     });
   </script>

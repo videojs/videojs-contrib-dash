@@ -31,7 +31,7 @@
       src: 'movie.mpd',
       type: 'application/dash+xml'
     },
-    testHandleSource = function (source, fakeManifest, expectedKeySystemOptions) {
+    testHandleSource = function (source, expectedKeySystemOptions) {
       var
         startupCalled = false,
         attachViewCalled = false,
@@ -46,7 +46,7 @@
         origVJSXHR = videojs.xhr,
         origResetSrc = videojs.Html5DashJS.prototype.resetSrc_;
 
-      expect(7);
+      expect(5);
 
       Html5 = videojs.getComponent('Html5');
       tech = new Html5({});
@@ -61,12 +61,7 @@
               initialize: function () {
                 startupCalled = true;
               },
-              retrieveManifest: function (manifestUrl, callback) {
-                strictEqual(manifestUrl, 'movie.mpd',
-                    'manifest url is requested via retrieveManifest');
 
-                return callback(fakeManifest, null);
-              },
               attachView: function () {
                 attachViewCalled = true;
               },
@@ -78,11 +73,10 @@
                   'src and manifest key system options are merged');
               },
               attachSource: function (manifest) {
-                deepEqual(manifest, fakeManifest, 'manifest object is sent to attachSource');
+                deepEqual(manifest, source.src, 'manifest url is sent to attachSource');
 
                 strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
                 strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
-                strictEqual(resetSrcCalled, true, 'Html5DashJS#resetSrc_ was called');
 
                 tech.dispose();
 
@@ -111,6 +105,7 @@
 
     },
     teardown: function() {
+      videojs.Html5DashJS.updateSourceData = undefined;
     }
   });
 
@@ -155,28 +150,40 @@
   });
 
   test('validate handleSource function with src-provided key options', function() {
-    var
-      manifestWithProtection = {
-        Period: {
-          AdaptationSet: []
-        }
-      },
-      mergedKeySystemOptions = {
+    var mergedKeySystemOptions = {
         'com.widevine.alpha': {
           extra: 'data',
           serverURL:'https://example.com/license'
         }
       };
 
-    testHandleSource(sampleSrc, manifestWithProtection, mergedKeySystemOptions);
+    testHandleSource(sampleSrc, mergedKeySystemOptions);
   });
 
   test('validate handleSource function with invalid manifest', function() {
-    var
-      manifestWithProtection = {},
-      mergedKeySystemOptions = {};
+    var mergedKeySystemOptions = {};
 
-    testHandleSource(sampleSrcNoDRM, manifestWithProtection, mergedKeySystemOptions);
+    testHandleSource(sampleSrcNoDRM, mergedKeySystemOptions);
+  });
+
+  test('update the source keySystemOptions', function() {
+    var mergedKeySystemOptions = {
+        'com.widevine.alpha': {
+          serverURL:'https://example.com/anotherlicense'
+        }
+    };
+
+    videojs.Html5DashJS.updateSourceData = function(source) {
+      source.keySystemOptions = [{
+        name: 'com.widevine.alpha',
+        options: {
+          serverURL:'https://example.com/anotherlicense'
+        }
+      }];
+      return source;
+    };
+
+    testHandleSource(sampleSrc, mergedKeySystemOptions);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
