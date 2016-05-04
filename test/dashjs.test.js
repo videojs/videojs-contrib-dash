@@ -31,7 +31,7 @@
       src: 'movie.mpd',
       type: 'application/dash+xml'
     },
-    testHandleSource = function (source, fakeManifest, expectedKeySystemOptions) {
+    testHandleSource = function (source, expectedKeySystemOptions) {
       var
         startupCalled = false,
         attachViewCalled = false,
@@ -61,12 +61,7 @@
               initialize: function () {
                 startupCalled = true;
               },
-              retrieveManifest: function (manifestUrl, callback) {
-                strictEqual(manifestUrl, 'movie.mpd',
-                    'manifest url is requested via retrieveManifest');
 
-                return callback(fakeManifest, null);
-              },
               attachView: function () {
                 attachViewCalled = true;
               },
@@ -154,28 +149,20 @@
   });
 
   test('validate handleSource function with src-provided key options', function() {
-    var
-      manifestWithProtection = {
-        Period: {
-          AdaptationSet: []
-        }
-      },
-      mergedKeySystemOptions = {
+    var mergedKeySystemOptions = {
         'com.widevine.alpha': {
           extra: 'data',
           serverURL:'https://example.com/license'
         }
       };
 
-    testHandleSource(sampleSrc, manifestWithProtection, mergedKeySystemOptions);
+    testHandleSource(sampleSrc, mergedKeySystemOptions);
   });
 
   test('validate handleSource function with invalid manifest', function() {
-    var
-      manifestWithProtection = {},
-      mergedKeySystemOptions = {};
+    var mergedKeySystemOptions = {};
 
-    testHandleSource(sampleSrcNoDRM, manifestWithProtection, mergedKeySystemOptions);
+    testHandleSource(sampleSrcNoDRM, mergedKeySystemOptions);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
