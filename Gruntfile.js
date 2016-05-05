@@ -21,9 +21,10 @@ module.exports = function(grunt) {
             flatten: true,
             src: [
               'node_modules/bootstrap/dist/js/bootstrap.min.js',
-              'node_modules/video.js/dist/video.js',
-              'node_modules/video.js/dist/video.js.map',
-              'node_modules/dashjs/dist/dash.all.js',
+              'node_modules/video.js/dist/video.min.js',
+              'node_modules/video.js/dist/video.js.min.map',
+              'node_modules/dashjs/dist/dash.all.min.js',
+              'node_modules/dashjs/dist/dash.all.min.js.map',
               'node_modules/videojs-contrib-dash/dist/videojs-dash.min.js'
             ],
             dest: 'js/'
