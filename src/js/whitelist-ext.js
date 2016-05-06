@@ -98,9 +98,6 @@ var WhitelistPlugin = function () {
    * @return {number} - index of quality selected
    */
   function whitelistImplementer(current, proposed, streamProcessor) {
-    if(current === 0 || proposed === 0) {
-      return proposed;
-    }
     if (current === proposed) {
       return proposed;
     }
