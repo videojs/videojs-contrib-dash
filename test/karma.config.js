@@ -23,7 +23,7 @@ module.exports = function(config) {
     browserNoActivityTimeout: 300000,
 
     detectBrowsers: {
-      enabled: !process.env.BROWSER_STACK_USERNAME,
+      enabled: !(process.env.BROWSER_STACK_USERNAME || process.env.TRAVIS),
       usePhantomJS: false
     },
 
@@ -33,10 +33,9 @@ module.exports = function(config) {
       pollingTimeout: 30000
     },
 
-    browsers: [
-      'chrome_bs',
-      'firefox_bs'
-    ],
+    browsers: process.env.BROWSER_STACK_USERNAME ? ['chrome_bs', 'firefox_bs'] :
+              process.env.TRAVIS ? ['travisChrome'] :
+              ['Chrome'],
 
     customLaunchers: {
       chrome_bs: {
@@ -51,6 +50,11 @@ module.exports = function(config) {
         browser: 'firefox',
         os: 'Windows',
         os_version: '8.1'
+      },
+
+      travisChrome: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
       }
     }
   });
