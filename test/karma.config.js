@@ -6,11 +6,13 @@ module.exports = function(config) {
       'node_modules/video.js/dist/video-js.css',
       'node_modules/video.js/dist/video.js',
       'node_modules/dashjs/dist/dash.all.debug.js',
-      'dist/videojs-dash.js',
-      'test/integration.test.js',
+      'dist/videojs-dash.js'].concat(
+        (process.env.BROWSER_STACK_USERNAME || !process.env.TRAVIS) ?
+        ['test/integration.test.js'] : []
+        ).concat([
       'test/globals.test.js',
       'test/dashjs.test.js'
-    ],
+    ]),
 
     frameworks: ['qunit', 'detectBrowsers'],
 
