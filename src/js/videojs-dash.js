@@ -14,10 +14,10 @@ let
  */
 class Html5DashJS {
   constructor(source, tech) {
-	var
+    var
       options = tech.options_,
       player = videojs(options.playerId);
-	
+
     this.tech_ = tech;
     this.el_ = tech.el();
     this.elParent_ = this.el_.parentNode;

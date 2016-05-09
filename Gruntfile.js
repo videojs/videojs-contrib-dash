@@ -46,6 +46,19 @@ module.exports = function(grunt) {
         }
       }
     },
+    babel: {
+      dist: {
+        files: [{
+          expand: true,
+          src: ['src/js/*.js'],
+          dest: 'es5',
+          ext: '.js'
+        }],
+        options: {
+          presets: ['es2015']
+        }
+      }
+    },
     uglify: {
       dist: {
         src: [
@@ -83,6 +96,6 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('test', 'karma');
-  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'uglify', 'concat']);
+  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'babel', 'uglify', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };
