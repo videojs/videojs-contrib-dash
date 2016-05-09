@@ -48,6 +48,8 @@ var dashjs = require('dashjs');
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
+      videojs.log.warn('useVideoJSDebug has been deprecated.' +
+        ' Please switch to using beforeInitialize.');
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
 

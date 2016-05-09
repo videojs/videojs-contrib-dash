@@ -75,6 +75,12 @@ Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPla
 
 ```javascript
 videojs.Html5DashJS.beforeInitialize = function(player, mediaPlayer) {
-  // do something...
+  // Log MedaPlayer messages through video.js
+  if (videojs && videojs.log) {
+    mediaPlayer.getDebug().setLogToBrowserConsole(false);
+    mediaPlayer.on('log', function(event) {
+      videojs.log(event.message);
+    });
+  }
 };
 ```
