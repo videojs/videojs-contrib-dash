@@ -48,8 +48,14 @@
 
       expect(5);
 
+      el.setAttribute('id', 'test-vid');
+      parentEl.appendChild(el);
+      document.body.appendChild(parentEl);
+
       Html5 = videojs.getComponent('Html5');
-      tech = new Html5({});
+      tech = new Html5({
+        playerId: el.getAttribute('id')
+      });
       tech.el = function() { return el; };
       tech.triggerReady = function() { };
       parentEl.appendChild(el);
