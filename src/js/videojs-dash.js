@@ -14,9 +14,8 @@ let
  */
 class Html5DashJS {
   constructor(source, tech) {
-    var
-      options = tech.options_,
-      player = videojs(options.playerId);
+    let options = tech.options_;
+    let player = videojs(options.playerId);
 
     this.tech_ = tech;
     this.el_ = tech.el();
