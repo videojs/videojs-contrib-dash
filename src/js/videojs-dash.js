@@ -14,7 +14,10 @@ var dashjs = require('dashjs');
    * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
    */
   function Html5DashJS (source, tech) {
-    var manifestSource;
+    var
+      options = tech.options_,
+      player = videojs(options.playerId),
+      manifestSource;
 
     this.tech_ = tech;
     this.el_ = tech.el();
@@ -47,7 +50,13 @@ var dashjs = require('dashjs');
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
+      videojs.log.warn('useVideoJSDebug has been deprecated.' +
+        ' Please switch to using beforeInitialize.');
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
+    }
+
+    if (Html5DashJS.beforeInitialize) {
+      Html5DashJS.beforeInitialize(player, this.mediaPlayer_);
     }
 
     // Must run controller before these two lines or else there is no

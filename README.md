@@ -68,3 +68,19 @@ videojs.Html5DashJS.updateSourceData = function(source) {
   return source;
 };
 ```
+
+## Before Initialize Hook
+
+Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPlayer before it is initialized. For these cases we have a beforeInitialize hook. The method is passed the Video.js player instance and the instance of Dash.js' MediaPlayer we are using, before the media player is initialized.
+
+```javascript
+videojs.Html5DashJS.beforeInitialize = function(player, mediaPlayer) {
+  // Log MediaPlayer messages through video.js
+  if (videojs && videojs.log) {
+    mediaPlayer.getDebug().setLogToBrowserConsole(false);
+    mediaPlayer.on('log', function(event) {
+      videojs.log(event.message);
+    });
+  }
+};
+```
