@@ -1,23 +1,21 @@
-'use strict';
-var window_ = require('global/window');
-var videojs = require('video.js');
-var dashjs = require('dashjs');
+import window from 'global/window';
+import videojs from 'video.js';
+import dashjs from 'dashjs';
 
-  var
-    isArray = function(a) {
-      return Object.prototype.toString.call(a) === '[object Array]';
-    };
+let
+  isArray = function(a) {
+    return Object.prototype.toString.call(a) === '[object Array]';
+  };
 
-  /**
-   * videojs-contrib-dash
-   *
-   * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
-   */
-  function Html5DashJS (source, tech) {
-    var
-      options = tech.options_,
-      player = videojs(options.playerId),
-      manifestSource;
+/**
+ * videojs-contrib-dash
+ *
+ * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
+ */
+class Html5DashJS {
+  constructor(source, tech) {
+    let options = tech.options_;
+    let player = videojs(options.playerId);
 
     this.tech_ = tech;
     this.el_ = tech.el();
@@ -37,7 +35,7 @@ var dashjs = require('dashjs');
       source = Html5DashJS.updateSourceData(source);
     }
 
-    manifestSource = source.src;
+    let manifestSource = source.src;
     this.keySystemOptions_ = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
 
     // Save the context after the first initialization for subsequent instances
@@ -80,20 +78,16 @@ var dashjs = require('dashjs');
    *
    * Also rename 'licenseUrl' property in the options to an 'serverURL' property
    */
-  Html5DashJS.buildDashJSProtData = function (keySystemOptions) {
-    var
-      keySystem,
-      options,
-      i,
-      output = {};
+  static buildDashJSProtData(keySystemOptions) {
+    let output = {};
 
     if (!keySystemOptions || !isArray(keySystemOptions)) {
       return output;
     }
 
-    for (i = 0; i < keySystemOptions.length; i++) {
-      keySystem = keySystemOptions[i];
-      options = videojs.mergeOptions({}, keySystem.options);
+    for (let i = 0; i < keySystemOptions.length; i++) {
+      let keySystem = keySystemOptions[i];
+      let options = videojs.mergeOptions({}, keySystem.options);
 
       if (options.licenseUrl) {
         options.serverURL = options.licenseUrl;
@@ -104,51 +98,52 @@ var dashjs = require('dashjs');
     }
 
     return output;
-  };
+  }
 
-  Html5DashJS.prototype.dispose = function () {
+  dispose() {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.reset();
     }
-  };
+  }
+}
 
-  videojs.DashSourceHandler = function() {
-    return {
-      canHandleSource: function (source) {
-        var dashExtRE = /\.mpd/i;
+videojs.DashSourceHandler = function() {
+  return {
+    canHandleSource: function(source) {
+      let dashExtRE = /\.mpd/i;
 
-        if (videojs.DashSourceHandler.canPlayType(source.type)) {
-          return 'probably';
-        } else if (dashExtRE.test(source.src)){
-          return 'maybe';
-        } else {
-          return '';
-        }
-      },
-
-      handleSource: function (source, tech) {
-        return new Html5DashJS(source, tech);
-      },
-
-      canPlayType: function (type) {
-        return videojs.DashSourceHandler.canPlayType(type);
+      if (videojs.DashSourceHandler.canPlayType(source.type)) {
+        return 'probably';
+      } else if (dashExtRE.test(source.src)) {
+        return 'maybe';
+      } else {
+        return '';
       }
-    };
-  };
+    },
 
-  videojs.DashSourceHandler.canPlayType = function (type) {
-    var dashTypeRE = /^application\/dash\+xml/i;
-    if (dashTypeRE.test(type)) {
-      return 'probably';
+    handleSource: function(source, tech) {
+      return new Html5DashJS(source, tech);
+    },
+
+    canPlayType: function(type) {
+      return videojs.DashSourceHandler.canPlayType(type);
     }
-
-    return '';
   };
+};
 
-  // Only add the SourceHandler if the browser supports MediaSourceExtensions
-  if (!!window_.MediaSource) {
-    videojs.getComponent('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
+videojs.DashSourceHandler.canPlayType = function(type) {
+  let dashTypeRE = /^application\/dash\+xml/i;
+  if (dashTypeRE.test(type)) {
+    return 'probably';
   }
 
-  videojs.Html5DashJS = Html5DashJS;
-module.exports = Html5DashJS;
+  return '';
+};
+
+// Only add the SourceHandler if the browser supports MediaSourceExtensions
+if (!!window.MediaSource) {
+  videojs.getComponent('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
+}
+
+videojs.Html5DashJS = Html5DashJS;
+export default Html5DashJS;

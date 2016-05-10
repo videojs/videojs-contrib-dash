@@ -37,7 +37,25 @@ module.exports = function(grunt) {
           'tmp/videojs-dash.js': ['src/js/videojs-dash.js']
         },
         options: {
-          transform: ['browserify-shim']
+          transform: [
+            ['babelify', {
+              loose: 'all'
+            }],
+            'browserify-shim'
+          ]
+        }
+      }
+    },
+    babel: {
+      dist: {
+        files: [{
+          expand: true,
+          src: ['src/js/*.js'],
+          dest: 'es5',
+          ext: '.js'
+        }],
+        options: {
+          presets: ['es2015']
         }
       }
     },
@@ -78,6 +96,6 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('test', 'karma');
-  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'uglify', 'concat']);
+  grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'babel', 'uglify', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };
