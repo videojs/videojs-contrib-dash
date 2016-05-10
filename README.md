@@ -68,3 +68,29 @@ videojs.Html5DashJS.updateSourceData = function(source) {
   return source;
 };
 ```
+
+## Note on API methods below
+
+In the examples below, the tech is retrieved from the player by passing in { IWillNotUseThisInPlugins: true }. For more information on why this is required, please refer to [video.js issue 2617](https://github.com/videojs/video.js/issues/2617).
+
+## Setting the Buffer Time
+
+The buffer time value specifies how many seconds of video to keep in the video buffer.  This value can be set by using the `setBufferTime(seconds)` method on the `sourceHandler`.
+
+```
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
+sourceHandler.setBufferTime(5);
+```
+
+## Interacting with representations
+
+### Get all of the representations and enable/disable them
+
+To get all of the available representations, call the `representations()` method on the `sourceHandler`. This will return a list of plain objects, each with `width`, `height`, `bandwidth`, and `id` properties, and an `enabled()` method.
+
+```
+var sourceHandler = player.tech({ IWillNotUseThisInPlugins: true }).sourceHandler_;
+var representations = sourceHandler.representations();
+```
+
+To see whether the representation is enabled or disabled, call its `enabled()` method with no arguments. To set whether it is enabled/disabled, call its `enabled()` method and pass in a boolean value.

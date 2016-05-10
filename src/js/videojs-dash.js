@@ -2,11 +2,13 @@
 var window_ = require('global/window');
 var videojs = require('video.js');
 var dashjs = require('dashjs');
+var WhitelistPlugin = require('./whitelist-ext');
 
   var
     isArray = function(a) {
       return Object.prototype.toString.call(a) === '[object Array]';
-    };
+    },
+    whitelistPlugin = new WhitelistPlugin();
 
   /**
    * videojs-contrib-dash
@@ -14,7 +16,10 @@ var dashjs = require('dashjs');
    * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
    */
   function Html5DashJS (source, tech) {
-    var manifestSource;
+    var
+      options = tech.options_,
+      player = videojs(options.playerId),
+      manifestSource;
 
     this.tech_ = tech;
     this.el_ = tech.el();
@@ -43,10 +48,12 @@ var dashjs = require('dashjs');
     // But make a fresh MediaPlayer each time the sourceHandler is used
     this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
 
-    // Log MedaPlayer messages through video.js
+    // Log MediaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
+
+    whitelistPlugin.initialize(this.mediaPlayer_);
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
@@ -59,6 +66,11 @@ var dashjs = require('dashjs');
     // Attach the source with any protection data
     this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
     this.mediaPlayer_.attachSource(manifestSource);
+
+    player.dash = player.dash || {
+      representations: this.representations.bind(this),
+      setBufferTime: this.setBufferTime.bind(this)
+    };
 
     this.tech_.triggerReady();
   }
@@ -121,6 +133,59 @@ var dashjs = require('dashjs');
       this.mediaPlayer_.reset();
     }
     this.resetSrc_(function noop(){});
+  };
+
+  // Whitelist API
+
+  Html5DashJS.prototype.representations = function() {
+    var
+      currentVideoAdaptation = whitelistPlugin.getCurrentAdaptationFor('video'),
+      representations = currentVideoAdaptation.Representation;
+
+    this.enabledRepresentationIds = this.enabledRepresentationIds ||
+                                    representations.map(function(rep) {
+      return rep.id;
+    });
+
+    return representations.map(function(rep) {
+      return {
+        width: rep.width,
+        height: rep.height,
+        bandwidth: rep.bandwidth,
+        id: rep.id,
+        enabled: function(enable) {
+          var currentlyEnabled = this.enabledRepresentationIds.indexOf(rep.id) > -1;
+
+          if (enable === undefined) {
+            return currentlyEnabled;
+          }
+
+          if ((enable && currentlyEnabled) || (!enable && !currentlyEnabled)) {
+            return;
+          }
+
+          if (enable) {
+            this.enabledRepresentationIds.push(rep.id);
+          } else {
+            this.enabledRepresentationIds.splice(
+              this.enabledRepresentationIds.indexOf(rep.id), 1);
+          }
+
+          whitelistPlugin.setWhiteListRepresentations(currentVideoAdaptation,
+                                                      function(proposedRep) {
+            return this.enabledRepresentationIds.indexOf(proposedRep.id) > -1;
+          }.bind(this));
+        }.bind(this)
+      };
+    }.bind(this));
+  };
+
+  // Dash.js API
+
+  Html5DashJS.prototype.setBufferTime = function (seconds) {
+    this.mediaPlayer_.setStableBufferTime(seconds);
+    this.mediaPlayer_.setBufferTimeAtTopQuality(seconds);
+    this.mediaPlayer_.setBufferTimeAtTopQualityLongForm(seconds);
   };
 
   videojs.DashSourceHandler = function() {
