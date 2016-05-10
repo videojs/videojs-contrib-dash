@@ -40,8 +40,10 @@ var dashjs = require('dashjs');
     // Save the context after the first initialization for subsequent instances
     Html5DashJS.context_ = Html5DashJS.context_ || {};
 
-    // But make a fresh MediaPlayer each time the sourceHandler is used
-    this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
+    // reuse MediaPlayer if it already exists
+    if (!this.mediaPlayer_) {
+      this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
+    }
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
@@ -95,32 +97,10 @@ var dashjs = require('dashjs');
     return output;
   };
 
-  /*
-   * Helper function to clear any EME keys that may have been set on the video element
-   *
-   * The MediaKeys has to be explicitly set to null before any DRM content can be loaded into
-   * a video element that already contained DRM content.
-   */
-  Html5DashJS.prototype.resetSrc_ = function (callback) {
-    // In Chrome, MediaKeys can NOT be changed when a src is loaded in the video element
-    // Dash.js has a bug where it doesn't correctly reset the data so we do it manually
-    // The order of these two lines is important. The video element's src must be reset
-    // to allow `mediaKeys` to changed otherwise a DOMException is thrown.
-    if (this.el_) {
-      this.el_.src = '';
-      if (this.el_.setMediaKeys) {
-        this.el_.setMediaKeys(null).then(callback, callback);
-      } else {
-        callback();
-      }
-    }
-  };
-
   Html5DashJS.prototype.dispose = function () {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.reset();
     }
-    this.resetSrc_(function noop(){});
   };
 
   videojs.DashSourceHandler = function() {
