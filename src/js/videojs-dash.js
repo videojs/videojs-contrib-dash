@@ -13,8 +13,10 @@ let
  * Use Dash.js to playback DASH content inside of Video.js via a SourceHandler
  */
 class Html5DashJS {
-  constructor(source, tech) {
-    let options = tech.options_;
+  constructor(source, tech, options) {
+    // Get options from tech if not provided for backwards compatibility
+    options = options || tech.options_;
+
     let player = videojs(options.playerId);
 
     this.tech_ = tech;
@@ -60,6 +62,14 @@ class Html5DashJS {
     // Must run controller before these two lines or else there is no
     // element to bind to.
     this.mediaPlayer_.initialize();
+    
+    // Apply any options that are set
+    if (options.dash && options.dash.limit_bitrate_by_portal) {
+      this.mediaPlayer_.setLimitBitrateByPortal(true);
+    } else {
+      this.mediaPlayer_.setLimitBitrateByPortal(false);
+    }
+    
     this.mediaPlayer_.attachView(this.el_);
 
     // Dash.js autoplays by default, video.js will handle autoplay
@@ -121,8 +131,8 @@ videojs.DashSourceHandler = function() {
       }
     },
 
-    handleSource: function(source, tech) {
-      return new Html5DashJS(source, tech);
+    handleSource: function(source, tech, options) {
+      return new Html5DashJS(source, tech, options);
     },
 
     canPlayType: function(type) {

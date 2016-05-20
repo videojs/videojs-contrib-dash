@@ -30,7 +30,13 @@
     videoEl.className = 'video-js vjs-default-skin';
     fixture.appendChild(videoEl);
 
-    var player = videojs('vid');
+    var player = videojs('vid', {
+      html5: {
+        dash: {
+          limit_bitrate_by_portal: true
+        }
+      }
+    });
 
     player.ready(function() {
       player.src({

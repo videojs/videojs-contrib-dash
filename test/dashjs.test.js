@@ -31,22 +31,28 @@
       src: 'movie.mpd',
       type: 'application/dash+xml'
     },
-    testHandleSource = function (source, expectedKeySystemOptions) {
+    testHandleSource = function (source, expectedKeySystemOptions, limitBitrateByPortal) {
       var
         startupCalled = false,
         attachViewCalled = false,
         resetSrcCalled = false,
+        setLimitBitrateByPortalCalled = false,
+        setLimitBitrateByPortalValue = null,
         el = document.createElement('div'),
         parentEl = document.createElement('div'),
         Html5,
         tech,
+        options,
 
         //stubs
         origMediaPlayer = dashjs.MediaPlayer,
         origVJSXHR = videojs.xhr,
         origResetSrc = videojs.Html5DashJS.prototype.resetSrc_;
 
-      expect(5);
+      expect(7);
+      
+      // Default limitBitrateByPortal to false
+      limitBitrateByPortal = limitBitrateByPortal || false;
 
       el.setAttribute('id', 'test-vid');
       parentEl.appendChild(el);
@@ -56,6 +62,12 @@
       tech = new Html5({
         playerId: el.getAttribute('id')
       });
+      options = {
+        playerId: el.getAttribute('id'),
+        dash: {
+          limit_bitrate_by_portal: limitBitrateByPortal
+        }
+      };
       tech.el = function() { return el; };
       tech.triggerReady = function() { };
       parentEl.appendChild(el);
@@ -81,6 +93,10 @@
               attachSource: function (manifest) {
                 deepEqual(manifest, source.src, 'manifest url is sent to attachSource');
 
+                strictEqual(setLimitBitrateByPortalCalled, true,
+                    'MediaPlayer.setLimitBitrateByPortal was called');
+                strictEqual(setLimitBitrateByPortalValue, limitBitrateByPortal,
+                    'MediaPlayer.setLimitBitrateByPortal was called with the correct value');
                 strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
                 strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
 
@@ -90,6 +106,11 @@
                 dashjs.MediaPlayer = origMediaPlayer;
                 videojs.xhr = origVJSXHR;
                 videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
+              },
+
+              setLimitBitrateByPortal: function (value) {
+                setLimitBitrateByPortalCalled = true;
+                setLimitBitrateByPortalValue = value;
               }
             };
           }
@@ -103,7 +124,7 @@
       };
 
       var dashSourceHandler = Html5.selectSourceHandler(source);
-      dashSourceHandler.handleSource(source, tech);
+      dashSourceHandler.handleSource(source, tech, options);
     };
 
   qunit.module('videojs-dash dash.js SourceHandler', {
@@ -157,13 +178,24 @@
 
   test('validate handleSource function with src-provided key options', function() {
     var mergedKeySystemOptions = {
-        'com.widevine.alpha': {
-          extra: 'data',
-          serverURL:'https://example.com/license'
-        }
-      };
+      'com.widevine.alpha': {
+        extra: 'data',
+        serverURL:'https://example.com/license'
+      }
+    };
 
     testHandleSource(sampleSrc, mergedKeySystemOptions);
+  });
+
+  test('validate handleSource function with "limit bitrate by portal" option', function() {
+    var mergedKeySystemOptions = {
+      'com.widevine.alpha': {
+        extra: 'data',
+        serverURL:'https://example.com/license'
+      }
+    };
+
+    testHandleSource(sampleSrc, mergedKeySystemOptions, true);
   });
 
   test('validate handleSource function with invalid manifest', function() {
