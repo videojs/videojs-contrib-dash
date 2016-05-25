@@ -73,7 +73,7 @@ videojs.Html5DashJS.updateSourceData = function(source) {
 
 It is possible to pass options to Dash.js during initialiation of video.js. The following options are currently supported:
 
-* `limit_bitrate_by_portal` (defaults to `false`): if set to `true`, Dash.js will not request video tracks which are bigger than the video element.
+* `limitBitrateByPortal` (defaults to `false`): if set to `true`, Dash.js will not request video tracks which are bigger than the video element.
 
 To set these options, pass them in the `html5.dash` object of video.js during initialization.
 
@@ -83,7 +83,7 @@ For example:
 var player = videojs('example-video', {
   html5: {
     dash: {
-      limit_bitrate_by_portal: true
+      limitBitrateByPortal: true
     }
   }
 });

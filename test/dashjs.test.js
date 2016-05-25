@@ -65,7 +65,7 @@
       options = {
         playerId: el.getAttribute('id'),
         dash: {
-          limit_bitrate_by_portal: limitBitrateByPortal
+          limitBitrateByPortal: limitBitrateByPortal
         }
       };
       tech.el = function() { return el; };

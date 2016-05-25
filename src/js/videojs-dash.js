@@ -64,7 +64,7 @@ class Html5DashJS {
     this.mediaPlayer_.initialize();
     
     // Apply any options that are set
-    if (options.dash && options.dash.limit_bitrate_by_portal) {
+    if (options.dash && options.dash.limitBitrateByPortal) {
       this.mediaPlayer_.setLimitBitrateByPortal(true);
     } else {
       this.mediaPlayer_.setLimitBitrateByPortal(false);
