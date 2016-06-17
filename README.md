@@ -67,6 +67,26 @@ videojs.Html5DashJS.updateSourceData = function(source) {
 };
 ```
 
+## Passing options to Dash.js
+
+It is possible to pass options to Dash.js during initialiation of video.js. The following options are currently supported:
+
+* `limitBitrateByPortal` (defaults to `false`): if set to `true`, Dash.js will not request video tracks which are bigger than the video element.
+
+To set these options, pass them in the `html5.dash` object of video.js during initialization.
+
+For example:
+
+```javascript
+var player = videojs('example-video', {
+  html5: {
+    dash: {
+      limitBitrateByPortal: true
+    }
+  }
+});
+```
+
 ## Before Initialize Hook
 
 Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPlayer before it is initialized. For these cases we have a beforeInitialize hook. The method is passed the Video.js player instance and the instance of Dash.js' MediaPlayer we are using, before the media player is initialized.
