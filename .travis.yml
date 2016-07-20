@@ -5,6 +5,7 @@ node_js:
   - '0.10'
 
 addons:
+  firefox: latest
   apt:
     sources:
       - google-chrome
