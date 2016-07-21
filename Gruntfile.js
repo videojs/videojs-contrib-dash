@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     browserify: {
       dist: {
         files: {
-          'tmp/videojs-dash.js': ['dist/es5/videojs-dash.js']
+          'tmp/videojs-dash.js': ['es5/videojs-dash.js']
         },
         options: {
           transform: [
@@ -49,7 +49,7 @@ module.exports = function(grunt) {
           cwd: 'src/js',
           expand: true,
           src: ['*.js'],
-          dest: 'dist/es5',
+          dest: 'es5',
           ext: '.js'
         }],
         options: {
