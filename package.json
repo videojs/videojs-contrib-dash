@@ -29,7 +29,7 @@
     "video.js": "global:videojs"
   },
   "dependencies": {
-    "dashjs": "Dash-Industry-Forum/dash.js#v2.1.1",
+    "dashjs": "^2.2.0",
     "global": "^4.3.0",
     "video.js": "^5.0.0"
   },
