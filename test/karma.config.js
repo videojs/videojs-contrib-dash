@@ -22,7 +22,7 @@ module.exports = function(config) {
 
     browserNoActivityTimeout: 300000,
 
-    browsers: process.env.TRAVIS ? ['travisChrome', 'Firefox'] : ['Chrome', 'Firefox'],
+    browsers: process.env.TRAVIS ? ['travisChrome'] : ['Chrome', 'Firefox'],
 
     customLaunchers: {
       travisChrome: {
