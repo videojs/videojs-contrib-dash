@@ -12,6 +12,7 @@
   },
   "scripts": {
     "test": "grunt",
+    "build": "grunt build",
     "prepublish": "grunt build"
   },
   "keywords": [
