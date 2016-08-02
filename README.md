@@ -9,11 +9,7 @@ A video.js source handler for supporting MPEG-DASH playback through a video.js p
 Download [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/releases) and [videojs-contrib-dash](https://github.com/videojs/videojs-contrib-dash/releases). Include them both in your web page along with video.js:
 
 ```html
-<video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls>
-  <source
-     src="https://example.com/dash.mpd"
-     type="application/dash+xml">
-</video>
+<video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls></video>
 <script src="video.js"></script>
 
 <!-- Dash.js -->
@@ -24,7 +20,15 @@ Download [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/releases) and 
 
 <script>
 var player = videojs('example-video');
-player.play();
+
+player.ready(function() {
+  player.src({
+    src: 'https://example.com/dash.mpd',
+    type: 'application/dash+xml'
+  });
+
+  player.play();
+});
 </script>
 ```
 

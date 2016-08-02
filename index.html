@@ -12,25 +12,13 @@
 </head>
 
 <body>
+  <video id="player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
   <script src="node_modules/video.js/dist/video.js"></script>
   <script src="node_modules/dashjs/dist/dash.all.debug.js"></script>
   <script src="dist/videojs-dash.js"></script>
 
   <script>
-    var fixture;
-    fixture = document.createElement('div');
-    fixture.id = 'fixture';
-    document.body.appendChild(this.fixture);
-
-    var videoEl = document.createElement('video');
-    videoEl.id = 'vid';
-    videoEl.setAttribute('controls', '');
-    videoEl.setAttribute('width', '600');
-    videoEl.setAttribute('height', '300');
-    videoEl.className = 'video-js vjs-default-skin';
-    fixture.appendChild(videoEl);
-
-    var player = videojs('vid', {
+    var player = videojs('player', {
       html5: {
         dash: {
           limitBitrateByPortal: true
