@@ -62,14 +62,14 @@ class Html5DashJS {
     // Must run controller before these two lines or else there is no
     // element to bind to.
     this.mediaPlayer_.initialize();
-    
+
     // Apply any options that are set
     if (options.dash && options.dash.limitBitrateByPortal) {
       this.mediaPlayer_.setLimitBitrateByPortal(true);
     } else {
       this.mediaPlayer_.setLimitBitrateByPortal(false);
     }
-    
+
     this.mediaPlayer_.attachView(this.el_);
 
     // Dash.js autoplays by default, video.js will handle autoplay
