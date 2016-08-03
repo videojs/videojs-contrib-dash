@@ -18,6 +18,7 @@ class Html5DashJS {
     options = options || tech.options_;
 
     let player = videojs(options.playerId);
+    player.dash = player.dash || {};
 
     this.tech_ = tech;
     this.el_ = tech.el();
@@ -40,13 +41,9 @@ class Html5DashJS {
     let manifestSource = source.src;
     this.keySystemOptions_ = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
 
-    // Save the context after the first initialization for subsequent instances
-    Html5DashJS.context_ = Html5DashJS.context_ || {};
+    player.dash.mediaPlayer = dashjs.MediaPlayer().create();
 
-    // reuse MediaPlayer if it already exists
-    if (!this.mediaPlayer_) {
-      this.mediaPlayer_ = dashjs.MediaPlayer(Html5DashJS.context_).create();
-    }
+    this.mediaPlayer_ = player.dash.mediaPlayer;
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
