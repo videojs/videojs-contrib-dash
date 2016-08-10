@@ -1,4 +1,6 @@
 (function(videojs, q) {
+  'use strict';
+
   var when = function(element, type, fn, condition) {
     var func = function() {
       if (condition()) {

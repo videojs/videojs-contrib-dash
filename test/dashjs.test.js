@@ -1,37 +1,23 @@
-(function(window, videojs, dashjs, qunit) {
+(function(window, videojs, dashjs, q) {
   'use strict';
 
   var
-    // local QUnit aliases
-    // http://api.qunitjs.com/
-
-    // test(name, callback)
-    test = qunit.test,
-    // ok(value, [message])
-    ok = qunit.ok,
-    // strictEqual(actual, expected, [message])
-    strictEqual = qunit.strictEqual,
-    // deepEqual(actual, expected, [message])
-    deepEqual = qunit.deepEqual,
-
     sampleSrc = {
       src: 'movie.mpd',
       type: 'application/dash+xml',
-      keySystemOptions: [
-        {
-          name: 'com.widevine.alpha',
-          options: {
-            extra: 'data',
-            licenseUrl: 'https://example.com/license'
-          }
+      keySystemOptions: [{
+        name: 'com.widevine.alpha',
+        options: {
+          extra: 'data',
+          licenseUrl: 'https://example.com/license'
         }
-      ]
+      }]
     },
     sampleSrcNoDRM = {
       src: 'movie.mpd',
       type: 'application/dash+xml'
     },
-    testHandleSource = function (source, expectedKeySystemOptions, limitBitrateByPortal) {
+    testHandleSource = function(assert, source, expectedKeySystemOptions, limitBitrateByPortal) {
       var
         startupCalled = false,
         attachViewCalled = false,
@@ -49,8 +35,8 @@
         origVJSXHR = videojs.xhr,
         origResetSrc = videojs.Html5DashJS.prototype.resetSrc_;
 
-      expect(7);
-      
+      assert.expect(7);
+
       // Default limitBitrateByPortal to false
       limitBitrateByPortal = limitBitrateByPortal || false;
 
@@ -68,37 +54,39 @@
           limitBitrateByPortal: limitBitrateByPortal
         }
       };
-      tech.el = function() { return el; };
-      tech.triggerReady = function() { };
+      tech.el = function() {
+        return el;
+      };
+      tech.triggerReady = function() {};
       parentEl.appendChild(el);
 
-      dashjs.MediaPlayer = function () {
+      dashjs.MediaPlayer = function() {
         return {
-          create: function () {
+          create: function() {
             return {
-              initialize: function () {
+              initialize: function() {
                 startupCalled = true;
               },
 
-              attachView: function () {
+              attachView: function() {
                 attachViewCalled = true;
               },
-              setAutoPlay: function (autoplay) {
-                strictEqual(autoplay, false, 'autoplay is set to false by default');
+              setAutoPlay: function(autoplay) {
+                assert.strictEqual(autoplay, false, 'autoplay is set to false by default');
               },
-              setProtectionData: function (keySystemOptions) {
-                deepEqual(keySystemOptions, expectedKeySystemOptions,
+              setProtectionData: function(keySystemOptions) {
+                assert.deepEqual(keySystemOptions, expectedKeySystemOptions,
                   'src and manifest key system options are merged');
               },
-              attachSource: function (manifest) {
-                deepEqual(manifest, source.src, 'manifest url is sent to attachSource');
+              attachSource: function(manifest) {
+                assert.deepEqual(manifest, source.src, 'manifest url is sent to attachSource');
 
-                strictEqual(setLimitBitrateByPortalCalled, true,
-                    'MediaPlayer.setLimitBitrateByPortal was called');
-                strictEqual(setLimitBitrateByPortalValue, limitBitrateByPortal,
-                    'MediaPlayer.setLimitBitrateByPortal was called with the correct value');
-                strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
-                strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
+                assert.strictEqual(setLimitBitrateByPortalCalled, true,
+                  'MediaPlayer.setLimitBitrateByPortal was called');
+                assert.strictEqual(setLimitBitrateByPortalValue, limitBitrateByPortal,
+                  'MediaPlayer.setLimitBitrateByPortal was called with the correct value');
+                assert.strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
+                assert.strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
 
                 tech.dispose();
 
@@ -108,7 +96,7 @@
                 videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
               },
 
-              setLimitBitrateByPortal: function (value) {
+              setLimitBitrateByPortal: function(value) {
                 setLimitBitrateByPortalCalled = true;
                 setLimitBitrateByPortalValue = value;
               }
@@ -118,7 +106,7 @@
       };
 
       // We have to override this because PhantomJS does not have Encrypted Media Extensions
-      videojs.Html5DashJS.prototype.resetSrc_ = function (fn) {
+      videojs.Html5DashJS.prototype.resetSrc_ = function(fn) {
         resetSrcCalled = true;
         return fn();
       };
@@ -127,101 +115,98 @@
       dashSourceHandler.handleSource(source, tech, options);
     };
 
-  qunit.module('videojs-dash dash.js SourceHandler', {
-    setup: function() {
-
-    },
-    teardown: function() {
+  q.module('videojs-dash dash.js SourceHandler', {
+    afterEach: function() {
       videojs.Html5DashJS.updateSourceData = undefined;
     }
   });
 
-  test('validate the Dash.js SourceHandler in Html5', function() {
+  q.test('validate the Dash.js SourceHandler in Html5', function(assert) {
     var dashSource = {
-      src:'some.mpd',
-      type:'application/dash+xml'
-    },
-    maybeDashSource = {
-      src:'some.mpd'
-    },
-    nonDashSource = {
-      src:'some.mp4',
-      type:'video/mp4'
-    };
+        src: 'some.mpd',
+        type: 'application/dash+xml'
+      },
+      maybeDashSource = {
+        src: 'some.mpd'
+      },
+      nonDashSource = {
+        src: 'some.mp4',
+        type: 'video/mp4'
+      };
 
     var dashSourceHandler = videojs.getComponent('Html5').selectSourceHandler(dashSource);
 
-    ok(dashSourceHandler, 'A DASH handler was found');
+    assert.ok(dashSourceHandler, 'A DASH handler was found');
 
-    strictEqual(dashSourceHandler.canHandleSource(dashSource), 'probably',
+    assert.strictEqual(dashSourceHandler.canHandleSource(dashSource), 'probably',
       'canHandleSource with proper mime-type returns "probably"');
-    strictEqual(dashSourceHandler.canHandleSource(maybeDashSource), 'maybe',
+    assert.strictEqual(dashSourceHandler.canHandleSource(maybeDashSource), 'maybe',
       'canHandleSource with expected extension returns "maybe"');
-    strictEqual(dashSourceHandler.canHandleSource(nonDashSource), '',
+    assert.strictEqual(dashSourceHandler.canHandleSource(nonDashSource), '',
       'canHandleSource with anything else returns ""');
 
-    strictEqual(dashSourceHandler.canPlayType(dashSource.type), 'probably',
+    assert.strictEqual(dashSourceHandler.canPlayType(dashSource.type), 'probably',
       'canPlayType with proper mime-type returns "probably"');
-    strictEqual(dashSourceHandler.canPlayType(nonDashSource.type), '',
+    assert.strictEqual(dashSourceHandler.canPlayType(nonDashSource.type), '',
       'canPlayType with anything else returns ""');
   });
 
-  test('validate buildDashJSProtData function', function() {
+  q.test('validate buildDashJSProtData function', function(assert) {
     var output = videojs.Html5DashJS.buildDashJSProtData(sampleSrc.keySystemOptions);
 
     var empty = videojs.Html5DashJS.buildDashJSProtData(undefined);
 
-    strictEqual(output['com.widevine.alpha'].serverURL, 'https://example.com/license',
+    assert.strictEqual(output['com.widevine.alpha'].serverURL, 'https://example.com/license',
       'licenceUrl converted to serverURL');
-    deepEqual(empty, {}, 'undefined keySystemOptions returns empty object');
+    assert.deepEqual(empty, {}, 'undefined keySystemOptions returns empty object');
   });
 
-  test('validate handleSource function with src-provided key options', function() {
+  q.test('validate handleSource function with src-provided key options', function(assert) {
     var mergedKeySystemOptions = {
       'com.widevine.alpha': {
         extra: 'data',
-        serverURL:'https://example.com/license'
+        serverURL: 'https://example.com/license'
       }
     };
 
-    testHandleSource(sampleSrc, mergedKeySystemOptions);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions);
   });
 
-  test('validate handleSource function with "limit bitrate by portal" option', function() {
+  q.test('validate handleSource function with "limit bitrate by portal" option', function(assert) {
     var mergedKeySystemOptions = {
       'com.widevine.alpha': {
         extra: 'data',
-        serverURL:'https://example.com/license'
+        serverURL: 'https://example.com/license'
       }
     };
 
-    testHandleSource(sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
   });
 
-  test('validate handleSource function with invalid manifest', function() {
+  q.test('validate handleSource function with invalid manifest', function(assert) {
     var mergedKeySystemOptions = {};
 
-    testHandleSource(sampleSrcNoDRM, mergedKeySystemOptions);
+    testHandleSource(assert, sampleSrcNoDRM, mergedKeySystemOptions);
   });
 
-  test('update the source keySystemOptions', function() {
+  q.test('update the source keySystemOptions', function(assert) {
     var mergedKeySystemOptions = {
-        'com.widevine.alpha': {
-          serverURL:'https://example.com/anotherlicense'
-        }
+      'com.widevine.alpha': {
+        serverURL: 'https://example.com/anotherlicense'
+      }
     };
 
     videojs.Html5DashJS.updateSourceData = function(source) {
       source.keySystemOptions = [{
         name: 'com.widevine.alpha',
         options: {
-          serverURL:'https://example.com/anotherlicense'
+          serverURL: 'https://example.com/anotherlicense'
         }
       }];
       return source;
     };
 
-    testHandleSource(sampleSrc, mergedKeySystemOptions);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
