@@ -17,8 +17,8 @@ class Html5DashJS {
     // Get options from tech if not provided for backwards compatibility
     options = options || tech.options_;
 
-    let player = videojs(options.playerId);
-    player.dash = player.dash || {};
+    this.player = videojs(options.playerId);
+    this.player.dash = this.player.dash || {};
 
     this.tech_ = tech;
     this.el_ = tech.el();
@@ -41,9 +41,9 @@ class Html5DashJS {
     let manifestSource = source.src;
     this.keySystemOptions_ = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
 
-    player.dash.mediaPlayer = dashjs.MediaPlayer().create();
+    this.player.dash.mediaPlayer = dashjs.MediaPlayer().create();
 
-    this.mediaPlayer_ = player.dash.mediaPlayer;
+    this.mediaPlayer_ = this.player.dash.mediaPlayer;
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
@@ -53,7 +53,7 @@ class Html5DashJS {
     }
 
     if (Html5DashJS.beforeInitialize) {
-      Html5DashJS.beforeInitialize(player, this.mediaPlayer_);
+      Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
     // Must run controller before these two lines or else there is no
@@ -110,6 +110,10 @@ class Html5DashJS {
   dispose() {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.reset();
+    }
+
+    if (this.player.dash) {
+      delete this.player.dash;
     }
   }
 }
