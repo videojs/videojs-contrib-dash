@@ -5,6 +5,7 @@
 A video.js source handler for supporting MPEG-DASH playback through a video.js player on browsers with support for Media Source Extensions.
 
 Lead Maintainer: Joe Forbes [forbesjo](https://github.com/forbesjo)
+
 Maintenance Status: Stable
 
 ## Getting Started
