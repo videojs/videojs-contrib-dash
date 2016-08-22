@@ -4,6 +4,9 @@
 
 A video.js source handler for supporting MPEG-DASH playback through a video.js player on browsers with support for Media Source Extensions.
 
+Lead Maintainer: Joe Forbes [forbesjo](https://github.com/forbesjo)
+Maintenance Status: Stable
+
 ## Getting Started
 
 Download [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/releases) and [videojs-contrib-dash](https://github.com/videojs/videojs-contrib-dash/releases). Include them both in your web page along with video.js:
