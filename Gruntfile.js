@@ -37,9 +37,21 @@ module.exports = function(grunt) {
           'tmp/videojs-dash.js': ['es5/videojs-dash.js']
         },
         options: {
-          transform: [
-            'browserify-shim'
-          ]
+          transform: ['browserify-shim']
+        }
+      },
+      test: {
+        files: {
+          'tmp/browserify.test.js': ['test/browserify.test.js']
+        }
+      }
+    },
+    webpack: {
+      test: {
+        entry: './test/webpack.test.js',
+        output: {
+          path: 'tmp/',
+          filename: 'webpack.test.js'
         }
       }
     },
@@ -93,7 +105,7 @@ module.exports = function(grunt) {
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('test', 'karma');
-  grunt.registerTask('build', ['clean', 'jshint', 'babel', 'browserify', 'uglify', 'concat']);
+  grunt.registerTask('test', ['browserify:test', 'webpack:test', 'karma']);
+  grunt.registerTask('build', ['clean', 'jshint', 'babel', 'browserify:dist', 'uglify', 'concat']);
   grunt.registerTask('default', ['build', 'test']);
 };
