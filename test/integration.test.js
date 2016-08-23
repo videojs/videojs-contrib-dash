@@ -44,7 +44,6 @@
     },
     afterEach: function() {
       this.player.dispose();
-      this.fixture.innerHTML = '';
     }
   });
 

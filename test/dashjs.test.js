@@ -21,19 +21,17 @@
       var
         startupCalled = false,
         attachViewCalled = false,
-        resetSrcCalled = false,
         setLimitBitrateByPortalCalled = false,
         setLimitBitrateByPortalValue = null,
         el = document.createElement('div'),
-        parentEl = document.createElement('div'),
+        fixture = document.querySelector('#qunit-fixture'),
         Html5,
         tech,
         options,
 
         //stubs
         origMediaPlayer = dashjs.MediaPlayer,
-        origVJSXHR = videojs.xhr,
-        origResetSrc = videojs.Html5DashJS.prototype.resetSrc_;
+        origVJSXHR = videojs.xhr;
 
       assert.expect(7);
 
@@ -41,8 +39,7 @@
       limitBitrateByPortal = limitBitrateByPortal || false;
 
       el.setAttribute('id', 'test-vid');
-      parentEl.appendChild(el);
-      document.body.appendChild(parentEl);
+      fixture.appendChild(el);
 
       Html5 = videojs.getComponent('Html5');
       tech = new Html5({
@@ -54,11 +51,8 @@
           limitBitrateByPortal: limitBitrateByPortal
         }
       };
-      tech.el = function() {
-        return el;
-      };
-      tech.triggerReady = function() {};
-      parentEl.appendChild(el);
+      tech.el = function() { return el; };
+      tech.triggerReady = function() { };
 
       dashjs.MediaPlayer = function() {
         return {
@@ -93,7 +87,6 @@
                 // Restore
                 dashjs.MediaPlayer = origMediaPlayer;
                 videojs.xhr = origVJSXHR;
-                videojs.Html5DashJS.prototype.resetSrc_ = origResetSrc;
               },
 
               setLimitBitrateByPortal: function(value) {
@@ -103,12 +96,6 @@
             };
           }
         };
-      };
-
-      // We have to override this because PhantomJS does not have Encrypted Media Extensions
-      videojs.Html5DashJS.prototype.resetSrc_ = function(fn) {
-        resetSrcCalled = true;
-        return fn();
       };
 
       var dashSourceHandler = Html5.selectSourceHandler(source);
