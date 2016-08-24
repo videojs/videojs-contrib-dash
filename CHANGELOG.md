@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Expose mediaPlayer on player
+_(none)_
 
 --------------------
+
+## 2.5.0 (2016-08-24)
+* Expose mediaPlayer on player
 
 ## 2.4.0 (2016-07-07)
 * ES6 rewrite
