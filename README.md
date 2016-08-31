@@ -81,6 +81,8 @@ It is possible to pass options to Dash.js during initialiation of video.js. The 
 
 * `limitBitrateByPortal` (defaults to `false`): if set to `true`, Dash.js will not request video tracks which are bigger than the video element.
 
+* `hideCaptions` (defaults to `false`): if set to `true`, Dash.js will not show captions that are passed through by the manifest
+
 To set these options, pass them in the `html5.dash` object of video.js during initialization.
 
 For example:
