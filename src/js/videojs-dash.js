@@ -61,10 +61,19 @@ class Html5DashJS {
     this.mediaPlayer_.initialize();
 
     // Apply any options that are set
-    if (options.dash && options.dash.limitBitrateByPortal) {
-      this.mediaPlayer_.setLimitBitrateByPortal(true);
-    } else {
-      this.mediaPlayer_.setLimitBitrateByPortal(false);
+    if (options.dash) {
+      if (options.dash.limitBitrateByPortal) {
+        this.mediaPlayer_.setLimitBitrateByPortal(true);
+      } else {
+        this.mediaPlayer_.setLimitBitrateByPortal(false);
+      }
+      if (options.dash.hideCaptions) {
+        this.mediaPlayer_.on(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED,
+          function() {
+            this.mediaPlayer_.setTextTrack(-1);
+          }
+        );
+      }
     }
 
     this.mediaPlayer_.attachView(this.el_);
