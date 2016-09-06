@@ -9,8 +9,15 @@ module.exports = function(config) {
       'dist/videojs-dash.js',
       'test/integration.test.js',
       'test/globals.test.js',
-      'test/dashjs.test.js'
+      'test/dashjs.test.js',
+      'tmp/browserify.test.js',
+      'tmp/webpack.test.js'
     ],
+
+    browserConsoleLogOptions: {
+      level: 'error',
+      terminal: false
+    },
 
     frameworks: ['qunit'],
 

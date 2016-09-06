@@ -52,27 +52,13 @@
       done = assert.async(),
       player = this.player;
 
-    assert.expect(4);
+    assert.expect(2);
 
     when(player, 'timeupdate', function() {
       assert.ok(true, 'played for at least two seconds');
+      assert.equal(player.error(), null, 'has no player errors');
 
-      when(player, 'timeupdate', function() {
-        assert.ok(true, 'seeked to 15s');
-
-        when(player, 'timeupdate', function() {
-          assert.ok(!player.paused(), 'continued playing');
-          assert.equal(player.error(), null, 'has no player errors');
-
-          done();
-        }, function() {
-          return Math.floor(player.currentTime()) > 15;
-        });
-      }, function() {
-        return Math.floor(player.currentTime()) === 15;
-      });
-
-      player.currentTime(15);
+      done();
     }, function() {
       return player.currentTime() >= 2;
     });

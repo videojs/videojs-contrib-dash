@@ -25,12 +25,14 @@
   <div id="qunit-fixture"></div>
   <!-- Tests -->
   <script>
-    test('the environment is sane', function() {
-      ok(true, 'everything is swell');
+    QUnit.test('the environment is sane', function(assert) {
+      assert.ok(true, 'everything is swell');
     });
   </script>
   <script src="integration.test.js"></script>
   <script src="globals.test.js"></script>
   <script src="dashjs.test.js"></script>
+  <script src="../tmp/browserify.test.js"></script>
+  <script src="../tmp/webpack.test.js"></script>
 </body>
 </html>
