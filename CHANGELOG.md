@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Skip source if requestMediaKeySystemAccess isn't present for key system
+_(none)_
 
 --------------------
+
+## 2.5.1 (2016-09-09)
+* Skip source if requestMediaKeySystemAccess isn't present for key system
 
 ## 2.5.0 (2016-08-24)
 * Expose mediaPlayer on player
