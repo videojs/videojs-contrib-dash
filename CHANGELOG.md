@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Skip source if requestMediaKeySystemAccess isn't present for key system
 
 --------------------
 
