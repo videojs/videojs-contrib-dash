@@ -118,10 +118,30 @@ class Html5DashJS {
   }
 }
 
+const canHandleKeySystems = function(source) {
+  if (Html5DashJS.updateSourceData) {
+    source = Html5DashJS.updateSourceData(source);
+  }
+
+  let videoEl = document.createElement('video');
+  if (source.keySystemOptions &&
+    !(navigator.requestMediaKeySystemAccess ||
+      // IE11 Win 8.1
+      videoEl.msSetMediaKeys)) {
+    return false;
+  }
+
+  return true;
+};
+
 videojs.DashSourceHandler = function() {
   return {
     canHandleSource: function(source) {
       let dashExtRE = /\.mpd/i;
+
+      if (!canHandleKeySystems(source)) {
+        return '';
+      }
 
       if (videojs.DashSourceHandler.canPlayType(source.type)) {
         return 'probably';
