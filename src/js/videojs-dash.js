@@ -121,15 +121,7 @@ class Html5DashJS {
 videojs.DashSourceHandler = function() {
   return {
     canHandleSource: function(source) {
-      let dashExtRE = /\.mpd/i;
-
-      if (videojs.DashSourceHandler.canPlayType(source.type)) {
-        return 'probably';
-      } else if (dashExtRE.test(source.src)) {
-        return 'maybe';
-      } else {
-        return '';
-      }
+      return videojs.DashSourceHandler.canHandleSource(source);
     },
 
     handleSource: function(source, tech, options) {
@@ -149,6 +141,18 @@ videojs.DashSourceHandler.canPlayType = function(type) {
   }
 
   return '';
+};
+
+videojs.DashSourceHandler.canHandleSource = function(source) {
+  let dashExtRE = /\.mpd/i;
+
+  if (videojs.DashSourceHandler.canPlayType(source.type)) {
+    return 'probably';
+  } else if (dashExtRE.test(source.src)) {
+    return 'maybe';
+  } else {
+    return '';
+  }
 };
 
 // Only add the SourceHandler if the browser supports MediaSourceExtensions
