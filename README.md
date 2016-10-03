@@ -54,7 +54,7 @@ player.src({
     {
       name: 'com.widevine.alpha',
       options: {
-        licenseUrl: 'http://m.widevine.com/proxy'
+        serverURL: 'http://m.widevine.com/proxy'
       }
     }
   ]
