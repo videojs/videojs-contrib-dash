@@ -89,7 +89,7 @@ class Html5DashJS {
     let output = {};
 
     if (!keySystemOptions || !isArray(keySystemOptions)) {
-      return output;
+      return null;
     }
 
     for (let i = 0; i < keySystemOptions.length; i++) {

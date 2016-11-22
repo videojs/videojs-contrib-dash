@@ -145,7 +145,7 @@
 
     assert.strictEqual(output['com.widevine.alpha'].serverURL, 'https://example.com/license',
       'licenceUrl converted to serverURL');
-    assert.deepEqual(empty, {}, 'undefined keySystemOptions returns empty object');
+    assert.equal(empty, null, 'undefined keySystemOptions returns null');
   });
 
   q.test('validate handleSource function with src-provided key options', function(assert) {
@@ -171,7 +171,7 @@
   });
 
   q.test('validate handleSource function with invalid manifest', function(assert) {
-    var mergedKeySystemOptions = {};
+    var mergedKeySystemOptions = null;
 
     testHandleSource(assert, sampleSrcNoDRM, mergedKeySystemOptions);
   });
