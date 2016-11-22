@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 2.5.2 (2016-11-22)
+* Don't pass empty object for key systems.
+
 ## 2.5.1 (2016-09-09)
 * Skip source if requestMediaKeySystemAccess isn't present for key system
 
