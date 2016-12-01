@@ -115,8 +115,6 @@ class Html5DashJS {
     if (this.player.dash) {
       delete this.player.dash;
     }
-
-    Html5DashJS.beforeInitializeHooks_.length = 0;
   }
 
   /**
