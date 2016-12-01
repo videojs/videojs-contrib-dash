@@ -52,9 +52,9 @@ class Html5DashJS {
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
 
-    if (Html5DashJS.beforeInitialize) {
-      Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
-    }
+    Html5DashJS.beforeInitializeHooks_.forEach((hook) => {
+      hook(this.player, this.mediaPlayer_);
+    });
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
@@ -115,8 +115,28 @@ class Html5DashJS {
     if (this.player.dash) {
       delete this.player.dash;
     }
+
+    Html5DashJS.beforeInitializeHooks_.length = 0;
+  }
+
+  /**
+   * Registers a callback function to be called before the MediaPlayer is initialized.
+   * Does not register duplicates
+   *
+   * @param {Function} fn callback function to register
+   * @function beforeInitialize
+   */
+  static beforeInitialize(fn) {
+    const index = Html5DashJS.beforeInitializeHooks_.indexOf(fn);
+
+    if (index <= -1) {
+      // Only add callback if its not a duplicate
+      Html5DashJS.beforeInitializeHooks_.push(fn);
+    }
   }
 }
+
+Html5DashJS.beforeInitializeHooks_ = [];
 
 const canHandleKeySystems = function(source) {
   if (Html5DashJS.updateSourceData) {

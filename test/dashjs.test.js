@@ -105,6 +105,18 @@
   q.module('videojs-dash dash.js SourceHandler', {
     afterEach: function() {
       videojs.Html5DashJS.updateSourceData = undefined;
+      videojs.Html5DashJS.beforeInitializeHooks_.length = 0;
+      sampleSrc = {
+        src: 'movie.mpd',
+        type: 'application/dash+xml',
+        keySystemOptions: [{
+          name: 'com.widevine.alpha',
+          options: {
+            extra: 'data',
+            licenseUrl: 'https://example.com/license'
+          }
+        }]
+      };
     }
   });
 
@@ -194,6 +206,36 @@
     };
 
     testHandleSource(assert, sampleSrc, mergedKeySystemOptions);
+  });
+
+  q.test('registers beforeInitialize callbacks correctly', function(assert) {
+    var cb1Count = 0;
+    var cb2Count = 0;
+    var cb1 = function() {
+      cb1Count++;
+    };
+    var cb2 = function() {
+      cb2Count++;
+    };
+    var mergedKeySystemOptions = {
+      'com.widevine.alpha': {
+        extra: 'data',
+        serverURL: 'https://example.com/license'
+      }
+    };
+
+    videojs.Html5DashJS.beforeInitialize(cb1);
+    videojs.Html5DashJS.beforeInitialize(cb2);
+    videojs.Html5DashJS.beforeInitialize(cb1);
+
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+
+    assert.expect(9);
+
+    assert.equal(cb1Count, 1,
+      'did not register duplicate callback, only called once during initialization');
+    assert.equal(cb2Count, 1,
+      'registered second callback and called during initialization');
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
