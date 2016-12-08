@@ -95,9 +95,9 @@ var player = videojs('example-video', {
 });
 ```
 
-## Before Initialize Hook
+## Initialization Hook
 
-Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPlayer before it is initialized. For these cases we have a beforeInitialize hook. The method takes a callback that is passed the Video.js player instance and the instance of Dash.js' MediaPlayer we are using, before the media player is initialized.
+Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPlayer before it is initialized. For these cases we have an api `registerInitializationHook`. The method takes a callback that is passed the Video.js player instance and the instance of Dash.js' MediaPlayer we are using, before the media player is initialized.
 
 ```javascript
 var myCustomCallback = function(player, mediaPlayer) {
@@ -110,5 +110,5 @@ var myCustomCallback = function(player, mediaPlayer) {
   }
 };
 
-videojs.Html5DashJS.beforeInitialize(myCustomCallback);
+videojs.Html5DashJS.registerInitializationHook(myCustomCallback);
 ```

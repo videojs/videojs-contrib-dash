@@ -48,8 +48,14 @@ class Html5DashJS {
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       videojs.log.warn('useVideoJSDebug has been deprecated.' +
-        ' Please switch to using beforeInitialize.');
+        ' Please switch to using registerInitializationHook.');
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
+    }
+
+    if (Html5DashJS.beforeInitialize) {
+      videojs.log.warn('beforeInitialize has been deprecated.' +
+        ' Please switch to using registerInitializationHook.');
+      Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
     Html5DashJS.beforeInitializeHooks_.forEach((hook) => {
@@ -122,9 +128,9 @@ class Html5DashJS {
    * Does not register duplicates
    *
    * @param {Function} fn callback function to register
-   * @function beforeInitialize
+   * @function registerInitializationHook
    */
-  static beforeInitialize(fn) {
+  static registerInitializationHook(fn) {
     const index = Html5DashJS.beforeInitializeHooks_.indexOf(fn);
 
     if (index <= -1) {

@@ -208,7 +208,7 @@
     testHandleSource(assert, sampleSrc, mergedKeySystemOptions);
   });
 
-  q.test('registers beforeInitialize callbacks correctly', function(assert) {
+  q.test('registers registerInitializationHook callbacks correctly', function(assert) {
     var cb1Count = 0;
     var cb2Count = 0;
     var cb1 = function() {
@@ -224,9 +224,9 @@
       }
     };
 
-    videojs.Html5DashJS.beforeInitialize(cb1);
-    videojs.Html5DashJS.beforeInitialize(cb2);
-    videojs.Html5DashJS.beforeInitialize(cb1);
+    videojs.Html5DashJS.registerInitializationHook(cb1);
+    videojs.Html5DashJS.registerInitializationHook(cb2);
+    videojs.Html5DashJS.registerInitializationHook(cb1);
 
     testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
 
