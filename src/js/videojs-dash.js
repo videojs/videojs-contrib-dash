@@ -58,7 +58,7 @@ class Html5DashJS {
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
-    Html5DashJS.beforeInitializeHooks_.forEach((hook) => {
+    Html5DashJS.initializationHooks_.forEach((hook) => {
       hook(this.player, this.mediaPlayer_);
     });
 
@@ -127,20 +127,40 @@ class Html5DashJS {
    * Registers a callback function to be called before the MediaPlayer is initialized.
    * Does not register duplicates
    *
-   * @param {Function} fn callback function to register
+   * @param {Function} hook callback function to register
    * @function registerInitializationHook
    */
-  static registerInitializationHook(fn) {
-    const index = Html5DashJS.beforeInitializeHooks_.indexOf(fn);
+  static registerInitializationHook(hook) {
+    const index = Html5DashJS.initializationHooks_.indexOf(hook);
 
-    if (index <= -1) {
+    if (index === -1) {
       // Only add callback if its not a duplicate
-      Html5DashJS.beforeInitializeHooks_.push(fn);
+      Html5DashJS.initializationHooks_ = Html5DashJS.initializationHooks_.concat(hook);
     }
+  }
+
+  /**
+   * Removes a registered callback function from the initialization hooks.
+   *
+   * @param {Function} hook callback function to remove
+   * @return {boolean} true if removed, false if callback not registered
+   * @function removeInitializationHook
+   */
+  static removeInitializationHook(hook) {
+    const index = Html5DashJS.initializationHooks_.indexOf(hook);
+
+    if (index !== -1) {
+      Html5DashJS.initializationHooks_ = Html5DashJS.initializationHooks_.slice();
+      Html5DashJS.initializationHooks_.splice(index, 1);
+
+      return true;
+    }
+
+    return false;
   }
 }
 
-Html5DashJS.beforeInitializeHooks_ = [];
+Html5DashJS.initializationHooks_ = [];
 
 const canHandleKeySystems = function(source) {
   if (Html5DashJS.updateSourceData) {
