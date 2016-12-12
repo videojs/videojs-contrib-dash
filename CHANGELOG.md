@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 2.6.0 (2016-12-12)
+* Added initialization and update source hooks.
+
 ## 2.5.2 (2016-11-22)
 * Don't pass empty object for key systems.
 
