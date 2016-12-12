@@ -104,7 +104,18 @@
 
   q.module('videojs-dash dash.js SourceHandler', {
     afterEach: function() {
-      videojs.Html5DashJS.updateSourceData = undefined;
+      videojs.Html5DashJS.hooks_ = {};
+      sampleSrc = {
+        src: 'movie.mpd',
+        type: 'application/dash+xml',
+        keySystemOptions: [{
+          name: 'com.widevine.alpha',
+          options: {
+            extra: 'data',
+            licenseUrl: 'https://example.com/license'
+          }
+        }]
+      };
     }
   });
 
@@ -183,7 +194,7 @@
       }
     };
 
-    videojs.Html5DashJS.updateSourceData = function(source) {
+    var updateSourceData = function(source) {
       source.keySystemOptions = [{
         name: 'com.widevine.alpha',
         options: {
@@ -192,8 +203,93 @@
       }];
       return source;
     };
+    videojs.Html5DashJS.hook('updatesource', updateSourceData);
 
     testHandleSource(assert, sampleSrc, mergedKeySystemOptions);
+  });
+
+  q.test('registers hook callbacks correctly', function(assert) {
+    var cb1Count = 0;
+    var cb2Count = 0;
+    var cb1 = function(source) {
+      cb1Count++;
+      return source;
+    };
+    var cb2 = function() {
+      cb2Count++;
+    };
+    var mergedKeySystemOptions = {
+      'com.widevine.alpha': {
+        extra: 'data',
+        serverURL: 'https://example.com/license'
+      }
+    };
+
+    videojs.Html5DashJS.hook('updatesource', cb1);
+    videojs.Html5DashJS.hook('beforeinitialize', cb2);
+
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+
+    assert.expect(9);
+
+    assert.equal(cb1Count, 1,
+      'registered first callback and called');
+    assert.equal(cb2Count, 1,
+      'registered second callback and called');
+  });
+
+  q.test('removes callbacks with removeInitializationHook correctly', function(assert) {
+    var cb1Count = 0;
+    var cb2Count = 0;
+    var cb3Count = 0;
+    var cb4Count = 0;
+    var cb1 = function() {
+      cb1Count++;
+    };
+    var cb2 = function() {
+      cb2Count++;
+      assert.ok(videojs.Html5DashJS.removeHook('beforeinitialize', cb2),
+        'removed hook cb2');
+    };
+    var cb3 = function(source) {
+      cb3Count++;
+      return source;
+    };
+    var cb4 = function(source) {
+      cb4Count++;
+      return source;
+    };
+    var mergedKeySystemOptions = {
+      'com.widevine.alpha': {
+        extra: 'data',
+        serverURL: 'https://example.com/license'
+      }
+    };
+
+    videojs.Html5DashJS.hook('beforeinitialize', [cb1, cb2]);
+    videojs.Html5DashJS.hook('updatesource', [cb3, cb4]);
+
+    assert.equal(videojs.Html5DashJS.hooks('beforeinitialize').length, 2,
+      'added 2 hooks to beforeinitialize');
+    assert.equal(videojs.Html5DashJS.hooks('updatesource').length, 2,
+      'added 2 hooks to updatesource');
+
+    assert.ok(!videojs.Html5DashJS.removeHook('beforeinitialize', cb3),
+      'nothing removed if callback not found');
+    assert.ok(videojs.Html5DashJS.removeHook('updatesource', cb3), 'removed cb3');
+
+    assert.equal(videojs.Html5DashJS.hooks('updatesource').length, 1, 'removed hook cb3');
+
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+
+    assert.expect(18);
+
+    assert.equal(cb1Count, 1, 'called cb1');
+    assert.equal(cb2Count, 1, 'called cb2');
+    assert.equal(cb3Count, 0, 'did not call cb3');
+    assert.equal(cb4Count, 1, 'called cb4');
+    assert.equal(videojs.Html5DashJS.hooks('beforeinitialize').length, 1,
+      'cb2 removed itself');
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);

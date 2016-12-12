@@ -35,8 +35,15 @@ class Html5DashJS {
     tech.isReady_ = false;
 
     if (Html5DashJS.updateSourceData) {
+      videojs.log.warn('updateSourceData has been deprecated.' +
+        ' Please switch to using hook("updatesource", callback).');
       source = Html5DashJS.updateSourceData(source);
     }
+
+    // call updatesource hooks
+    Html5DashJS.hooks('updatesource').forEach((hook) => {
+      source = hook(source);
+    });
 
     let manifestSource = source.src;
     this.keySystemOptions_ = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
@@ -48,13 +55,19 @@ class Html5DashJS {
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       videojs.log.warn('useVideoJSDebug has been deprecated.' +
-        ' Please switch to using beforeInitialize.');
+        ' Please switch to using hook("beforeinitialize", callback).');
       Html5DashJS.useVideoJSDebug(this.mediaPlayer_);
     }
 
     if (Html5DashJS.beforeInitialize) {
+      videojs.log.warn('beforeInitialize has been deprecated.' +
+        ' Please switch to using hook("beforeinitialize", callback).');
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
+
+    Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
+      hook(this.player, this.mediaPlayer_);
+    });
 
     // Must run controller before these two lines or else there is no
     // element to bind to.
@@ -116,7 +129,59 @@ class Html5DashJS {
       delete this.player.dash;
     }
   }
+
+  /**
+   * Get a list of hooks for a specific lifecycle
+   *
+   * @param {string} type the lifecycle to get hooks from
+   * @param {Function=|Function[]=} hook Optionally add a hook tothe lifecycle
+   * @return {Array} an array of hooks or epty if none
+   * @method hooks
+   */
+  static hooks(type, hook) {
+    Html5DashJS.hooks_[type] = Html5DashJS.hooks_[type] || [];
+
+    if (hook) {
+      Html5DashJS.hooks_[type] = Html5DashJS.hooks_[type].concat(hook);
+    }
+
+    return Html5DashJS.hooks_[type];
+  }
+
+/**
+ * Add a function hook to a specific dash lifecycle
+ *
+ * @param {string} type the lifecycle to hook the function to
+ * @param {Function|Function[]} hook the function or array of functions to attach
+ * @method hook
+ */
+  static hook(type, hook) {
+    Html5DashJS.hooks(type, hook);
+  }
+
+  /**
+   * Remove a hook from a specific dash lifecycle.
+   *
+   * @param {string} type the lifecycle that the function hooked to
+   * @param {Function} hook The hooked function to remove
+   * @return {boolean} True if the function was removed, false if not found
+   * @method removeHook
+   */
+  static removeHook(type, hook) {
+    const index = Html5DashJS.hooks(type).indexOf(hook);
+
+    if (index === -1) {
+      return false;
+    }
+
+    Html5DashJS.hooks_[type] = Html5DashJS.hooks_[type].slice();
+    Html5DashJS.hooks_[type].splice(index, 1);
+
+    return true;
+  }
 }
+
+Html5DashJS.hooks_ = {};
 
 const canHandleKeySystems = function(source) {
   if (Html5DashJS.updateSourceData) {
