@@ -61,10 +61,10 @@ player.src({
 });
 ```
 
-You may also manipulate the source object by setting the `videojs.Html5DashJS.updateSourceData` function. This function takes a source object as an argument and should return a source object.
+You may also manipulate the source object by registering a function to the `updatesource` hook. Your function should take a source object as an argument and should return a source object.
 
 ```javascript
-videojs.Html5DashJS.updateSourceData = function(source) {
+var updateSourceData = function(source) {
   source.keySystemOptions = [{
     name: 'com.widevine.alpha',
     options: {
@@ -73,6 +73,8 @@ videojs.Html5DashJS.updateSourceData = function(source) {
   }];
   return source;
 };
+
+videojs.Html5DashJS.hook('updatesource', updateSourceData);
 ```
 
 ## Passing options to Dash.js
@@ -97,7 +99,11 @@ var player = videojs('example-video', {
 
 ## Initialization Hook
 
-Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPlayer before it is initialized. For these cases we have an api `registerInitializationHook`. The method takes a callback that is passed the Video.js player instance and the instance of Dash.js' MediaPlayer we are using, before the media player is initialized.
+Sometimes you may need to extend Dash.js, or have access to the Dash.js MediaPlayer before it is initialized. For these cases, you can register a function to the `beforeinitialize` hook, which will be called just before the Dash.js MediaPlayer is initialized.
+
+Your function should have two parameters:
+ 1. The video.js Player instance
+ 2. The Dash.js MediaPlayer instance
 
 ```javascript
 var myCustomCallback = function(player, mediaPlayer) {
@@ -110,5 +116,5 @@ var myCustomCallback = function(player, mediaPlayer) {
   }
 };
 
-videojs.Html5DashJS.registerInitializationHook(myCustomCallback);
+videojs.Html5DashJS.hook('beforeinitialize', myCustomCallback);
 ```
