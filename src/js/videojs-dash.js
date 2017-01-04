@@ -29,11 +29,6 @@ class Html5DashJS {
       return;
     }
 
-    // Replace the tech's duration method with our own so that it properly
-    // returns Infinity for live streams
-    this.tech_.duration_ = this.tech_.duration;
-    this.tech_.duration = this.duration.bind(this);
-
     // While the manifest is loading and Dash.js has not finished initializing
     // we must defer events and functions calls with isReady_ and then `triggerReady`
     // again later once everything is setup
@@ -136,7 +131,7 @@ class Html5DashJS {
   }
 
   duration() {
-    const duration = this.tech_.duration_();
+    const duration = this.el_.duration;
     if (duration === Number.MAX_VALUE) {
       return Infinity;
     }
