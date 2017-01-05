@@ -13,7 +13,7 @@ var when = function(element, type, fn, condition) {
   element.on(type, func);
 };
 
-q.module('Browserify Integration', {
+q.module('Webpack/Browserify Integration', {
   beforeEach: function(assert) {
     var
       done = assert.async(),
@@ -38,7 +38,7 @@ q.module('Browserify Integration', {
       player.one('loadstart', done);
 
       player.src({
-        src: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd',
+        src: 'http://dash.edgesuite.net/akamai/bbb_30fps/bbb_30fps.mpd',
         type: 'application/dash+xml'
       });
     });

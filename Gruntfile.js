@@ -42,13 +42,13 @@ module.exports = function(grunt) {
       },
       test: {
         files: {
-          'tmp/browserify.test.js': ['test/browserify.test.js']
+          'tmp/browserify.test.js': ['test/build.test.js']
         }
       }
     },
     webpack: {
       test: {
-        entry: './test/webpack.test.js',
+        entry: './test/build.test.js',
         output: {
           path: 'tmp/',
           filename: 'webpack.test.js'
