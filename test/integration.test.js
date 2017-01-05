@@ -37,7 +37,7 @@
         player.one('loadstart', done);
 
         player.src({
-          src: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd',
+          src: 'http://dash.edgesuite.net/akamai/bbb_30fps/bbb_30fps.mpd',
           type: 'application/dash+xml'
         });
       });
