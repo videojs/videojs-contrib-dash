@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 2.6.1 (2017-01-05)
+* Fixed Live display for live streams
+
 ## 2.6.0 (2016-12-12)
 * Added initialization and update source hooks.
 
