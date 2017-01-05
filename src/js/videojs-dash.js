@@ -130,6 +130,14 @@ class Html5DashJS {
     }
   }
 
+  duration() {
+    const duration = this.el_.duration;
+    if (duration === Number.MAX_VALUE) {
+      return Infinity;
+    }
+    return duration;
+  }
+
   /**
    * Get a list of hooks for a specific lifecycle
    *
