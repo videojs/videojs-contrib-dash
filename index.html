@@ -86,9 +86,6 @@
           -- Your video element. Just like regular HTML5 video.
           -->
         <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls>
-          <source
-             src="https://s3.amazonaws.com/_bc_dml/example-content/sintel_dash/sintel_vod.mpd"
-             type="application/dash+xml">
         </video>
 
       </section>
@@ -101,17 +98,15 @@
           and <a href="https://github.com/videojs/videojs-contrib-dash/releases/latest">videojs-contrib-dash</a>. Include
           them both in your web page along with video.js:
         </p>
-        <pre>&lt;video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls&gt;
-  &lt;source
-     src="https://example.com/dash.mpd"
-     type="application/dash+xml"&gt;
-&lt;/video&gt;
+        <pre>&lt;video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls&gt; &lt;/video&gt;
+
 &lt;script src="video.js"&gt;&lt;/script&gt;
 &lt;script src="dash.all.js"&gt;&lt;/script&gt;
 &lt;script src="videojs-dash.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
-var player = videojs('example-video');
-player.play();
+  var player = videojs('example-video');
+  player.src({ src: 'https://example.com/dash.mpd', type: 'application/dash+xml'});
+  player.play();
 &lt;/script&gt;</pre>
         <p>Or just check out the source of this page!</p>
       </section>
@@ -133,21 +128,25 @@ player.play();
       -- Make sure to include the video.js CSS. This could go in
       -- the <head>, too.
       -->
-    <link href="//vjs.zencdn.net/5.9/video-js.css" rel="stylesheet">
+    <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
 
     <!--
       -- Include video.js, dash.js, and
       -- videojs-contrib-dash in your page
       -->
-    <script src="//vjs.zencdn.net/5.9/video.js"></script>
+    <script src="https://unpkg.com/video.js/dist/video.js"></script>
     <script src="//cdn.dashjs.org/latest/dash.all.debug.js"></script>
-    <script src="https://npmcdn.com/videojs-contrib-dash@^2.4.0/dist/videojs-dash.js"></script>
+    <script src="https://unpkg.com/videojs-contrib-dash/dist/videojs-dash.js"></script>
 
     <!--
       -- Now, initialize your player. That's it!
       -->
     <script>
       var player = videojs('example-video');
+      player.src({
+        src: 'https://s3.amazonaws.com/_bc_dml/example-content/sintel_dash/sintel_vod.mpd',
+        type: 'application/dash+xml'
+      });
     </script>
   </body>
 </html>
