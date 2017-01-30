@@ -73,11 +73,18 @@ class Html5DashJS {
     // element to bind to.
     this.mediaPlayer_.initialize();
 
-    // Apply any options that are set
-    if (options.dash && options.dash.limitBitrateByPortal) {
-      this.mediaPlayer_.setLimitBitrateByPortal(true);
-    } else {
-      this.mediaPlayer_.setLimitBitrateByPortal(false);
+    // Apply all dash options that are set
+    if (options.dash) {
+      Object.keys(options.dash).forEach((key) => {
+        const dashOptionsKey = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
+        if (this.mediaPlayer_.hasOwnProperty(dashOptionsKey)) {
+          this.mediaPlayer_[dashOptionsKey](options.dash[key]);
+        } else {
+          this.mediaPlayer_.getDebug().log(
+            `Warning: dash configuration option unrecognized: ${key}`
+          );
+        }
+      });
     }
 
     this.mediaPlayer_.attachView(this.el_);
