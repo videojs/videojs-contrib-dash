@@ -92,11 +92,15 @@
               setLimitBitrateByPortal: function(value) {
                 setLimitBitrateByPortalCalled = true;
                 setLimitBitrateByPortalValue = value;
-              }
+              },
+
+              on: function() {}
             };
           }
         };
       };
+
+      dashjs.MediaPlayer.events = { ERROR: '' };
 
       var dashSourceHandler = Html5.selectSourceHandler(source);
       dashSourceHandler.handleSource(source, tech, options);

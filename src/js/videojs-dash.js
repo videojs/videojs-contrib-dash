@@ -80,6 +80,13 @@ class Html5DashJS {
       this.mediaPlayer_.setLimitBitrateByPortal(false);
     }
 
+    this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, function(event) {
+      this.tech_.error({
+        code: 0,
+        message: event.error,
+      });
+    }.bind(this));
+
     this.mediaPlayer_.attachView(this.el_);
 
     // Dash.js autoplays by default, video.js will handle autoplay
