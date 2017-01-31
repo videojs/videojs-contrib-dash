@@ -77,13 +77,31 @@ class Html5DashJS {
     if (options.dash) {
       Object.keys(options.dash).forEach((key) => {
         const dashOptionsKey = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
+        let value = options.dash[key];
+
         if (this.mediaPlayer_.hasOwnProperty(dashOptionsKey)) {
-          this.mediaPlayer_[dashOptionsKey](options.dash[key]);
-        } else {
-          this.mediaPlayer_.getDebug().log(
+          // Providing a key without `set` prefix is now deprecated.
+          videojs.log.warn(`Using dash options in videojs-contrib-dash without the set prefix ` +
+            `has been deprecated. Change '${key}' to '${dashOptionsKey}'`);
+
+          // Set key so it will still work
+          key = dashOptionsKey;
+        }
+
+        if (!this.mediaPlayer_.hasOwnProperty(key)) {
+          videojs.log.warn(
             `Warning: dash configuration option unrecognized: ${key}`
           );
+
+          return;
         }
+
+        // Guarantee `value` is an array
+        if (!isArray(value)) {
+          value = [value];
+        }
+
+        this.mediaPlayer_[key](...value);
       });
     }
 
