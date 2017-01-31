@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 2.7.0 (2017-01-30)
+* Support all dash.js configuration options
+
 ## 2.6.1 (2017-01-05)
 * Fixed Live display for live streams
 
