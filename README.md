@@ -80,6 +80,20 @@ var updateSourceData = function(source) {
 videojs.Html5DashJS.hook('updatesource', updateSourceData);
 ```
 
+## Captions
+
+As of `video.js@5.14`, native captions are no longer supported on any browser besides Safari. Dash can handle captions referenced embedded vtt files, embedded captions in the manifest, and with fragmented text streaming. It is impossible to use video.js captions when dash.js is using fragmented text captions, so the user must disable native captions when using `videojs-contrib-dash`.
+
+```javascript
+videojs('example-video', {
+  html5: {
+    nativeCaptions: false
+  }
+});
+```
+
+A warning will be logged if this setting is not applied.
+
 ## Passing options to Dash.js
 
 It is possible to pass options to Dash.js during initialiation of video.js. All methods in the [`Dash.js#MediaPlayer` docs](http://cdn.dashjs.org/latest/jsdoc/module-MediaPlayer.html) are supported.
