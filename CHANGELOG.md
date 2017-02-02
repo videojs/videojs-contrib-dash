@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 2.7.1 (2017-02-02)
+* Allow dash config object to accept setters with multiple args
+
 ## 2.7.0 (2017-01-30)
 * Support all dash.js configuration options
 
