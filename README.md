@@ -89,7 +89,7 @@ For example:
 var player = videojs('example-video', {
   html5: {
     dash: {
-      setLimitBitrateByPortal: true
+      setLimitBitrateByPortal: true,
       setMaxAllowedBitrateFor: ['video', 2000]
     }
   }
