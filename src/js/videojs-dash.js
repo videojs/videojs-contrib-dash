@@ -1,6 +1,7 @@
 import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
+import setupAudioTracks from './setup-audio-tracks';
 
 let
   isArray = function(a) {
@@ -109,6 +110,9 @@ class Html5DashJS {
 
     // Dash.js autoplays by default, video.js will handle autoplay
     this.mediaPlayer_.setAutoPlay(false);
+
+    // Setup audio tracks
+    setupAudioTracks.call(null, this.player, tech);
 
     // Attach the source with any protection data
     this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
