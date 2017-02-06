@@ -6,6 +6,10 @@ _(none)_
 
 --------------------
 
+## 2.8.0 (2017-02-02)
+* Add support for multiple audio tracks
+* Introduce videojs 6 forward compatibility while maintaining backward compatibility
+
 ## 2.7.1 (2017-02-02)
 * Allow dash config object to accept setters with multiple args
 
