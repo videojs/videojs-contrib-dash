@@ -275,7 +275,7 @@ videojs.DashSourceHandler.canPlayType = function(type) {
 
 // Only add the SourceHandler if the browser supports MediaSourceExtensions
 if (!!window.MediaSource) {
-  videojs.getComponent('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
+  videojs.getTech('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
 }
 
 videojs.Html5DashJS = Html5DashJS;
