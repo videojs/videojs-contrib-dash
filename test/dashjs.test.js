@@ -41,7 +41,7 @@
       el.setAttribute('id', 'test-vid');
       fixture.appendChild(el);
 
-      Html5 = videojs.getComponent('Html5');
+      Html5 = videojs.getTech('Html5');
       tech = new Html5({
         playerId: el.getAttribute('id')
       });
@@ -132,7 +132,7 @@
         type: 'video/mp4'
       };
 
-    var dashSourceHandler = videojs.getComponent('Html5').selectSourceHandler(dashSource);
+    var dashSourceHandler = videojs.getTech('Html5').selectSourceHandler(dashSource);
 
     assert.ok(dashSourceHandler, 'A DASH handler was found');
 
