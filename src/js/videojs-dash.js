@@ -222,8 +222,15 @@ Html5DashJS.hooks_ = {};
 
 const canHandleKeySystems = function(source) {
   if (Html5DashJS.updateSourceData) {
+    videojs.log.warn('updateSourceData has been deprecated.' +
+      ' Please switch to using hook("updatesource", callback).');
     source = Html5DashJS.updateSourceData(source);
   }
+
+  // call updatesource hooks
+  Html5DashJS.hooks('updatesource').forEach((hook) => {
+    source = hook(source);
+  });
 
   let videoEl = document.createElement('video');
   if (source.keySystemOptions &&

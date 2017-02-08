@@ -236,7 +236,7 @@
 
     assert.expect(9);
 
-    assert.equal(cb1Count, 1,
+    assert.equal(cb1Count, 2,
       'registered first callback and called');
     assert.equal(cb2Count, 1,
       'registered second callback and called');
@@ -291,7 +291,7 @@
     assert.equal(cb1Count, 1, 'called cb1');
     assert.equal(cb2Count, 1, 'called cb2');
     assert.equal(cb3Count, 0, 'did not call cb3');
-    assert.equal(cb4Count, 1, 'called cb4');
+    assert.equal(cb4Count, 2, 'called cb4');
     assert.equal(videojs.Html5DashJS.hooks('beforeinitialize').length, 1,
       'cb2 removed itself');
   });
