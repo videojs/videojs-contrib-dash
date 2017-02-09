@@ -221,6 +221,9 @@ class Html5DashJS {
 Html5DashJS.hooks_ = {};
 
 const canHandleKeySystems = function(source) {
+  // copy the source
+  source = JSON.parse(JSON.stringify(source));
+
   if (Html5DashJS.updateSourceData) {
     videojs.log.warn('updateSourceData has been deprecated.' +
       ' Please switch to using hook("updatesource", callback).');

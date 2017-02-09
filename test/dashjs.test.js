@@ -194,17 +194,22 @@
   q.test('update the source keySystemOptions', function(assert) {
     var mergedKeySystemOptions = {
       'com.widevine.alpha': {
+        extra: 'data',
+        serverURL: 'https://example.com/license'
+      },
+      'com.widevine.alpha1': {
         serverURL: 'https://example.com/anotherlicense'
       }
     };
 
     var updateSourceData = function(source) {
-      source.keySystemOptions = [{
-        name: 'com.widevine.alpha',
+      var numOfKeySystems = source.keySystemOptions.length;
+      source.keySystemOptions.push({
+        name: 'com.widevine.alpha' + numOfKeySystems,
         options: {
           serverURL: 'https://example.com/anotherlicense'
         }
-      }];
+      });
       return source;
     };
     videojs.Html5DashJS.hook('updatesource', updateSourceData);
