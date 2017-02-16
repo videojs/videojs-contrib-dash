@@ -1,8 +1,8 @@
 module.exports = function(config) {
 
-  // On Travis CI, we can only run in Firefox.
+  // On Travis CI, we can only run in Chrome.
   if (process.env.TRAVIS) {
-    config.browsers = ['travisChrome', 'Firefox'];
+    config.browsers = ['travisChrome'];
   }
 
   if (!config.browsers.length) {
@@ -40,9 +40,9 @@ module.exports = function(config) {
     browserDisconnectTolerance: 3,
     captureTimeout: 300000,
     browserNoActivityTimeout: 300000,
-    /*browserConsoleLogOptions: {
+    browserConsoleLogOptions: {
       level: 'error',
       terminal: false
-    }*/
+    }
   });
 };
