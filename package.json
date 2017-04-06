@@ -41,6 +41,7 @@
   ],
   "browserify-shim": {
     "dashjs": "global:dashjs",
+    "shaka-player": "global:shaka",
     "video.js": "global:videojs"
   },
   "files": [
@@ -56,7 +57,8 @@
   "dependencies": {
     "dashjs": "^2.2.0",
     "global": "^4.3.0",
-    "video.js": "^5.18.0"
+    "shaka-player": "2.0.7",
+    "video.js": "^5.0.0"
   },
   "devDependencies": {
     "babel": "^5.8.0",
