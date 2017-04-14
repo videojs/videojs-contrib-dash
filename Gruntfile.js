@@ -63,10 +63,7 @@ module.exports = function(grunt) {
           src: ['*.js'],
           dest: 'es5',
           ext: '.js'
-        }],
-        options: {
-          presets: ['es2015']
-        }
+        }]
       }
     },
     uglify: {
