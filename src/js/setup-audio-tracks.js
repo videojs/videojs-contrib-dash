@@ -47,7 +47,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
         enabled: dashTrack === currentAudioTrack,
         id: generateIdFromTrackIndex(dashTrack.index),
         kind: dashTrack.kind || 'main',
-        label: label,
+        label,
         language: dashTrack.lang,
       })
     );
