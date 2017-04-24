@@ -35,13 +35,19 @@ function handlePlaybackMetadataLoaded(player, tech) {
   const currentAudioTrack = mediaPlayer.getCurrentTrackFor('audio');
 
   dashAudioTracks.forEach((dashTrack) => {
+    let label = dashTrack.lang;
+
+    if (dashTrack.roles && dashTrack.roles.length) {
+      label += ` (${dashTrack.roles.join(', ')})`;
+    }
+
     // Add the track to the player's audio track list.
     videojsAudioTracks.addTrack(
       new videojs.AudioTrack({
         enabled: dashTrack === currentAudioTrack,
         id: generateIdFromTrackIndex(dashTrack.index),
         kind: dashTrack.kind || 'main',
-        label: dashTrack.lang,
+        label,
         language: dashTrack.lang,
       })
     );
