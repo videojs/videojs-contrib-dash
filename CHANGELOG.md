@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 2.8.2 (2017-04-26)
+* Show role in audio track label
+
 ## 2.8.1 (2017-02-09)
 * Call update source hook in canHandleSource
 
