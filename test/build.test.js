@@ -17,21 +17,17 @@ q.module('Webpack/Browserify Integration', {
   beforeEach: function(assert) {
     var
       done = assert.async(),
-      videoEl,
+      fixture = document.querySelector('#qunit-fixture'),
+      videoEl = document.createElement('video'),
       player;
 
-    this.fixture = document.createElement('div');
-    document.body.appendChild(this.fixture);
+    // show the fixture
+    fixture.style.top = 0;
+    fixture.style.left = 0;
 
-    videoEl = document.createElement('video');
-    videoEl.id = 'vid';
-    videoEl.setAttribute('controls', '');
-    videoEl.setAttribute('width', '600');
-    videoEl.setAttribute('height', '300');
-    videoEl.className = 'video-js vjs-default-skin';
-    this.fixture.appendChild(videoEl);
+    fixture.appendChild(videoEl);
 
-    player = videojs('vid');
+    player = videojs(videoEl);
     this.player = player;
 
     player.ready(function() {
@@ -45,7 +41,6 @@ q.module('Webpack/Browserify Integration', {
   },
   afterEach: function() {
     this.player.dispose();
-    this.fixture.innerHTML = '';
   }
 });
 

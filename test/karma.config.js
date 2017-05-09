@@ -18,6 +18,7 @@ module.exports = function(config) {
       'node_modules/video.js/dist/video.js',
       'node_modules/dashjs/dist/dash.all.debug.js',
       'dist/videojs-dash.js',
+      'node_modules/videojs-contrib-quality-levels/dist/videojs-contrib-quality-levels.js',
       'test/integration.test.js',
       'test/globals.test.js',
       'test/dashjs.test.js',

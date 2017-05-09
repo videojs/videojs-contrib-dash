@@ -94,7 +94,9 @@
                 setLimitBitrateByPortalValue = value;
               },
 
-              on: function() {}
+              on: function() {},
+
+              setFastSwitchEnabled: function() {}
             };
           }
         };

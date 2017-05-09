@@ -2,11 +2,8 @@ import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
-
-let
-  isArray = function(a) {
-    return Object.prototype.toString.call(a) === '[object Array]';
-  };
+import createRepresentations from './create-representations';
+import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -21,9 +18,7 @@ class Html5DashJS {
     this.player = videojs(options.playerId);
     this.player.dash = this.player.dash || {};
 
-    this.tech_ = tech;
     this.el_ = tech.el();
-    this.elParent_ = this.el_.parentNode;
 
     // Do nothing if the src is falsey
     if (!source.src) {
@@ -47,11 +42,14 @@ class Html5DashJS {
     });
 
     let manifestSource = source.src;
-    this.keySystemOptions_ = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
+    let keySystemOptions = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
 
     this.player.dash.mediaPlayer = dashjs.MediaPlayer().create();
 
     this.mediaPlayer_ = this.player.dash.mediaPlayer;
+
+    // enable for fast quality up-switch
+    this.mediaPlayer_.setFastSwitchEnabled(true);
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
@@ -65,6 +63,9 @@ class Html5DashJS {
         ' Please switch to using hook("beforeinitialize", callback).');
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
+
+    this.player.dash.representations = createRepresentations(this.mediaPlayer_);
+    setupQualityLevels(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
       hook(this.player, this.mediaPlayer_);
@@ -98,7 +99,7 @@ class Html5DashJS {
         }
 
         // Guarantee `value` is an array
-        if (!isArray(value)) {
+        if (!Array.isArray(value)) {
           value = [value];
         }
 
@@ -115,10 +116,10 @@ class Html5DashJS {
     setupAudioTracks.call(null, this.player, tech);
 
     // Attach the source with any protection data
-    this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
+    this.mediaPlayer_.setProtectionData(keySystemOptions);
     this.mediaPlayer_.attachSource(manifestSource);
 
-    this.tech_.triggerReady();
+    tech.triggerReady();
   }
 
   /*
@@ -130,7 +131,7 @@ class Html5DashJS {
   static buildDashJSProtData(keySystemOptions) {
     let output = {};
 
-    if (!keySystemOptions || !isArray(keySystemOptions)) {
+    if (!keySystemOptions || !Array.isArray(keySystemOptions)) {
       return null;
     }
 
@@ -156,6 +157,10 @@ class Html5DashJS {
 
     if (this.player.dash) {
       delete this.player.dash;
+    }
+
+    if (this.player.qualityLevels) {
+      this.player.qualityLevels().dispose();
     }
   }
 
@@ -185,13 +190,13 @@ class Html5DashJS {
     return Html5DashJS.hooks_[type];
   }
 
-/**
- * Add a function hook to a specific dash lifecycle
- *
- * @param {string} type the lifecycle to hook the function to
- * @param {Function|Function[]} hook the function or array of functions to attach
- * @method hook
- */
+  /**
+   * Add a function hook to a specific dash lifecycle
+   *
+   * @param {string} type the lifecycle to hook the function to
+   * @param {Function|Function[]} hook the function or array of functions to attach
+   * @method hook
+   */
   static hook(type, hook) {
     Html5DashJS.hooks(type, hook);
   }
