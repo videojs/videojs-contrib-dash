@@ -21,8 +21,8 @@ module.exports = function(config) {
       'test/integration.test.js',
       'test/globals.test.js',
       'test/dashjs.test.js',
-      'tmp/browserify.test.js',
-      'tmp/webpack.test.js'
+      'dist-test/browserify.test.js',
+      'dist-test/webpack.test.js'
     ],
     customLaunchers: {
       travisChrome: {
@@ -30,12 +30,12 @@ module.exports = function(config) {
         flags: ['--no-sandbox']
       }
     },
-    reporters: ['dots'],
+    reporters: ['spec'],
     port: 9876,
     colors: true,
     autoWatch: false,
     singleRun: true,
-    concurrency: Infinity,
+    concurrency: 1,
 
     browserDisconnectTolerance: 3,
     captureTimeout: 300000,
