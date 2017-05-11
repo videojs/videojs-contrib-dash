@@ -13,35 +13,104 @@
 
 <body>
   <video id="player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
-  <video id="live-player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
+  <label>Rendition: <select class="quality-switcher"></select> </label>
+  <form id=load-url>
+    <label> Video URL: <input id=url type=url value="http://dash.edgesuite.net/akamai/bbb_30fps/bbb_30fps.mpd"> </label> <br>
+    <label> Widevine License URL: <input id=wvServer type=url value=""> </label><br>
+    <label> PlayReady License URL: <input id=prServer type=url value=""> </label><br>
+    <button type=submit>Load</button>
+  </form>
+
   <script src="node_modules/video.js/dist/video.js"></script>
   <script src="node_modules/dashjs/dist/dash.all.debug.js"></script>
   <script src="dist/videojs-dash.js"></script>
 
   <script>
-    var
-      player = videojs('player', {
-        html5: {
-          dash: {
-            limitBitrateByPortal: true
-          }
-        }
-      }),
-      livePlayer = videojs('live-player');
-
-    player.ready(function() {
-      player.src({
+    var player = videojs('player', {
+      sources: [{
         src: 'http://dash.edgesuite.net/akamai/bbb_30fps/bbb_30fps.mpd',
         type: 'application/dash+xml'
-      });
+      }]
     });
 
-    livePlayer.ready(function(){
-      livePlayer.src({
-        src: 'http://vm2.dashif.org/livesim/mup_30/testpic_2s/Manifest.mpd',
-        type: 'application/dash+xml'
+    // set up dropdown
+    (function(player) {
+      var selectControl = document.querySelector('.quality-switcher');
+
+      // set quality on selection
+      selectControl.addEventListener('change', function(event) {
+        var targetId = event.target.value;
+        var auto = targetId === 'auto';
+        if (player && player.dash) {
+          player.dash.representations().forEach(function(rep) {
+            if (rep.id) {
+              rep.enabled(auto || targetId === rep.id);
+            }
+          });
+        }
       });
-    });
+
+      player.on('loadedmetadata', function() {
+        if (!player.dash) return;
+
+        // update dropdown
+        // remove existing quality items
+        selectControl.innerHTML = '';
+
+        // add new quality items and an auto option
+        [{
+          id: 'auto',
+          text: 'auto'
+        }].concat(player.dash.representations())
+          .forEach(function(rep) {
+            var option = document.createElement('option');
+            option.value = rep.id;
+            option.text = rep.text || 'Height: ' + rep.height + ', Bandwidth: ' + rep.bandwidth;
+            selectControl.appendChild(option);
+          });
+      });
+    })(player);
+
+    // set up the video switcher
+    (function(player) {
+      var loadUrl = document.getElementById('load-url');
+      loadUrl.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var wvServer = document.getElementById('wvServer');
+        var prServer = document.getElementById('prServer');
+        var src = {
+          src: url.value,
+          type: 'application/dash+xml'
+        };
+
+        if (wvServer.value || prServer.value) {
+          src.keySystemOptions = [];
+
+          if (wvServer.value) {
+            src.keySystemOptions.push({
+              name: 'com.widevine.alpha',
+              options: {
+                serverURL: wvServer.value
+              }
+            });
+          }
+
+          if (prServer.value) {
+            src.keySystemOptions.push({
+              name: 'com.microsoft.playready',
+              options: {
+                serverURL: prServer.value
+              }
+            });
+          }
+        }
+
+        player.src(src);
+
+        return false;
+      });
+    })(player);
   </script>
 </body>
 
