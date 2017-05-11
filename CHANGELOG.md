@@ -5,6 +5,8 @@ CHANGELOG
 _(none)_
 
 --------------------
+## 2.9.0 (2017-05-11)
+* Load text tracks from dashjs into video.js
 
 ## 2.8.2 (2017-04-26)
 * Show role in audio track label
