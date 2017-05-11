@@ -2,6 +2,7 @@ import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
+import setupTextTracks from './setup-text-tracks';
 import createRepresentations from './create-representations';
 import setupQualityLevels from './setup-quality-levels';
 
@@ -114,6 +115,9 @@ class Html5DashJS {
 
     // Setup audio tracks
     setupAudioTracks.call(null, this.player, tech);
+
+    // Setup text tracks
+    setupTextTracks.call(null, this.player, tech, options);
 
     // Attach the source with any protection data
     this.mediaPlayer_.setProtectionData(keySystemOptions);
