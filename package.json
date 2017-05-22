@@ -54,7 +54,7 @@
     "karma-qunit": "^1.2.0",
     "load-grunt-tasks": "^3.1.0",
     "qunitjs": "^2.0.1",
-    "webpack": "^1.13.2",
+    "webpack": "^2.6.0",
     "webpack-dev-server": "^1.15.0"
   }
 }
