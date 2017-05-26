@@ -1,6 +1,6 @@
 var q = window.QUnit;
 var videojs = require('video.js');
-require('../es5/videojs-dash.js');
+require('../dist/videojs-dash.cjs.js');
 
 var when = function(element, type, fn, condition) {
   var func = function() {

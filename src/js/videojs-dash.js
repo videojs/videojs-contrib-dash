@@ -1,13 +1,13 @@
 import window from 'global/window';
+import { version } from '../../package.json';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
 
-let
-  isArray = function(a) {
-    return Object.prototype.toString.call(a) === '[object Array]';
-  };
+let isArray = function(a) {
+  return Object.prototype.toString.call(a) === '[object Array]';
+};
 
 /**
  * videojs-contrib-dash
@@ -24,7 +24,6 @@ class Html5DashJS {
 
     this.tech_ = tech;
     this.el_ = tech.el();
-    this.elParent_ = this.el_.parentNode;
 
     // Do nothing if the src is falsey
     if (!source.src) {
@@ -189,13 +188,13 @@ class Html5DashJS {
     return Html5DashJS.hooks_[type];
   }
 
-/**
- * Add a function hook to a specific dash lifecycle
- *
- * @param {string} type the lifecycle to hook the function to
- * @param {Function|Function[]} hook the function or array of functions to attach
- * @method hook
- */
+  /**
+   * Add a function hook to a specific dash lifecycle
+   *
+   * @param {string} type the lifecycle to hook the function to
+   * @param {Function|Function[]} hook the function or array of functions to attach
+   * @method hook
+   */
   static hook(type, hook) {
     Html5DashJS.hooks(type, hook);
   }
@@ -292,5 +291,6 @@ if (!!window.MediaSource) {
   videojs.getTech('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
 }
 
+Html5DashJS.version = version;
 videojs.Html5DashJS = Html5DashJS;
 export default Html5DashJS;
