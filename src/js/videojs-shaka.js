@@ -1,4 +1,5 @@
 import window from 'global/window';
+import { version } from '../../package.json';
 import videojs from 'video.js';
 import shaka from 'shaka-player';
 import findKeyByValue from './findKeyByValue';
@@ -446,5 +447,6 @@ if (!!window.MediaSource) {
   videojs.getTech('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
 }
 
+ShakaHandler.version = version;
 videojs.ShakaHandler = ShakaHandler;
 export default ShakaHandler;

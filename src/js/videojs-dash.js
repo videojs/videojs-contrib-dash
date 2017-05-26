@@ -1,4 +1,5 @@
 import window from 'global/window';
+import { version } from '../../package.json';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
@@ -290,5 +291,6 @@ if (!!window.MediaSource) {
   videojs.getTech('Html5').registerSourceHandler(videojs.DashSourceHandler(), 0);
 }
 
+Html5DashJS.version = version;
 videojs.Html5DashJS = Html5DashJS;
 export default Html5DashJS;
