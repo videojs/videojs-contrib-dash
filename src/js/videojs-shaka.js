@@ -84,12 +84,17 @@ class ShakaHandler {
 
   load(sourceUrl) {
     this.shakaPlayer.load(sourceUrl).then(() => {
-      // set up audio tracks
       this.setupAudioTracks();
-      // set up text tracks
       this.setupTextTracks();
       // limit ABR by player size
       this.resize();
+
+      // set up quality levels
+      if (player.dash &&
+          player.dash.representations &&
+          player.qualityLevels) {
+        setupQualityLevels(this.player);
+      }
     }).catch(ShakaHandler.onError);
   }
 
@@ -274,6 +279,40 @@ class ShakaHandler {
 
       return representations;
     };
+  }
+
+  setupQualityLevels() {
+    // reset quality levels
+    this.player.qualityLevels().dispose();
+    const qualityLevels = player.qualityLevels();
+
+    this.player.dash.representations()
+      .forEach(function(representation) {
+        representation.enabledOld = representation.enabled;
+        representation.enabled = function(state) {
+          if (typeof state === 'undefined') {
+            return representation.enabledOld();
+          }
+
+          representation.enabledOld(state);
+
+          let selectedIndex = -1;
+          // qualityLevels are already sorted by bandwidth ascending
+          for (let i = 0; i < qualityLevels.length; i++) {
+            if (qualityLevels[i].enabled) {
+              selectedIndex = i;
+            }
+          }
+
+          qualityLevels.selectedIndex_ = selectedIndex;
+          qualityLevels.trigger({
+            selectedIndex: selectedIndex,
+            type: 'change'
+          });
+        };
+
+        qualityLevels.addQualityLevel(representation);
+      });
   }
 
   resize() {
