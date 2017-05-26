@@ -1,7 +1,7 @@
 import dashjs from 'dashjs';
 import videojs from 'video.js';
 
-/*
+/**
  * Setup audio tracks. Take the tracks from dash and add the tracks to videojs. Listen for when
  * videojs changes tracks and apply that to the dash player because videojs doesn't do this
  * natively.
