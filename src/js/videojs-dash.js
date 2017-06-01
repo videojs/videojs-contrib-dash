@@ -4,10 +4,19 @@ import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
 
-let
-  isArray = function(a) {
-    return Object.prototype.toString.call(a) === '[object Array]';
+const isArray = function(a) {
+  return Object.prototype.toString.call(a) === '[object Array]';
+};
+
+const cancelEvent = function(event) {
+  event.isImmediatePropagationStopped = function() {
+    return true;
   };
+  event.cancelBubble = true;
+  event.isPropagationStopped = function() {
+    return true;
+  };
+};
 
 /**
  * videojs-contrib-dash
@@ -35,6 +44,8 @@ class Html5DashJS {
     // we must defer events and functions calls with isReady_ and then `triggerReady`
     // again later once everything is setup
     tech.isReady_ = false;
+
+    tech.on('progress', cancelEvent);
 
     if (Html5DashJS.updateSourceData) {
       videojs.log.warn('updateSourceData has been deprecated.' +
@@ -161,6 +172,8 @@ class Html5DashJS {
     if (this.player.dash) {
       delete this.player.dash;
     }
+
+    this.tech_.off('progress', cancelEvent);
   }
 
   duration() {
