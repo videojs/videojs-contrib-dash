@@ -1,6 +1,14 @@
 import dashjs from 'dashjs';
 import videojs from 'video.js';
 
+function find(l, f) {
+  for(let i = 0; i < l.length; i++) {
+    if (f(l[i])) {
+      return l[i];
+    }
+  }
+}
+
 /*
  * Attach text tracks from dash.js to videojs
  *
@@ -56,11 +64,10 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
       if (textTrack.mode === 'showing') {
         // Find the dash track we want to use
 
-        const dictionaryLookupResult = trackDictionary.find(
-          /* jshint loopfunc: true */
-          ({textTrack: dictionaryTextTrack}) => dictionaryTextTrack === textTrack
-          /* jshint loopfunc: false */
-        );
+        /* jshint loopfunc: true */
+        const dictionaryLookupResult = find(trackDictionary,
+          ({textTrack: dictionaryTextTrack}) => dictionaryTextTrack === textTrack);
+        /* jshint loopfunc: false */
 
         const dashTrackToActivate = dictionaryLookupResult ?
           dictionaryLookupResult.dashTrack :
