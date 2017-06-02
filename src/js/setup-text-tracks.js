@@ -19,8 +19,6 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
     .map((track) => ({
       dashTrack: track,
       trackConfig: {
-        default: track.defaultTrack,
-        kind: track.kind,
         label: track.lang,
         language: track.lang,
         srclang: track.lang,
@@ -88,23 +86,6 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
   player.one('loadstart', () => {
     player.textTracks().off('change', updateActiveDashTextTrack);
   });
-
-  /*
-   * Now that all the text tracks are created, iterate through them and set the default to
-   * `showing`. Note that more than one track can be listed as a default because this will create
-   * subtitles and captions which can independently have their own defaults. This will ignore all
-   * tracks that are not `subtitles` or `captions`, otherwise we'll be showing text data for
-   * `metadata` and `descriptions` tracks.
-  */
-  const textTracks = player.textTracks();
-
-  for (let i = 0; i < textTracks.length; i += 1) {
-    const textTrack = textTracks[i];
-
-    if (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') {
-      textTrack.mode = textTrack.default ? 'showing' : 'hidden';
-    }
-  }
 
   // Initialize the text track on our first run-through
   updateActiveDashTextTrack();
