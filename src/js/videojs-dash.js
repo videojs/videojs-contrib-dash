@@ -4,11 +4,6 @@ import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
 
-let
-  isArray = function(a) {
-    return Object.prototype.toString.call(a) === '[object Array]';
-  };
-
 /**
  * videojs-contrib-dash
  *
@@ -99,7 +94,7 @@ class Html5DashJS {
         }
 
         // Guarantee `value` is an array
-        if (!isArray(value)) {
+        if (!Array.isArray(value)) {
           value = [value];
         }
 
@@ -134,7 +129,7 @@ class Html5DashJS {
   static buildDashJSProtData(keySystemOptions) {
     let output = {};
 
-    if (!keySystemOptions || !isArray(keySystemOptions)) {
+    if (!keySystemOptions || !Array.isArray(keySystemOptions)) {
       return null;
     }
 
