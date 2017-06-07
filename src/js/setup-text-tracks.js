@@ -66,7 +66,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
 
         /* jshint loopfunc: true */
         const dictionaryLookupResult = find(trackDictionary,
-          ({textTrack: dictionaryTextTrack}) => dictionaryTextTrack === textTrack);
+          (track) => track.textTrack === textTrack);
         /* jshint loopfunc: false */
 
         const dashTrackToActivate = dictionaryLookupResult ?
