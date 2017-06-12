@@ -111,7 +111,7 @@ export default function setupTextTracks(player, tech, options) {
   // Clear VTTCue if it was shimmed by vttjs and let dash.js use TextTrackCue.
   // This is necessary because dash.js creates text tracks
   // using addTextTrack which is incompatible with vttjs.VTTCue in IE11
-  if (!(/\[native code\]/).test(window.VTTCue.toString())) {
+  if (window.VTTCue && !(/\[native code\]/).test(window.VTTCue.toString())) {
     window.VTTCue = false;
   }
 
