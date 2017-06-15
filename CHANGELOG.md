@@ -5,6 +5,9 @@ CHANGELOG
 _(none)_
 
 --------------------
+## 2.9.1 (2017-06-15)
+* Fix text tracks in IE
+
 ## 2.9.0 (2017-05-11)
 * Load text tracks from dashjs into video.js
 
