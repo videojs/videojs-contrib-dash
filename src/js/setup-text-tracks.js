@@ -1,6 +1,14 @@
 import dashjs from 'dashjs';
 import videojs from 'video.js';
 
+function find(l, f) {
+  for(let i = 0; i < l.length; i++) {
+    if (f(l[i])) {
+      return l[i];
+    }
+  }
+}
+
 /*
  * Attach text tracks from dash.js to videojs
  *
@@ -19,8 +27,6 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
     .map((track) => ({
       dashTrack: track,
       trackConfig: {
-        default: track.defaultTrack,
-        kind: track.kind,
         label: track.lang,
         language: track.lang,
         srclang: track.lang,
@@ -58,11 +64,10 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
       if (textTrack.mode === 'showing') {
         // Find the dash track we want to use
 
-        const dictionaryLookupResult = trackDictionary.find(
-          /* jshint loopfunc: true */
-          ({textTrack: dictionaryTextTrack}) => dictionaryTextTrack === textTrack
-          /* jshint loopfunc: false */
-        );
+        /* jshint loopfunc: true */
+        const dictionaryLookupResult = find(trackDictionary,
+          (track) => track.textTrack === textTrack);
+        /* jshint loopfunc: false */
 
         const dashTrackToActivate = dictionaryLookupResult ?
           dictionaryLookupResult.dashTrack :
@@ -89,23 +94,6 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
     player.textTracks().off('change', updateActiveDashTextTrack);
   });
 
-  /*
-   * Now that all the text tracks are created, iterate through them and set the default to
-   * `showing`. Note that more than one track can be listed as a default because this will create
-   * subtitles and captions which can independently have their own defaults. This will ignore all
-   * tracks that are not `subtitles` or `captions`, otherwise we'll be showing text data for
-   * `metadata` and `descriptions` tracks.
-  */
-  const textTracks = player.textTracks();
-
-  for (let i = 0; i < textTracks.length; i += 1) {
-    const textTrack = textTracks[i];
-
-    if (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') {
-      textTrack.mode = textTrack.default ? 'showing' : 'hidden';
-    }
-  }
-
   // Initialize the text track on our first run-through
   updateActiveDashTextTrack();
 
@@ -120,6 +108,13 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
  * @private
  */
 export default function setupTextTracks(player, tech, options) {
+  // Clear VTTCue if it was shimmed by vttjs and let dash.js use TextTrackCue.
+  // This is necessary because dash.js creates text tracks
+  // using addTextTrack which is incompatible with vttjs.VTTCue in IE11
+  if (window.VTTCue && !(/\[native code\]/).test(window.VTTCue.toString())) {
+    window.VTTCue = false;
+  }
+
   // Store the tracks that we've added so we can remove them later.
   let dashTracksAttachedToVideoJs = [];
 
