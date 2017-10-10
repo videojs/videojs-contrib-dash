@@ -38,8 +38,8 @@ module.exports = function(config) {
     concurrency: 1,
 
     browserDisconnectTolerance: 3,
-    captureTimeout: 300000,
-    browserNoActivityTimeout: 300000,
+    captureTimeout: 600000,
+    browserNoActivityTimeout: 600000,
     browserConsoleLogOptions: {
       level: 'error',
       terminal: false
