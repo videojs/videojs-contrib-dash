@@ -2,7 +2,6 @@ sudo: false
 dist: trusty
 language: node_js
 node_js:
-  - 'node'
   - 'lts/argon'
 before_script:
   # check if the current version is equal to the version for the env
@@ -20,7 +19,6 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 env:
   - VJS=5
-  - VJS=6
 addons:
   firefox: latest
   apt:
