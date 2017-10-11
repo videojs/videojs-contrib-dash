@@ -27,7 +27,7 @@
     "test": "karma start test/karma.config.js",
     "preversion": "npm test",
     "version": "npm run build",
-    "prepublish": "npm run build"
+    "prepublish": "not-in-install && npm run build || in-install"
   },
   "keywords": [
     "videojs",
@@ -66,6 +66,7 @@
     "bannerize": "^1.0.0",
     "browserify": "^11.0.0",
     "browserify-shim": "^3.0.0",
+    "in-publish": "^2.0.0",
     "jshint": "^2.9.4",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.1.1",
