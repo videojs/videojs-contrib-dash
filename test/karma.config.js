@@ -20,9 +20,7 @@ module.exports = function(config) {
       'dist/videojs-dash.js',
       'test/integration.test.js',
       'test/globals.test.js',
-      'test/dashjs.test.js',
-      'dist-test/browserify.test.js',
-      'dist-test/webpack.test.js'
+      'test/dashjs.test.js'
     ],
     customLaunchers: {
       travisChrome: {
