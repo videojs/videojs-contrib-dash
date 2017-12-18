@@ -72,7 +72,7 @@ class Html5DashJS {
 
     // Retrigger a dash.js-specific error event as a generic HTML5 one
     // See src/streaming/utils/ErrorHandler.js in dash.js code
-    this.retriggerError = (event) => {
+    this.retriggerError_ = (event) => {
       this.player.pause();
       if (event.error === 'capability' && event.event === 'mediasource') {
         this.player.error({code: 4});
@@ -83,7 +83,7 @@ class Html5DashJS {
       }
     };
 
-    this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError);
+    this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
 
     // Apply all dash options that are set
     if (options.dash) {
@@ -165,7 +165,7 @@ class Html5DashJS {
 
   dispose() {
     if (this.mediaPlayer_) {
-      this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError);
+      this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
       this.mediaPlayer_.reset();
     }
 
