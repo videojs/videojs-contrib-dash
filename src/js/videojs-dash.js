@@ -72,15 +72,65 @@ class Html5DashJS {
 
     // Retrigger a dash.js-specific error event as a generic HTML5 one
     // See src/streaming/utils/ErrorHandler.js in dash.js code
+    // Handled with error (playback is stopped):
+    // - capabilityError
+    // - downloadError
+    // - manifestError
+    // - mediaSourceError
+    // - mediaKeySessionError
+    // Not handled:
+    // - timedTextError (video can still play)
+    // - mediaKeyMessageError (only fires under 'might not work' circumstances)
     this.retriggerError_ = (event) => {
-      this.player.pause();
-      if (event.error === 'capability' && event.event === 'mediasource') {
+      // No support for MSE
+      if ((event.error === 'capability' && event.event === 'mediasource') ||
+        // Manifest type not supported
+        (event.error === 'manifestError' && event.event.id === 'createParser') ||
+        // Codec(s) not supported
+        (event.error === 'manifestError' && event.event.id === 'codec') ||
+        // No streams available to stream
+        (event.error === 'manifestError' && event.event.id === 'nostreams') ||
+        // not sure about this one
+        (event.error === 'manifestError' && event.event.id === 'nostreamscomposed') ||
+        // syntax error parsing the manifest
+        (event.error === 'manifestError' && event.event.id === 'parse') ||
+        // streams are multiplexed, which is not supported by dash
+        (event.error === 'manifestError' && event.event.id === 'multiplexedrep')) {
         this.player.error({code: 4});
-      } else if (event.error === 'capability' && event.event === 'encryptedmedia') {
+
+      } else if (event.error === 'mediasource') {
+        if (event.event === 'MEDIA_ERR_ABORTED') {
+          this.player.error({code: 1});
+        } else if (event.event === 'MEDIA_ERR_NETWORK') {
+          this.player.error({code: 2});
+        } else if (event.event === 'MEDIA_ERR_DECODE') {
+          this.player.error({code: 3});
+        } else if (event.event === 'MEDIA_ERR_SRC_NOT_SUPPORTED') {
+          this.player.error({code: 4});
+        } else if (event.event === 'MEDIA_ERR_ENCRYPTED') {
+          this.player.error({code: 5});
+        } else {
+          this.player.error({
+            code: 4,
+            message: event.event
+          });
+        }
+
+      } else if ((event.error === 'capability' && event.event === 'encryptedmedia') ||
+        (event.error === 'key_session')) {
         this.player.error({code: 5});
+
       } else if (event.error === 'download') {
         this.player.error({code: 2});
+
+      } else {
+        // ignore the error
+        return;
       }
+
+      // only reset the dash player in 10ms async, so that the rest of the
+      // calling function finishes
+      setTimeout(() => { this.mediaPlayer_.reset(); }, 10);
     };
 
     this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
