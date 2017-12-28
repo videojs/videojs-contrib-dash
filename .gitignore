@@ -32,6 +32,6 @@ node_modules/
 dist/
 dist-test/
 docs/api/
-es5/
+# es5/
 tmp
 coverage/

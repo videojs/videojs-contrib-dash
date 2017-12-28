@@ -266,7 +266,7 @@ var canHandleKeySystems = function canHandleKeySystems(source) {
   });
 
   var videoEl = document.createElement('video');
-  if (source.keySystemOptions && !(navigator.requestMediaKeySystemAccess || videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.microsoft.playready') ||
+  if (source.keySystemOptions && !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha') ||
   // IE11 Win 8.1
   videoEl.msSetMediaKeys)) {
     return false;
