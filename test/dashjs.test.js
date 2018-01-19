@@ -54,6 +54,7 @@
       tech.el = function() { return el; };
       tech.triggerReady = function() { };
 
+      window.eventHandlers = {};
       dashjs.MediaPlayer = function() {
         return {
           create: function() {
@@ -94,16 +95,36 @@
                 setLimitBitrateByPortalValue = value;
               },
 
-              on: function() {}
+              on: function(event, fn) {
+                if (!window.eventHandlers[event]) {
+                  window.eventHandlers[event] = [];
+                }
+                window.eventHandlers[event].push(fn);
+              },
+
+              resetCalled: false,
+              reset: function() {
+                this.resetCalled = true;
+              },
+
+              trigger: function(event, data) {
+                if (!window.eventHandlers[event]) {
+                  return;
+                }
+                window.eventHandlers[event].forEach(function(handler) {
+                  handler(data);
+                });
+              },
+
             };
           }
         };
       };
 
-      dashjs.MediaPlayer.events = { ERROR: '' };
+      dashjs.MediaPlayer.events = origMediaPlayer.events;
 
       var dashSourceHandler = Html5.selectSourceHandler(source);
-      dashSourceHandler.handleSource(source, tech, options);
+      return dashSourceHandler.handleSource(source, tech, options);
     };
 
   q.module('videojs-dash dash.js SourceHandler', {
@@ -299,6 +320,134 @@
     assert.equal(cb4Count, 2, 'called cb4');
     assert.equal(videojs.Html5DashJS.hooks('beforeinitialize').length, 1,
       'cb2 removed itself');
+  });
+
+  q.test('attaches dash.js error handler', function(assert) {
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null);
+    assert.expect(8);
+    assert.equal(window.eventHandlers[dashjs.MediaPlayer.events.ERROR][0],
+      sourceHandler.retriggerError_);
+  });
+
+  q.test('handles various errors', function(assert) {
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null);
+
+    var errors = [
+      {
+        receive: {error: 'capability', event: 'mediasource'},
+        trigger: {code: 4, message: 'The media cannot be played because it requires a feature ' +
+            'that your browser does not support.'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'createParser', message: 'manifest type unsupported'}},
+        trigger: {code: 4, message: 'manifest type unsupported'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'codec', message: 'Codec (h264) is not supported'}},
+        trigger: {code: 4, message: 'Codec (h264) is not supported'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'nostreams', message: 'No streams to play.'}},
+        trigger: {code: 4, message: 'No streams to play.'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'nostreamscomposed', message: 'Error creating stream.'}},
+        trigger: {code: 4, message: 'Error creating stream.'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'parse', message: 'parsing the manifest failed'}},
+        trigger: {code: 4, message: 'parsing the manifest failed'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'nostreams', message: 'Multiplexed representations are intentionally not ' +
+            'supported, as they are not compliant with the DASH-AVC/264 guidelines'}},
+        trigger: {code: 4, message: 'Multiplexed representations are intentionally not ' +
+          'supported, as they are not compliant with the DASH-AVC/264 guidelines'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_ABORTED: Some context'},
+        trigger: {code: 1, message: 'MEDIA_ERR_ABORTED: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_NETWORK: Some context'},
+        trigger: {code: 2, message: 'MEDIA_ERR_NETWORK: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_DECODE: Some context'},
+        trigger: {code: 3, message: 'MEDIA_ERR_DECODE: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_SRC_NOT_SUPPORTED: Some context'},
+        trigger: {code: 4, message: 'MEDIA_ERR_SRC_NOT_SUPPORTED: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_ENCRYPTED: Some context'},
+        trigger: {code: 5, message: 'MEDIA_ERR_ENCRYPTED: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'Some unknown error'},
+        trigger: {code: 4, message: 'Some unknown error'},
+      },
+      {
+        receive: {error: 'capability', event: 'encryptedmedia'},
+        trigger: {code: 5, message: 'The media cannot be played because it requires encryption ' +
+          'features that your browser does not support.'},
+      },
+      {
+        receive: {error: 'key_session', event: 'Some encryption error'},
+        trigger: {code: 5, message: 'Some encryption error'},
+      },
+      {
+        receive: {error: 'download', event: { id: 'someId', url: 'http://some/url', request: {} }},
+        trigger: {code: 2, message: 'The media playback was aborted because too many ' +
+          'consecutive download errors occurred.'},
+      },
+    ];
+    assert.expect(7 + (errors.length * 4));
+
+    var done = assert.async(errors.length);
+    var checkReset = function() {
+      setTimeout(function() {
+        assert.ok(sourceHandler.mediaPlayer_.resetCalled, 'reset was called on the MediaPlayer');
+        done();
+      }, 12);
+    };
+
+    var i;
+    sourceHandler.player.on('error', function() {
+      assert.equal(sourceHandler.player.error().code, errors[i].trigger.code, 'error code matches');
+      assert.equal(sourceHandler.player.error().message, errors[i].trigger.message,
+        'error message matches');
+      checkReset(errors[i]);
+    });
+
+    // dispatch all handled errors and see if they throw the correct details
+    for (i=0; i<errors.length; i++) {
+      sourceHandler.mediaPlayer_.resetCalled = false;
+      assert.notOk(sourceHandler.mediaPlayer_.resetCalled, 'MediaPlayer has not been reset');
+      sourceHandler.mediaPlayer_.trigger(dashjs.MediaPlayer.events.ERROR, errors[i].receive);
+    }
+
+  });
+
+  q.test('ignores unknown errors', function(assert) {
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null);
+    assert.notOk(sourceHandler.mediaPlayer_.resetCalled, 'MediaPlayer has not been reset');
+
+    var done = assert.async(1);
+    sourceHandler.mediaPlayer_.trigger(dashjs.MediaPlayer.events.ERROR, {error: 'unknown'});
+    assert.equal(sourceHandler.player.error(), null, 'No error dispatched');
+    setTimeout(function() {
+      assert.notOk(sourceHandler.mediaPlayer_.resetCalled, 'MediaPlayer has not been reset');
+      done();
+    }, 10);
+    assert.expect(10);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
