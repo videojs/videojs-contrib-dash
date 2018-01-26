@@ -5,16 +5,8 @@ cache:
   directories:
     - node_modules
 before_script:
-  # check if the current version is equal to the version for the env
-  - 'export IS_INSTALLED="$(npm list video.js | grep "video.js@$VJS")"'
-  # we have to add semi colons to the end of each line in the if
-  # as travis runs this all on one line
-  - 'if [ -z "$IS_INSTALLED" ]; then
-      echo "INSTALLING video.js@>=$VJS.0.0-RC.0 <$(($VJS+1)).0.0";
-      npm i "video.js@>=$VJS.0.0-RC.0 <\$(($VJS+1)).0.0";
-    else
-      echo "video.js@$VJS ALREADY INSTALLED";
-    fi'
+  # always install the appropriate version of video.js for the environment
+  - npm i "video.js@$VJS";
   # pulseaudio is needed for dockerized chrome since it has a dummy sink and
   # the dummy audio ALSA kernel module isn't loaded by Travis
   # libavcodec54 is needed by firefox for h.264 support
