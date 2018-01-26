@@ -28,11 +28,8 @@ module.exports = function(config) {
     colors: true,
     autoWatch: false,
     singleRun: true,
-    concurrency: 1,
-
+    concurrency: Infinity,
     browserDisconnectTolerance: 3,
-    captureTimeout: 300000,
-    browserNoActivityTimeout: 300000,
     browserConsoleLogOptions: {
       level: 'error',
       terminal: false
