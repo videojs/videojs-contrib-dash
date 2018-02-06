@@ -17,7 +17,12 @@
       src: 'movie.mpd',
       type: 'application/dash+xml'
     },
-    testHandleSource = function(assert, source, expectedKeySystemOptions, limitBitrateByPortal) {
+
+    testHandleSource = function(assert, source, expectedKeySystemOptions, testData) {
+      if (testData === undefined) {
+        testData = {};
+      }
+      var eventHandlers = (testData.eventHandlers !== undefined) ? testData.eventHandlers : {};
       var
         startupCalled = false,
         attachViewCalled = false,
@@ -36,7 +41,7 @@
       assert.expect(7);
 
       // Default limitBitrateByPortal to false
-      limitBitrateByPortal = limitBitrateByPortal || false;
+      var limitBitrateByPortal = testData.limitBitrateByPortal || false;
 
       el.setAttribute('id', 'test-vid');
       fixture.appendChild(el);
@@ -54,7 +59,6 @@
       tech.el = function() { return el; };
       tech.triggerReady = function() { };
 
-      window.eventHandlers = {};
       dashjs.MediaPlayer = function() {
         return {
           create: function() {
@@ -96,22 +100,19 @@
               },
 
               on: function(event, fn) {
-                if (!window.eventHandlers[event]) {
-                  window.eventHandlers[event] = [];
+                if (!eventHandlers[event]) {
+                  eventHandlers[event] = [];
                 }
-                window.eventHandlers[event].push(fn);
+                eventHandlers[event].push(fn);
               },
 
-              resetCalled: false,
-              reset: function() {
-                this.resetCalled = true;
-              },
+              reset: testData.resetCallback,
 
               trigger: function(event, data) {
-                if (!window.eventHandlers[event]) {
+                if (!eventHandlers[event]) {
                   return;
                 }
-                window.eventHandlers[event].forEach(function(handler) {
+                eventHandlers[event].forEach(function(handler) {
                   handler(data);
                 });
               },
@@ -203,7 +204,7 @@
       }
     };
 
-    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
   });
 
   q.test('validate handleSource function with invalid manifest', function(assert) {
@@ -258,7 +259,7 @@
     videojs.Html5DashJS.hook('updatesource', cb1);
     videojs.Html5DashJS.hook('beforeinitialize', cb2);
 
-    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
 
     assert.expect(9);
 
@@ -310,7 +311,7 @@
 
     assert.equal(videojs.Html5DashJS.hooks('updatesource').length, 1, 'removed hook cb3');
 
-    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
 
     assert.expect(18);
 
@@ -323,15 +324,14 @@
   });
 
   q.test('attaches dash.js error handler', function(assert) {
-    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null);
+    var eventHandlers = {};
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {eventHandlers});
     assert.expect(8);
-    assert.equal(window.eventHandlers[dashjs.MediaPlayer.events.ERROR][0],
+    assert.equal(eventHandlers[dashjs.MediaPlayer.events.ERROR][0],
       sourceHandler.retriggerError_);
   });
 
   q.test('handles various errors', function(assert) {
-    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null);
-
     var errors = [
       {
         receive: {error: 'capability', event: 'mediasource'},
@@ -409,45 +409,49 @@
           'consecutive download errors occurred.'},
       },
     ];
-    assert.expect(7 + (errors.length * 4));
 
+    // Make sure the MediaPlayer gets reset enough times
     var done = assert.async(errors.length);
-    var checkReset = function() {
-      setTimeout(function() {
-        assert.ok(sourceHandler.mediaPlayer_.resetCalled, 'reset was called on the MediaPlayer');
-        done();
-      }, 12);
+    var resetCallback = function() {
+      done();
     };
+
+    var eventHandlers = {};
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {eventHandlers, resetCallback});
+    assert.expect(7 + (errors.length * 2));
 
     var i;
     sourceHandler.player.on('error', function() {
       assert.equal(sourceHandler.player.error().code, errors[i].trigger.code, 'error code matches');
       assert.equal(sourceHandler.player.error().message, errors[i].trigger.message,
         'error message matches');
-      checkReset(errors[i]);
     });
 
     // dispatch all handled errors and see if they throw the correct details
     for (i=0; i<errors.length; i++) {
-      sourceHandler.mediaPlayer_.resetCalled = false;
-      assert.notOk(sourceHandler.mediaPlayer_.resetCalled, 'MediaPlayer has not been reset');
       sourceHandler.mediaPlayer_.trigger(dashjs.MediaPlayer.events.ERROR, errors[i].receive);
     }
 
   });
 
   q.test('ignores unknown errors', function(assert) {
-    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null);
-    assert.notOk(sourceHandler.mediaPlayer_.resetCalled, 'MediaPlayer has not been reset');
+    var resetCalled = false;
+    var resetCallback = () => {
+      resetCalled = true;
+    };
+
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {resetCallback});
 
     var done = assert.async(1);
     sourceHandler.mediaPlayer_.trigger(dashjs.MediaPlayer.events.ERROR, {error: 'unknown'});
     assert.equal(sourceHandler.player.error(), null, 'No error dispatched');
+    // The error handler waits 10ms before firing reset, so we wait for
+    // 20ms here to make sure it doesn't fire
     setTimeout(function() {
-      assert.notOk(sourceHandler.mediaPlayer_.resetCalled, 'MediaPlayer has not been reset');
+      assert.notOk(resetCalled, 'MediaPlayer has not been reset');
       done();
-    }, 10);
-    assert.expect(10);
+    }, 20);
+    assert.expect(9);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
