@@ -127,9 +127,6 @@ export default function setupTextTracks(player, tech, options) {
 
   const mediaPlayer = player.dash.mediaPlayer;
 
-  // Attach the videojs text track display DOM element
-  mediaPlayer.attachTTMLRenderingDiv(player.textTrackDisplay.el_);
-
   // Clear the tracks that we added. We don't clear them all because someone else can add tracks.
   function clearDashTracks() {
     dashTracksAttachedToVideoJs.forEach(player.removeRemoteTextTrack.bind(player));

@@ -117,6 +117,9 @@ class Html5DashJS {
     this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
     this.mediaPlayer_.attachSource(manifestSource);
 
+    // Attach the videojs text track display DOM element
+    mediaPlayer.attachTTMLRenderingDiv(player.textTrackDisplay.el_);
+
     this.tech_.triggerReady();
   }
 
