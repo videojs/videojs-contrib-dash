@@ -18,11 +18,11 @@
       type: 'application/dash+xml'
     },
 
-    testHandleSource = function(assert, source, expectedKeySystemOptions, testData) {
-      if (testData === undefined) {
-        testData = {};
+    testHandleSource = function(assert, source, expectedKeySystemOptions, config) {
+      if (config === undefined) {
+        config = {};
       }
-      var eventHandlers = (testData.eventHandlers !== undefined) ? testData.eventHandlers : {};
+      var eventHandlers = config.eventHandlers ? config.eventHandlers : {};
       var
         startupCalled = false,
         attachViewCalled = false,
@@ -41,7 +41,7 @@
       assert.expect(7);
 
       // Default limitBitrateByPortal to false
-      var limitBitrateByPortal = testData.limitBitrateByPortal || false;
+      var limitBitrateByPortal = config.limitBitrateByPortal || false;
 
       el.setAttribute('id', 'test-vid');
       fixture.appendChild(el);
@@ -106,7 +106,7 @@
                 eventHandlers[event].push(fn);
               },
 
-              reset: testData.resetCallback,
+              reset: config.resetCallback,
 
               trigger: function(event, data) {
                 if (!eventHandlers[event]) {
@@ -391,8 +391,12 @@
         trigger: {code: 5, message: 'MEDIA_ERR_ENCRYPTED: Some context'},
       },
       {
-        receive: {error: 'mediasource', event: 'Some unknown error'},
-        trigger: {code: 4, message: 'Some unknown error'},
+        receive: {error: 'mediasource', event: 'UNKNOWN: Some context'},
+        trigger: {code: 4, message: 'UNKNOWN: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'Error creating video source buffer'},
+        trigger: {code: 4, message: 'Error creating video source buffer'},
       },
       {
         receive: {error: 'capability', event: 'encryptedmedia'},

@@ -118,7 +118,15 @@ class Html5DashJS {
           this.player.error({code: 4, message: event.event});
         } else if (event.event.match('MEDIA_ERR_ENCRYPTED')) {
           this.player.error({code: 5, message: event.event});
+        } else if (event.event.match('UNKNOWN')) {
+          // We shouldn't ever end up here, since this would mean a
+          // `MediaError` thrown by the video element that doesn't comply
+          // with the W3C spec. But, since we should handle the error,
+          // throwing a MEDIA_ERR_SRC_NOT_SUPPORTED is probably the
+          // most reasonable thing to do.
+          this.player.error({code: 4, message: event.event});
         } else {
+          // Buffer allocation error
           this.player.error({code: 4, message: event.event});
         }
 
