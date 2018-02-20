@@ -1,5 +1,7 @@
 # video.js MPEG-DASH Source Handler
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/videojs/videojs-contrib-dash.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/videojs/videojs-contrib-dash.svg?branch=master)](https://travis-ci.org/videojs/videojs-contrib-dash)
 [![Slack Status](http://slack.videojs.com/badge.svg)](http://slack.videojs.com)
 
