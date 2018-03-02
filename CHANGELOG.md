@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Retrigger dash.js errors on video.js
 
 --------------------
 ## 2.9.2 (2017-10-11)
