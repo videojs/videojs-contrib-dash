@@ -33,6 +33,6 @@ package-lock.json
 dist/
 dist-test/
 docs/api/
-es5/
+# es5/
 tmp
 coverage/
