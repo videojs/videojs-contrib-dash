@@ -105,6 +105,7 @@ var Html5DashJS = function () {
     // - timedTextError (video can still play)
     // - mediaKeyMessageError (only fires under 'might not work' circumstances)
     this.retriggerError_ = function (event) {
+      console.log('retriggerError_', event);
       if (event.error === 'capability' && event.event === 'mediasource') {
         // No support for MSE
         _this.player.error({
