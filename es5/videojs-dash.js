@@ -395,6 +395,7 @@ _video2['default'].DashSourceHandler = function () {
 };
 
 _video2['default'].DashSourceHandler.canPlayType = function (type) {
+  console.log('canPlayType', type);
   var dashTypeRE = /^application\/dash\+xml/i;
   if (dashTypeRE.test(type)) {
     return 'probably';

@@ -373,6 +373,7 @@ videojs.DashSourceHandler = function() {
 };
 
 videojs.DashSourceHandler.canPlayType = function(type) {
+  console.log('canPlayType', type)
   let dashTypeRE = /^application\/dash\+xml/i;
   if (dashTypeRE.test(type)) {
     return 'probably';
