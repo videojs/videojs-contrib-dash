@@ -331,8 +331,10 @@ const canHandleKeySystems = function(source) {
   });
 
   let videoEl = document.createElement('video');
+  console.log(`videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha')`, videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha'))
   if (source.keySystemOptions &&
-    !(navigator.requestMediaKeySystemAccess ||
+    !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha') ||
+    // !(navigator.requestMediaKeySystemAccess ||
       // IE11 Win 8.1
       videoEl.msSetMediaKeys)) {
     return false;
