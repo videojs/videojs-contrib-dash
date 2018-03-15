@@ -27,7 +27,8 @@
     "test": "karma start test/karma.config.js",
     "preversion": "npm test",
     "version": "npm run build",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "postinstall": "npm run build:js:babel"
   },
   "keywords": [
     "videojs",
