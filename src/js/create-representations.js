@@ -54,7 +54,7 @@ let createRepresentations = function (mediaPlayer) {
     if (enabledRepresentations.length === representations.length ||
       enabledRepresentations.length === 0) {
       // dash.js docs say to clear the bitrate limit with NaN
-      mediaPlayer.setMinAllowedBitrateFor('video', NaN);
+      // mediaPlayer.setMinAllowedBitrateFor('video', NaN);
       mediaPlayer.setMaxAllowedBitrateFor('video', NaN);
 
       return;
@@ -68,7 +68,7 @@ let createRepresentations = function (mediaPlayer) {
     let max = enabledRepresentations[enabledRepresentations.length - 1].bandwidth;
 
     // these functions take kbps
-    mediaPlayer.setMinAllowedBitrateFor('video', min / 1e3);
+    // mediaPlayer.setMinAllowedBitrateFor('video', min / 1e3);
     mediaPlayer.setMaxAllowedBitrateFor('video', max / 1e3);
   };
 
