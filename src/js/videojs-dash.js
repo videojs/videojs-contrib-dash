@@ -1,11 +1,11 @@
 import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
-import 'videojs-contrib-quality-levels';
+// import 'videojs-contrib-quality-levels';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
-import createRepresentations from './create-representations';
-import setupQualityLevels from './setup-quality-levels';
+// import createRepresentations from './create-representations';
+// import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -53,7 +53,7 @@ class Html5DashJS {
     this.mediaPlayer_ = this.player.dash.mediaPlayer;
 
     // enable for fast quality up-switch
-    this.mediaPlayer_.setFastSwitchEnabled(true);
+    // this.mediaPlayer_.setFastSwitchEnabled(true);
 
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
@@ -68,10 +68,10 @@ class Html5DashJS {
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
-    const representations = createRepresentations(this.mediaPlayer_);
-    console.log('representations: ', representations);
-    this.player.dash.representations = representations;
-    setupQualityLevels(this.player, this.mediaPlayer_);
+    // const representations = createRepresentations(this.mediaPlayer_);
+    // console.log('representations: ', representations);
+    // this.player.dash.representations = representations;
+    // setupQualityLevels(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
       hook(this.player, this.mediaPlayer_);
