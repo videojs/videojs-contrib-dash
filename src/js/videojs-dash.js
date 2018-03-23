@@ -1,8 +1,11 @@
 import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
+import 'videojs-contrib-quality-levels';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
+import createRepresentations from './create-representations';
+import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -49,6 +52,9 @@ class Html5DashJS {
 
     this.mediaPlayer_ = this.player.dash.mediaPlayer;
 
+    // enable for fast quality up-switch
+    this.mediaPlayer_.setFastSwitchEnabled(true);
+
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       videojs.log.warn('useVideoJSDebug has been deprecated.' +
@@ -61,6 +67,9 @@ class Html5DashJS {
         ' Please switch to using hook("beforeinitialize", callback).');
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
+
+    this.player.dash.representations = createRepresentations(this.mediaPlayer_);
+    setupQualityLevels(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
       hook(this.player, this.mediaPlayer_);
@@ -252,6 +261,10 @@ class Html5DashJS {
 
     if (this.player.dash) {
       delete this.player.dash;
+    }
+
+    if (this.player.qualityLevels) {
+      this.player.qualityLevels().dispose();
     }
   }
 
