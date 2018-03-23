@@ -14,8 +14,6 @@ var _dashjs = require('dashjs');
 
 var _dashjs2 = _interopRequireDefault(_dashjs);
 
-require('videojs-contrib-quality-levels');
-
 var _setupAudioTracks = require('./setup-audio-tracks');
 
 var _setupAudioTracks2 = _interopRequireDefault(_setupAudioTracks);
@@ -28,13 +26,13 @@ var _createRepresentations = require('./create-representations');
 
 var _createRepresentations2 = _interopRequireDefault(_createRepresentations);
 
-var _setupQualityLevels = require('./setup-quality-levels');
-
-var _setupQualityLevels2 = _interopRequireDefault(_setupQualityLevels);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+// import 'videojs-contrib-quality-levels';
+
+
+// import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -99,7 +97,7 @@ var Html5DashJS = function () {
     }
 
     this.player.dash.representations = (0, _createRepresentations2['default'])(this.mediaPlayer_);
-    (0, _setupQualityLevels2['default'])(this.player, this.mediaPlayer_);
+    // setupQualityLevels(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach(function (hook) {
       hook(_this.player, _this.mediaPlayer_);
