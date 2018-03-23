@@ -68,7 +68,9 @@ class Html5DashJS {
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
-    this.player.dash.representations = createRepresentations(this.mediaPlayer_);
+    const representations = createRepresentations(this.mediaPlayer_);
+    console.log('representations: ', representations);
+    this.player.dash.representations = representations;
     setupQualityLevels(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
