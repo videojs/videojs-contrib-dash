@@ -14,6 +14,8 @@ var _dashjs = require('dashjs');
 
 var _dashjs2 = _interopRequireDefault(_dashjs);
 
+require('videojs-contrib-quality-levels');
+
 var _setupAudioTracks = require('./setup-audio-tracks');
 
 var _setupAudioTracks2 = _interopRequireDefault(_setupAudioTracks);
@@ -22,14 +24,17 @@ var _setupTextTracks = require('./setup-text-tracks');
 
 var _setupTextTracks2 = _interopRequireDefault(_setupTextTracks);
 
+var _createRepresentations = require('./create-representations');
+
+var _createRepresentations2 = _interopRequireDefault(_createRepresentations);
+
+var _setupQualityLevels = require('./setup-quality-levels');
+
+var _setupQualityLevels2 = _interopRequireDefault(_setupQualityLevels);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-// import 'videojs-contrib-quality-levels';
-
-
-// import createRepresentations from './create-representations';
-// import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -93,10 +98,8 @@ var Html5DashJS = function () {
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
-    // const representations = createRepresentations(this.mediaPlayer_);
-    // console.log('representations: ', representations);
-    // this.player.dash.representations = representations;
-    // setupQualityLevels(this.player, this.mediaPlayer_);
+    this.player.dash.representations = (0, _createRepresentations2['default'])(this.mediaPlayer_);
+    (0, _setupQualityLevels2['default'])(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach(function (hook) {
       hook(_this.player, _this.mediaPlayer_);
@@ -118,7 +121,6 @@ var Html5DashJS = function () {
     // - timedTextError (video can still play)
     // - mediaKeyMessageError (only fires under 'might not work' circumstances)
     this.retriggerError_ = function (event) {
-      console.log('retriggerError_', event);
       if (event.error === 'capability' && event.event === 'mediasource') {
         // No support for MSE
         _this.player.error({
@@ -372,7 +374,6 @@ var canHandleKeySystems = function canHandleKeySystems(source) {
   });
 
   var videoEl = document.createElement('video');
-  console.log('videoEl.canPlayType(\'video/mp4; codecs="avc1.640028"\', \'com.widevine.alpha\')', videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha'));
   if (source.keySystemOptions && !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha') ||
   // !(navigator.requestMediaKeySystemAccess ||
   // IE11 Win 8.1
@@ -412,7 +413,6 @@ _video2['default'].DashSourceHandler = function () {
 };
 
 _video2['default'].DashSourceHandler.canPlayType = function (type) {
-  console.log('canPlayType', type);
   var dashTypeRE = /^application\/dash\+xml/i;
   if (dashTypeRE.test(type)) {
     return 'probably';

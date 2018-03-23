@@ -1,11 +1,11 @@
 import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
-// import 'videojs-contrib-quality-levels';
+import 'videojs-contrib-quality-levels';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
-// import createRepresentations from './create-representations';
-// import setupQualityLevels from './setup-quality-levels';
+import createRepresentations from './create-representations';
+import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -68,10 +68,8 @@ class Html5DashJS {
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
-    // const representations = createRepresentations(this.mediaPlayer_);
-    // console.log('representations: ', representations);
-    // this.player.dash.representations = representations;
-    // setupQualityLevels(this.player, this.mediaPlayer_);
+    this.player.dash.representations = createRepresentations(this.mediaPlayer_);
+    setupQualityLevels(this.player, this.mediaPlayer_);
 
     Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
       hook(this.player, this.mediaPlayer_);
@@ -93,7 +91,6 @@ class Html5DashJS {
     // - timedTextError (video can still play)
     // - mediaKeyMessageError (only fires under 'might not work' circumstances)
     this.retriggerError_ = (event) => {
-      console.log('retriggerError_', event)
       if (event.error === 'capability' && event.event === 'mediasource') {
         // No support for MSE
         this.player.error({
@@ -347,7 +344,6 @@ const canHandleKeySystems = function(source) {
   });
 
   let videoEl = document.createElement('video');
-  console.log(`videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha')`, videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha'))
   if (source.keySystemOptions &&
     !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha') ||
     // !(navigator.requestMediaKeySystemAccess ||
@@ -388,7 +384,6 @@ videojs.DashSourceHandler = function() {
 };
 
 videojs.DashSourceHandler.canPlayType = function(type) {
-  console.log('canPlayType', type)
   let dashTypeRE = /^application\/dash\+xml/i;
   if (dashTypeRE.test(type)) {
     return 'probably';
