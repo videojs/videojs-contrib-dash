@@ -54,10 +54,9 @@
     "test/"
   ],
   "dependencies": {
-    "dashjs": "2.3.0",
+    "dashjs": "^2.2.0",
     "global": "^4.3.0",
-    "video.js": "^5.18.0 || ^6.2.8",
-    "videojs-contrib-quality-levels": "^2.0.4"
+    "video.js": "^5.18.0 || ^6.2.8"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

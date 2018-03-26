@@ -1,7 +1,6 @@
 import window from 'global/window';
 import videojs from 'video.js';
 import dashjs from 'dashjs';
-// import 'videojs-contrib-quality-levels';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
 import createRepresentations from './create-representations';
