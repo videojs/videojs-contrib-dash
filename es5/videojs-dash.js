@@ -29,8 +29,6 @@ var _createRepresentations2 = _interopRequireDefault(_createRepresentations);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-// import 'videojs-contrib-quality-levels';
-
 
 // import setupQualityLevels from './setup-quality-levels';
 
