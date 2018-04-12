@@ -421,7 +421,8 @@
     };
 
     var eventHandlers = {};
-    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {eventHandlers, resetCallback});
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null,
+      {eventHandlers, resetCallback});
     assert.expect(7 + (errors.length * 2));
 
     var i;

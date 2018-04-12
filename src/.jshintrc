@@ -12,7 +12,7 @@
   "boss": true,
   "eqnull": true,
   "browser": true,
-  "esnext": true,
+  "esversion": 6,
   "nonew": true,
   "quotmark": "single",
   "trailing": true,
