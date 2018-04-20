@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Cleanup of event addition and removal on dispose to not bork on source change
 
 --------------------
 ## 2.9.3 (2018-04-12)

@@ -35,7 +35,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
 
     // Add track to videojs track list
     .map(({trackConfig, dashTrack}) => {
-      const remoteTextTrack = player.addRemoteTextTrack(trackConfig, true);
+      const remoteTextTrack = player.addRemoteTextTrack(trackConfig, false);
       trackDictionary.push({textTrack: remoteTextTrack.track, dashTrack});
 
       // Don't add the cues becuase we're going to let dash handle it natively. This will ensure
@@ -90,7 +90,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
   player.textTracks().on('change', updateActiveDashTextTrack);
 
   // Cleanup event listeners whenever we start loading a new source
-  player.one('loadstart', () => {
+  player.dash.mediaPlayer.on(dashjs.MediaPlayer.events.STREAM_TEARDOWN_COMPLETE, () => {
     player.textTracks().off('change', updateActiveDashTextTrack);
   });
 
@@ -153,15 +153,11 @@ export default function setupTextTracks(player, tech, options) {
   // Attach dash text tracks whenever we dash emits `TEXT_TRACKS_ADDED`.
   mediaPlayer.on(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
 
-  function cleanup() {
-    mediaPlayer.off(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
-
-    player.one('loadstart', clearDashTracks);
-  }
-
   // When the player can play, remove the initialization events. We might not have received
   // TEXT_TRACKS_ADDED` so we have to stop listening for it or we'll get errors when we load new
   // videos and are listening for the same event in multiple places, including cleaned up
   // mediaPlayers.
-  mediaPlayer.on(dashjs.MediaPlayer.events.CAN_PLAY, cleanup);
+  mediaPlayer.on(dashjs.MediaPlayer.events.CAN_PLAY, () => {
+    mediaPlayer.off(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
+  });
 }
