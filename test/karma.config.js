@@ -18,7 +18,7 @@ module.exports = function(config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
+        flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']
       }
     },
     browsers: ['ChromeHeadlessNoSandbox', 'FirefoxHeadless'],
