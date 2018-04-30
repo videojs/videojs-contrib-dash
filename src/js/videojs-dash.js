@@ -153,6 +153,12 @@ class Html5DashJS {
             'download errors occurred.'
         });
 
+      } else if (event.error === 'mssError') {
+        this.player.error({
+          code: 3,
+          message: event.event
+        });
+
       } else {
         // ignore the error
         return;
