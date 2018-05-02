@@ -5,6 +5,9 @@ CHANGELOG
 _(none)_
 
 --------------------
+## 2.9.3 (2018-04-12)
+* Retrigger dash.js errors on video.js
+
 ## 2.9.2 (2017-10-11)
 * Depend on either Video.js 5.x or 6.x
 

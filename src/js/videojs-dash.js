@@ -70,6 +70,101 @@ class Html5DashJS {
     // element to bind to.
     this.mediaPlayer_.initialize();
 
+    // Retrigger a dash.js-specific error event as a player error
+    // See src/streaming/utils/ErrorHandler.js in dash.js code
+    // Handled with error (playback is stopped):
+    // - capabilityError
+    // - downloadError
+    // - manifestError
+    // - mediaSourceError
+    // - mediaKeySessionError
+    // Not handled:
+    // - timedTextError (video can still play)
+    // - mediaKeyMessageError (only fires under 'might not work' circumstances)
+    this.retriggerError_ = (event) => {
+      if (event.error === 'capability' && event.event === 'mediasource') {
+        // No support for MSE
+        this.player.error({
+          code: 4,
+          message: 'The media cannot be played because it requires a feature ' +
+            'that your browser does not support.'
+        });
+
+      } else if (event.error === 'manifestError' && (
+          (event.event.id === 'createParser') || // Manifest type not supported
+          (event.event.id === 'codec') || // Codec(s) not supported
+          (event.event.id === 'nostreams') || // No streams available to stream
+          (event.event.id === 'nostreamscomposed') || // Error creating Stream object
+          (event.event.id === 'parse') || // syntax error parsing the manifest
+          (event.event.id === 'multiplexedrep') // a stream has multiplexed audio+video
+        )) {
+        // These errors have useful error messages, so we forward it on
+        this.player.error({code: 4, message: event.event.message});
+
+      } else if (event.error === 'mediasource') {
+        // This error happens when dash.js fails to allocate a SourceBuffer
+        // OR the underlying video element throws a `MediaError`.
+        // If it's a buffer allocation fail, the message states which buffer
+        // (audio/video/text) failed allocation.
+        // If it's a `MediaError`, dash.js inspects the error object for
+        // additional information to append to the error type.
+        if (event.event.match('MEDIA_ERR_ABORTED')) {
+          this.player.error({code: 1, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_NETWORK')) {
+          this.player.error({code: 2, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_DECODE')) {
+          this.player.error({code: 3, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_SRC_NOT_SUPPORTED')) {
+          this.player.error({code: 4, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_ENCRYPTED')) {
+          this.player.error({code: 5, message: event.event});
+        } else if (event.event.match('UNKNOWN')) {
+          // We shouldn't ever end up here, since this would mean a
+          // `MediaError` thrown by the video element that doesn't comply
+          // with the W3C spec. But, since we should handle the error,
+          // throwing a MEDIA_ERR_SRC_NOT_SUPPORTED is probably the
+          // most reasonable thing to do.
+          this.player.error({code: 4, message: event.event});
+        } else {
+          // Buffer allocation error
+          this.player.error({code: 4, message: event.event});
+        }
+
+      } else if (event.error === 'capability' && event.event === 'encryptedmedia') {
+        // Browser doesn't support EME
+        this.player.error({
+          code: 5,
+          message: 'The media cannot be played because it requires encryption ' +
+            'features that your browser does not support.'
+        });
+
+      } else if (event.error === 'key_session') {
+        // This block handles pretty much all errors thrown by the
+        // encryption subsystem
+        this.player.error({
+          code: 5,
+          message: event.event
+        });
+
+      } else if (event.error === 'download') {
+        this.player.error({
+          code: 2,
+          message: 'The media playback was aborted because too many consecutive ' +
+            'download errors occurred.'
+        });
+
+      } else {
+        // ignore the error
+        return;
+      }
+
+      // only reset the dash player in 10ms async, so that the rest of the
+      // calling function finishes
+      setTimeout(() => { this.mediaPlayer_.reset(); }, 10);
+    };
+
+    this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
+
     // Apply all dash options that are set
     if (options.dash) {
       Object.keys(options.dash).forEach((key) => {
@@ -153,6 +248,7 @@ class Html5DashJS {
 
   dispose() {
     if (this.mediaPlayer_) {
+      this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
       this.mediaPlayer_.reset();
     }
 
