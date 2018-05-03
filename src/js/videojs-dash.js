@@ -255,11 +255,11 @@ class Html5DashJS {
   }
 
   duration() {
-    const duration = this.el_.duration;
-    if (duration === Number.MAX_VALUE) {
+    if (this.mediaPlayer_.isDynamic()) {
       return Infinity;
+    } else {
+      return this.mediaPlayer_.duration();
     }
-    return duration;
   }
 
   /**
