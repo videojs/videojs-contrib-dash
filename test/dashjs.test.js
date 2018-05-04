@@ -17,7 +17,12 @@
       src: 'movie.mpd',
       type: 'application/dash+xml'
     },
-    testHandleSource = function(assert, source, expectedKeySystemOptions, limitBitrateByPortal) {
+
+    testHandleSource = function(assert, source, expectedKeySystemOptions, config) {
+      if (config === undefined) {
+        config = {};
+      }
+      var eventHandlers = config.eventHandlers ? config.eventHandlers : {};
       var
         startupCalled = false,
         attachViewCalled = false,
@@ -36,7 +41,7 @@
       assert.expect(7);
 
       // Default limitBitrateByPortal to false
-      limitBitrateByPortal = limitBitrateByPortal || false;
+      var limitBitrateByPortal = config.limitBitrateByPortal || false;
 
       el.setAttribute('id', 'test-vid');
       fixture.appendChild(el);
@@ -94,16 +99,33 @@
                 setLimitBitrateByPortalValue = value;
               },
 
-              on: function() {}
+              on: function(event, fn) {
+                if (!eventHandlers[event]) {
+                  eventHandlers[event] = [];
+                }
+                eventHandlers[event].push(fn);
+              },
+
+              reset: config.resetCallback,
+
+              trigger: function(event, data) {
+                if (!eventHandlers[event]) {
+                  return;
+                }
+                eventHandlers[event].forEach(function(handler) {
+                  handler(data);
+                });
+              },
+
             };
           }
         };
       };
 
-      dashjs.MediaPlayer.events = { ERROR: '' };
+      dashjs.MediaPlayer.events = origMediaPlayer.events;
 
       var dashSourceHandler = Html5.selectSourceHandler(source);
-      dashSourceHandler.handleSource(source, tech, options);
+      return dashSourceHandler.handleSource(source, tech, options);
     };
 
   q.module('videojs-dash dash.js SourceHandler', {
@@ -182,7 +204,7 @@
       }
     };
 
-    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
   });
 
   q.test('validate handleSource function with invalid manifest', function(assert) {
@@ -237,7 +259,7 @@
     videojs.Html5DashJS.hook('updatesource', cb1);
     videojs.Html5DashJS.hook('beforeinitialize', cb2);
 
-    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
 
     assert.expect(9);
 
@@ -289,7 +311,7 @@
 
     assert.equal(videojs.Html5DashJS.hooks('updatesource').length, 1, 'removed hook cb3');
 
-    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, true);
+    testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
 
     assert.expect(18);
 
@@ -299,6 +321,141 @@
     assert.equal(cb4Count, 2, 'called cb4');
     assert.equal(videojs.Html5DashJS.hooks('beforeinitialize').length, 1,
       'cb2 removed itself');
+  });
+
+  q.test('attaches dash.js error handler', function(assert) {
+    var eventHandlers = {};
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {eventHandlers});
+    assert.expect(8);
+    assert.equal(eventHandlers[dashjs.MediaPlayer.events.ERROR][0],
+      sourceHandler.retriggerError_);
+  });
+
+  q.test('handles various errors', function(assert) {
+    var errors = [
+      {
+        receive: {error: 'capability', event: 'mediasource'},
+        trigger: {code: 4, message: 'The media cannot be played because it requires a feature ' +
+            'that your browser does not support.'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'createParser', message: 'manifest type unsupported'}},
+        trigger: {code: 4, message: 'manifest type unsupported'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'codec', message: 'Codec (h264) is not supported'}},
+        trigger: {code: 4, message: 'Codec (h264) is not supported'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'nostreams', message: 'No streams to play.'}},
+        trigger: {code: 4, message: 'No streams to play.'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'nostreamscomposed', message: 'Error creating stream.'}},
+        trigger: {code: 4, message: 'Error creating stream.'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'parse', message: 'parsing the manifest failed'}},
+        trigger: {code: 4, message: 'parsing the manifest failed'},
+      },
+      {
+        receive: {error: 'manifestError',
+          event: {id: 'nostreams', message: 'Multiplexed representations are intentionally not ' +
+            'supported, as they are not compliant with the DASH-AVC/264 guidelines'}},
+        trigger: {code: 4, message: 'Multiplexed representations are intentionally not ' +
+          'supported, as they are not compliant with the DASH-AVC/264 guidelines'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_ABORTED: Some context'},
+        trigger: {code: 1, message: 'MEDIA_ERR_ABORTED: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_NETWORK: Some context'},
+        trigger: {code: 2, message: 'MEDIA_ERR_NETWORK: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_DECODE: Some context'},
+        trigger: {code: 3, message: 'MEDIA_ERR_DECODE: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_SRC_NOT_SUPPORTED: Some context'},
+        trigger: {code: 4, message: 'MEDIA_ERR_SRC_NOT_SUPPORTED: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'MEDIA_ERR_ENCRYPTED: Some context'},
+        trigger: {code: 5, message: 'MEDIA_ERR_ENCRYPTED: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'UNKNOWN: Some context'},
+        trigger: {code: 4, message: 'UNKNOWN: Some context'},
+      },
+      {
+        receive: {error: 'mediasource', event: 'Error creating video source buffer'},
+        trigger: {code: 4, message: 'Error creating video source buffer'},
+      },
+      {
+        receive: {error: 'capability', event: 'encryptedmedia'},
+        trigger: {code: 5, message: 'The media cannot be played because it requires encryption ' +
+          'features that your browser does not support.'},
+      },
+      {
+        receive: {error: 'key_session', event: 'Some encryption error'},
+        trigger: {code: 5, message: 'Some encryption error'},
+      },
+      {
+        receive: {error: 'download', event: { id: 'someId', url: 'http://some/url', request: {} }},
+        trigger: {code: 2, message: 'The media playback was aborted because too many ' +
+          'consecutive download errors occurred.'},
+      },
+    ];
+
+    // Make sure the MediaPlayer gets reset enough times
+    var done = assert.async(errors.length);
+    var resetCallback = function() {
+      done();
+    };
+
+    var eventHandlers = {};
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {eventHandlers, resetCallback});
+    assert.expect(7 + (errors.length * 2));
+
+    var i;
+    sourceHandler.player.on('error', function() {
+      assert.equal(sourceHandler.player.error().code, errors[i].trigger.code, 'error code matches');
+      assert.equal(sourceHandler.player.error().message, errors[i].trigger.message,
+        'error message matches');
+    });
+
+    // dispatch all handled errors and see if they throw the correct details
+    for (i=0; i<errors.length; i++) {
+      sourceHandler.mediaPlayer_.trigger(dashjs.MediaPlayer.events.ERROR, errors[i].receive);
+    }
+
+  });
+
+  q.test('ignores unknown errors', function(assert) {
+    var resetCalled = false;
+    var resetCallback = () => {
+      resetCalled = true;
+    };
+
+    var sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {resetCallback});
+
+    var done = assert.async(1);
+    sourceHandler.mediaPlayer_.trigger(dashjs.MediaPlayer.events.ERROR, {error: 'unknown'});
+    assert.equal(sourceHandler.player.error(), null, 'No error dispatched');
+    // The error handler waits 10ms before firing reset, so we wait for
+    // 20ms here to make sure it doesn't fire
+    setTimeout(function() {
+      assert.notOk(resetCalled, 'MediaPlayer has not been reset');
+      done();
+    }, 20);
+    assert.expect(9);
   });
 
 })(window, window.videojs, window.dashjs, window.QUnit);
