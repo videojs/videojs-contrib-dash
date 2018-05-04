@@ -344,12 +344,7 @@ const canHandleKeySystems = function(source) {
 
   let videoEl = document.createElement('video');
   if (source.keySystemOptions &&
-<<<<<<< HEAD
-    !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"','com.widevine.alpha') ||
-=======
     !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha') ||
-    // !(navigator.requestMediaKeySystemAccess ||
->>>>>>> 9a067b3675a335f19b2d6d3969d4f1518d2bbfd5
       // IE11 Win 8.1
       videoEl.msSetMediaKeys)) {
     return false;
