@@ -3,6 +3,8 @@ import videojs from 'video.js';
 import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
+import createRepresentations from './create-representations';
+// import setupQualityLevels from './setup-quality-levels';
 
 /**
  * videojs-contrib-dash
@@ -49,6 +51,9 @@ class Html5DashJS {
 
     this.mediaPlayer_ = this.player.dash.mediaPlayer;
 
+    // enable for fast quality up-switch
+    // this.mediaPlayer_.setFastSwitchEnabled(true);
+
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       videojs.log.warn('useVideoJSDebug has been deprecated.' +
@@ -62,6 +67,9 @@ class Html5DashJS {
       Html5DashJS.beforeInitialize(this.player, this.mediaPlayer_);
     }
 
+    this.player.dash.representations = createRepresentations(this.mediaPlayer_);
+    // setupQualityLevels(this.player, this.mediaPlayer_);
+
     Html5DashJS.hooks('beforeinitialize').forEach((hook) => {
       hook(this.player, this.mediaPlayer_);
     });
@@ -69,6 +77,101 @@ class Html5DashJS {
     // Must run controller before these two lines or else there is no
     // element to bind to.
     this.mediaPlayer_.initialize();
+
+    // Retrigger a dash.js-specific error event as a player error
+    // See src/streaming/utils/ErrorHandler.js in dash.js code
+    // Handled with error (playback is stopped):
+    // - capabilityError
+    // - downloadError
+    // - manifestError
+    // - mediaSourceError
+    // - mediaKeySessionError
+    // Not handled:
+    // - timedTextError (video can still play)
+    // - mediaKeyMessageError (only fires under 'might not work' circumstances)
+    this.retriggerError_ = (event) => {
+      if (event.error === 'capability' && event.event === 'mediasource') {
+        // No support for MSE
+        this.player.error({
+          code: 4,
+          message: 'The media cannot be played because it requires a feature ' +
+            'that your browser does not support.'
+        });
+
+      } else if (event.error === 'manifestError' && (
+          (event.event.id === 'createParser') || // Manifest type not supported
+          (event.event.id === 'codec') || // Codec(s) not supported
+          (event.event.id === 'nostreams') || // No streams available to stream
+          (event.event.id === 'nostreamscomposed') || // Error creating Stream object
+          (event.event.id === 'parse') || // syntax error parsing the manifest
+          (event.event.id === 'multiplexedrep') // a stream has multiplexed audio+video
+        )) {
+        // These errors have useful error messages, so we forward it on
+        this.player.error({code: 4, message: event.event.message});
+
+      } else if (event.error === 'mediasource') {
+        // This error happens when dash.js fails to allocate a SourceBuffer
+        // OR the underlying video element throws a `MediaError`.
+        // If it's a buffer allocation fail, the message states which buffer
+        // (audio/video/text) failed allocation.
+        // If it's a `MediaError`, dash.js inspects the error object for
+        // additional information to append to the error type.
+        if (event.event.match('MEDIA_ERR_ABORTED')) {
+          this.player.error({code: 1, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_NETWORK')) {
+          this.player.error({code: 2, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_DECODE')) {
+          this.player.error({code: 3, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_SRC_NOT_SUPPORTED')) {
+          this.player.error({code: 4, message: event.event});
+        } else if (event.event.match('MEDIA_ERR_ENCRYPTED')) {
+          this.player.error({code: 5, message: event.event});
+        } else if (event.event.match('UNKNOWN')) {
+          // We shouldn't ever end up here, since this would mean a
+          // `MediaError` thrown by the video element that doesn't comply
+          // with the W3C spec. But, since we should handle the error,
+          // throwing a MEDIA_ERR_SRC_NOT_SUPPORTED is probably the
+          // most reasonable thing to do.
+          this.player.error({code: 4, message: event.event});
+        } else {
+          // Buffer allocation error
+          this.player.error({code: 4, message: event.event});
+        }
+
+      } else if (event.error === 'capability' && event.event === 'encryptedmedia') {
+        // Browser doesn't support EME
+        this.player.error({
+          code: 5,
+          message: 'The media cannot be played because it requires encryption ' +
+            'features that your browser does not support.'
+        });
+
+      } else if (event.error === 'key_session') {
+        // This block handles pretty much all errors thrown by the
+        // encryption subsystem
+        this.player.error({
+          code: 5,
+          message: event.event
+        });
+
+      } else if (event.error === 'download') {
+        this.player.error({
+          code: 2,
+          message: 'The media playback was aborted because too many consecutive ' +
+            'download errors occurred.'
+        });
+
+      } else {
+        // ignore the error
+        return;
+      }
+
+      // only reset the dash player in 10ms async, so that the rest of the
+      // calling function finishes
+      setTimeout(() => { this.mediaPlayer_.reset(); }, 10);
+    };
+
+    this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
 
     // Apply all dash options that are set
     if (options.dash) {
@@ -150,11 +253,16 @@ class Html5DashJS {
 
   dispose() {
     if (this.mediaPlayer_) {
+      this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
       this.mediaPlayer_.reset();
     }
 
     if (this.player.dash) {
       delete this.player.dash;
+    }
+
+    if (this.player.qualityLevels) {
+      this.player.qualityLevels().dispose();
     }
   }
 
@@ -236,7 +344,12 @@ const canHandleKeySystems = function(source) {
 
   let videoEl = document.createElement('video');
   if (source.keySystemOptions &&
+<<<<<<< HEAD
     !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"','com.widevine.alpha') ||
+=======
+    !(videoEl.canPlayType('video/mp4; codecs="avc1.640028"', 'com.widevine.alpha') ||
+    // !(navigator.requestMediaKeySystemAccess ||
+>>>>>>> 9a067b3675a335f19b2d6d3969d4f1518d2bbfd5
       // IE11 Win 8.1
       videoEl.msSetMediaKeys)) {
     return false;

@@ -1,14 +1,5 @@
 module.exports = function(config) {
 
-  // On Travis CI, we can only run in Chrome.
-  if (process.env.TRAVIS) {
-    config.browsers = ['travisChrome'];
-  }
-
-  if (!config.browsers.length) {
-    config.browsers = ['Chrome', 'Firefox'];
-  }
-
   config.set({
     basePath: '..',
     frameworks: ['qunit'],
@@ -25,21 +16,20 @@ module.exports = function(config) {
       'dist-test/webpack.test.js'
     ],
     customLaunchers: {
-      travisChrome: {
-        base: 'Chrome',
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
         flags: ['--no-sandbox']
       }
     },
+    browsers: ['ChromeHeadlessNoSandbox', 'FirefoxHeadless'],
+
     reporters: ['spec'],
     port: 9876,
     colors: true,
     autoWatch: false,
     singleRun: true,
-    concurrency: 1,
-
+    concurrency: Infinity,
     browserDisconnectTolerance: 3,
-    captureTimeout: 300000,
-    browserNoActivityTimeout: 300000,
     browserConsoleLogOptions: {
       level: 'error',
       terminal: false
