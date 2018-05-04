@@ -1,7 +1,7 @@
 {
   "name": "videojs-contrib-dash",
   "description": "A Video.js source-handler providing MPEG-DASH playback.",
-  "main": "es5/videojs-dash.js",
+  "main": "src/js/videojs-dash.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/videojs/videojs-contrib-dash.git"
@@ -54,7 +54,7 @@
     "test/"
   ],
   "dependencies": {
-    "dashjs": "^2.2.0",
+    "dashjs": "2.3.0",
     "global": "^4.3.0",
     "video.js": "^5.18.0 || ^6.2.8"
   },

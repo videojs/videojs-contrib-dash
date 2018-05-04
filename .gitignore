@@ -24,6 +24,7 @@ npm-debug.log*
 # Dependency directories
 bower_components/
 node_modules/
+package-lock.json
 
 # Yeoman meta-data
 .yo-rc.json
@@ -32,6 +33,6 @@ node_modules/
 dist/
 dist-test/
 docs/api/
-es5/
+# es5/
 tmp
 coverage/
