@@ -412,6 +412,10 @@
         trigger: {code: 2, message: 'The media playback was aborted because too many ' +
           'consecutive download errors occurred.'},
       },
+      {
+        receive: {error: 'mssError', event: 'MSS_NO_TFRF : Missing tfrf in live media segment'},
+        trigger: {code: 3, message: 'MSS_NO_TFRF : Missing tfrf in live media segment'},
+      },
     ];
 
     // Make sure the MediaPlayer gets reset enough times
