@@ -30,6 +30,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
         label: track.lang,
         language: track.lang,
         srclang: track.lang,
+        kind: track.kind
       },
     }))
 
