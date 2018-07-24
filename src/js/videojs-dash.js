@@ -20,6 +20,7 @@ class Html5DashJS {
     this.tech_ = tech;
     this.el_ = tech.el();
     this.elParent_ = this.el_.parentNode;
+    this.hasFiniteDuration_ = false;
 
     // Do nothing if the src is falsey
     if (!source.src) {
@@ -171,6 +172,25 @@ class Html5DashJS {
 
     this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
 
+    this.getDuration_ = (event) => {
+      let periods = event.data.Period_asArray;
+      let oldHasFiniteDuration = this.hasFiniteDuration_;
+
+      if (event.data.mediaPresentationDuration || periods[periods.length - 1].duration) {
+        this.hasFiniteDuration_ = true;
+      } else {
+        // in case we run into a weird situation where we're VOD but then
+        // switch to live
+        this.hasFiniteDuration_ = false;
+      }
+
+      if (this.hasFiniteDuration_ !== oldHasFiniteDuration) {
+        this.player.trigger('durationchange');
+      }
+    };
+
+    this.mediaPlayer_.on(dashjs.MediaPlayer.events.MANIFEST_LOADED, this.getDuration_);
+
     // Apply all dash options that are set
     if (options.dash) {
       Object.keys(options.dash).forEach((key) => {
@@ -252,6 +272,7 @@ class Html5DashJS {
   dispose() {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
+      this.mediaPlayer_.off(dashjs.MediaPlayer.events.MANIFEST_LOADED, this.getDuration_);
       this.mediaPlayer_.reset();
     }
 
@@ -261,7 +282,7 @@ class Html5DashJS {
   }
 
   duration() {
-    if (this.mediaPlayer_.isDynamic()) {
+    if (this.mediaPlayer_.isDynamic() && !this.hasFiniteDuration_) {
       return Infinity;
     } else {
       return this.mediaPlayer_.duration();
