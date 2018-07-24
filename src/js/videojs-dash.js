@@ -174,9 +174,18 @@ class Html5DashJS {
 
     this.getDuration_ = (event) => {
       let periods = event.data.Period_asArray;
+      let oldHasFiniteDuration = this.hasFiniteDuration_;
 
       if (event.data.mediaPresentationDuration || periods[periods.length - 1].duration) {
         this.hasFiniteDuration_ = true;
+      } else {
+        // in case we run into a weird situation where we're VOD but then
+        // switch to live
+        this.hasFiniteDuration_ = false;
+      }
+
+      if (this.hasFiniteDuration_ !== oldHasFiniteDuration) {
+        this.player.trigger('durationchange');
       }
     };
 
