@@ -53,7 +53,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
     );
   });
 
-  videojsAudioTracks.addEventListener('change', () => {
+  let audioTracksChangeHandler = () => {
     for (let i = 0; i < videojsAudioTracks.length; i++) {
       const track = videojsAudioTracks[i];
 
@@ -69,6 +69,11 @@ function handlePlaybackMetadataLoaded(player, tech) {
         continue;
       }
     }
+  };
+
+  videojsAudioTracks.addEventListener('change', audioTracksChangeHandler);
+  player.dash.mediaPlayer.on(dashjs.MediaPlayer.events.STREAM_TEARDOWN_COMPLETE, () => {
+    videojsAudioTracks.removeEventListener('change', audioTracksChangeHandler);
   });
 }
 
