@@ -64,7 +64,7 @@
     "babel-preset-es3": "^1.0.1",
     "babelify": "^7.3.0",
     "bannerize": "^1.0.0",
-    "browserify": "^11.0.0",
+    "browserify": "^16.2.2",
     "browserify-shim": "^3.0.0",
     "jshint": "^2.9.4",
     "karma": "^2.0.0",
