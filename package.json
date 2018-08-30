@@ -1,7 +1,7 @@
 {
   "name": "videojs-contrib-dash",
   "description": "A Video.js source-handler providing MPEG-DASH playback.",
-  "main": "dist/videojs-contrib-dash.cjs.js",
+  "main": "dist/videojs-dash.cjs.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/videojs/videojs-contrib-dash.git"
@@ -19,7 +19,7 @@
     "docs:api": "jsdoc src -g plugins/markdown -r -c scripts/jsdoc.json -d docs/api",
     "docs:toc": "doctoc README.md",
     "lint": "vjsstandard",
-    "server": "karma start scripts/karma.conf.js --singleRun=false --auto-watch --no-browsers",
+    "server": "karma start scripts/karma.conf.js --singleRun=false --auto-watch",
     "start": "npm-run-all -p server watch",
     "pretest": "npm-run-all lint build",
     "test": "karma start scripts/karma.conf.js",
@@ -77,11 +77,11 @@
     "rollup": "^0.65.0",
     "shx": "^0.3.2",
     "sinon": "^6.1.5",
-    "videojs-generate-karma-config": "~2.0.0",
+    "videojs-generate-karma-config": "~3.0.0",
     "videojs-generate-rollup-config": "~2.1.0",
     "videojs-standard": "^7.0.1"
   },
-  "module": "dist/videojs-contrib-dash.es.js",
+  "module": "dist/videojs-dash.es.js",
   "generator-videojs-plugin": {
     "version": "7.2.1"
   },
