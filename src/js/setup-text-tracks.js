@@ -1,8 +1,9 @@
 import dashjs from 'dashjs';
 import videojs from 'video.js';
+import window from 'global/window';
 
 function find(l, f) {
-  for(let i = 0; i < l.length; i++) {
+  for (let i = 0; i < l.length; i++) {
     if (f(l[i])) {
       return l[i];
     }
@@ -31,12 +32,13 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
         language: track.lang,
         srclang: track.lang,
         kind: track.kind
-      },
+      }
     }))
 
     // Add track to videojs track list
     .map(({trackConfig, dashTrack}) => {
       const remoteTextTrack = player.addRemoteTextTrack(trackConfig, false);
+
       trackDictionary.push({textTrack: remoteTextTrack.track, dashTrack});
 
       // Don't add the cues becuase we're going to let dash handle it natively. This will ensure
@@ -47,6 +49,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
 
       return remoteTextTrack;
     })
+
   ;
 
   /*
