@@ -16,7 +16,7 @@
     "clean": "shx rm -rf ./dist ./test/dist",
     "postclean": "shx mkdir -p ./dist ./test/dist",
     "docs": "npm-run-all docs:*",
-    "docs:api": "jsdoc src -g plugins/markdown -r -c scripts/jsdoc.json -d docs/api",
+    "docs:api": "jsdoc src -g plugins/markdown -r -d docs/api",
     "docs:toc": "doctoc README.md",
     "lint": "vjsstandard",
     "server": "karma start scripts/karma.conf.js --singleRun=false --auto-watch",
@@ -83,7 +83,7 @@
   },
   "module": "dist/videojs-dash.es.js",
   "generator-videojs-plugin": {
-    "version": "7.2.1"
+    "version": "7.2.3"
   },
   "browserslist": [
     "defaults",
