@@ -318,12 +318,12 @@ class Html5DashJS {
   }
 
   /**
- * Add a function hook to a specific dash lifecycle
- *
- * @param {string} type the lifecycle to hook the function to
- * @param {Function|Function[]} hook the function or array of functions to attach
- * @method hook
- */
+   * Add a function hook to a specific dash lifecycle
+   *
+   * @param {string} type the lifecycle to hook the function to
+   * @param {Function|Function[]} hook the function or array of functions to attach
+   * @method hook
+   */
   static hook(type, hook) {
     Html5DashJS.hooks(type, hook);
   }
