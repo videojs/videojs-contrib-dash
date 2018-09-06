@@ -1,9 +1,9 @@
-var q = window.QUnit;
-var videojs = require('video.js');
-require('../es5/videojs-dash.js');
+import QUnit from 'qunit';
+import videojs from 'video.js';
+import document from 'global/document';
 
-var when = function(element, type, fn, condition) {
-  var func = function() {
+const when = function(element, type, fn, condition) {
+  const func = function() {
     if (condition()) {
       element.off(type, func);
       fn.apply(this, arguments);
@@ -13,17 +13,15 @@ var when = function(element, type, fn, condition) {
   element.on(type, func);
 };
 
-q.module('Webpack/Browserify Integration', {
-  beforeEach: function(assert) {
-    var
-      done = assert.async(),
-      videoEl,
-      player;
+QUnit.module('Webpack/Browserify Integration', {
+  beforeEach(assert) {
+    const done = assert.async();
 
     this.fixture = document.createElement('div');
     document.body.appendChild(this.fixture);
 
-    videoEl = document.createElement('video');
+    const videoEl = document.createElement('video');
+
     videoEl.id = 'vid';
     videoEl.setAttribute('controls', '');
     videoEl.setAttribute('width', '600');
@@ -31,7 +29,8 @@ q.module('Webpack/Browserify Integration', {
     videoEl.className = 'video-js vjs-default-skin';
     this.fixture.appendChild(videoEl);
 
-    player = videojs('vid');
+    const player = videojs('vid');
+
     this.player = player;
 
     player.ready(function() {
@@ -43,16 +42,17 @@ q.module('Webpack/Browserify Integration', {
       });
     });
   },
-  afterEach: function() {
+  afterEach() {
     this.player.dispose();
     this.fixture.innerHTML = '';
   }
 });
 
-q.test('should play', function(assert) {
-  var
-    done = assert.async(),
-    player = this.player;
+QUnit.test('should play', function(assert) {
+  const
+    done = assert.async();
+
+  const player = this.player;
 
   assert.expect(2);
 
