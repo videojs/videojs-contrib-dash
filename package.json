@@ -78,7 +78,7 @@
     "videojs-generate-rollup-config": "~2.2.0",
     "videojs-standard": "~7.1.0",
     "npm-merge-driver-install": "^1.0.0",
-    "videojs-generator-verify": "~1.0.4"
+    "videojs-generator-verify": "~1.1.0"
   },
   "module": "dist/videojs-dash.es.js",
   "generator-videojs-plugin": {
