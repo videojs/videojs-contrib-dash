@@ -128,6 +128,7 @@ const testHandleSource = function(assert, source, expectedKeySystemOptions, conf
   };
 
   dashjs.MediaPlayer.events = origMediaPlayer.events;
+  dashjs.MediaPlayer.errors = origMediaPlayer.errors;
 
   const dashSourceHandler = Html5.selectSourceHandler(source);
 
@@ -428,6 +429,91 @@ QUnit.test('handles various errors', function(assert) {
       trigger: {code: 3, message: 'MSS_NO_TFRF : Missing tfrf in live media segment'}
     }
   ];
+
+  const errorCodes = videojs.mergeOptions(
+    dashjs.MediaPlayer.errors,
+    dashjs.Protection.errors
+  );
+
+  errorCodes.MSS_NO_TFRF_CODE = 200;
+  errorCodes.MSS_UNSUPPORTED_CODEC_CODE = 201;
+
+  const sourceErrors = [
+    errorCodes.MANIFEST_LOADER_PARSING_FAILURE_ERROR_CODE,
+    errorCodes.MANIFEST_ERROR_ID_PARSE_CODE,
+    errorCodes.MANIFEST_ERROR_ID_NOSTREAMS_CODE,
+    errorCodes.MANIFEST_ERROR_ID_MULTIPLEXED_CODE,
+    errorCodes.MEDIASOURCE_TYPE_UNSUPPORTED_CODE,
+    errorCodes.MANIFEST_ERROR_ID_CODEC_CODE,
+    errorCodes.MANIFEST_ERROR_ID_PARSE_CODE,
+    errorCodes.MSS_NO_TFRF_CODE,
+    errorCodes.MSS_UNSUPPORTED_CODEC_CODE
+  ];
+  const networkErrors = [
+    errorCodes.MANIFEST_LOADER_LOADING_FAILURE_ERROR_CODE,
+    errorCodes.XLINK_LOADER_LOADING_FAILURE_ERROR_CODE,
+    errorCodes.DOWNLOAD_ERROR_ID_MANIFEST_CODE,
+    errorCodes.DOWNLOAD_ERROR_ID_SIDX_CODE,
+    errorCodes.DOWNLOAD_ERROR_ID_CONTENT_CODE,
+    errorCodes.DOWNLOAD_ERROR_ID_INITIALIZATION_CODE,
+    errorCodes.DOWNLOAD_ERROR_ID_XLINK_CODE
+  ];
+  const emeErrors = [
+    errorCodes.MEDIA_KEYERR_CODE,
+    errorCodes.MEDIA_KEYERR_UNKNOWN_CODE,
+    errorCodes.MEDIA_KEYERR_CLIENT_CODE,
+    errorCodes.MEDIA_KEYERR_SERVICE_CODE,
+    errorCodes.MEDIA_KEYERR_OUTPUT_CODE,
+    errorCodes.MEDIA_KEYERR_HARDWARECHANGE_CODE,
+    errorCodes.MEDIA_KEYERR_DOMAIN_CODE,
+    errorCodes.MEDIA_KEY_MESSAGE_ERROR_CODE,
+    errorCodes.MEDIA_KEY_MESSAGE_NO_CHALLENGE_ERROR_CODE,
+    errorCodes.SERVER_CERTIFICATE_UPDATED_ERROR_CODE,
+    errorCodes.KEY_STATUS_CHANGED_EXPIRED_ERROR_CODE,
+    errorCodes.MEDIA_KEY_MESSAGE_NO_LICENSE_SERVER_URL_ERROR_CODE,
+    errorCodes.KEY_SYSTEM_ACCESS_DENIED_ERROR_CODE,
+    errorCodes.KEY_SESSION_CREATED_ERROR_CODE,
+    errorCodes.MEDIA_KEY_MESSAGE_LICENSER_ERROR_CODE
+  ];
+
+  const makeErrors = (errs, rethrowCode) => {
+    errs.forEach((err) => {
+      errors.push({
+        receive: {
+          error: {
+            code: err,
+            message: `message for ${err}`
+          }
+        },
+        trigger: {
+          code: rethrowCode,
+          message: `message for ${err}`
+        }
+      });
+    });
+  };
+
+  makeErrors(sourceErrors, 4);
+  makeErrors(networkErrors, 2);
+  makeErrors(emeErrors, 5);
+
+  // test that extra data is passed through
+  const extraData = {some: 'extra', data: [0, 1]};
+
+  errors.push({
+    receive: {
+      error: {
+        code: 10,
+        message: 'message for 10',
+        data: extraData
+      }
+    },
+    trigger: {
+      code: 4,
+      message: 'message for 10',
+      data: extraData
+    }
+  });
 
   // Make sure the MediaPlayer gets reset enough times
   const done = assert.async(errors.length);
