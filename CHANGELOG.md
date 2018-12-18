@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## 2.10.1 (2018-12-18)
+* Change main to be `dist/videojs-dash.cjs.js`
+* Reformat test code
+* Add v7 to list of supported video.js dependencies
+
 ## 2.10.0 (2018-07-30)
 * Cleanup of event addition and removal on dispose to not bork on source change
 * Use MPD type and duration to determine if we should report live status
