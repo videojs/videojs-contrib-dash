@@ -8,6 +8,8 @@
 
 A video.js source handler for supporting MPEG-DASH playback through a video.js player on browsers with support for Media Source Extensions.
 
+__Supported Dash.js version: 2.x__
+
 Maintenance Status: Stable
 
 Drop by our slack channel (#playback) on the [Video.js slack](http://slack.videojs.com).
