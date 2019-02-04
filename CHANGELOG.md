@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## Unreleased
+* Fix bug where VTT captions wouldn't show
+
 ## 2.10.1 (2018-12-18)
 * Change main to be `dist/videojs-dash.cjs.js`
 * Reformat test code
