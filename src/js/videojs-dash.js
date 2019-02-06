@@ -52,6 +52,11 @@ class Html5DashJS {
 
     this.mediaPlayer_ = this.player.dash.mediaPlayer;
 
+    // For whatever reason, we need to call setTextDefaultEnabled(false) to get
+    // VTT captions to show, even though we're doing virtually the same thing
+    // in setup-text-tracks.js
+    this.mediaPlayer_.setTextDefaultEnabled(false);
+
     // Log MedaPlayer messages through video.js
     if (Html5DashJS.useVideoJSDebug) {
       videojs.log.warn('useVideoJSDebug has been deprecated.' +
