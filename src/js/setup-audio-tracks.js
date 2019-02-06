@@ -35,10 +35,33 @@ function handlePlaybackMetadataLoaded(player, tech) {
   const currentAudioTrack = mediaPlayer.getCurrentTrackFor('audio');
 
   dashAudioTracks.forEach((dashTrack) => {
-    let label = dashTrack.lang;
+    let localizedLabel;
 
-    if (dashTrack.roles && dashTrack.roles.length) {
-      label += ` (${dashTrack.roles.join(', ')})`;
+    if (Array.isArray(dashTrack.labels)) {
+      for (let i = 0; i < dashTrack.labels.length; i++) {
+        if (
+          dashTrack.labels[i].lang &&
+          player.language().indexOf(dashTrack.labels[i].lang.toLowerCase()) !== -1
+        ) {
+          localizedLabel = dashTrack.labels[i];
+
+          break;
+        }
+      }
+    }
+
+    let label;
+
+    if (localizedLabel) {
+      label = localizedLabel.text;
+    } else if (Array.isArray(dashTrack.labels) && dashTrack.labels.length === 1) {
+      label = dashTrack.labels[0].text;
+    } else {
+      label = dashTrack.lang;
+
+      if (dashTrack.roles && dashTrack.roles.length) {
+        label += ` (${dashTrack.roles.join(', ')})`;
+      }
     }
 
     // Add the track to the player's audio track list.
