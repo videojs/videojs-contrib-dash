@@ -4,6 +4,7 @@ import dashjs from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
 import document from 'global/document';
+import './ttml-text-track-display';
 
 /**
  * videojs-contrib-dash
@@ -209,6 +210,10 @@ class Html5DashJS {
     // Apply all dash options that are set
     if (options.dash) {
       Object.keys(options.dash).forEach((key) => {
+        if (key === 'useTTML') {
+          return;
+        }
+
         const dashOptionsKey = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
         let value = options.dash[key];
 
@@ -239,6 +244,11 @@ class Html5DashJS {
     }
 
     this.mediaPlayer_.attachView(this.el_);
+
+    if (options.dash && options.dash.useTTML) {
+      this.ttmlContainer_ = this.player.addChild('TTMLTextTrackDisplay');
+      this.mediaPlayer_.attachTTMLRenderingDiv(this.ttmlContainer_.el());
+    }
 
     // Dash.js autoplays by default, video.js will handle autoplay
     this.mediaPlayer_.setAutoPlay(false);
@@ -293,6 +303,11 @@ class Html5DashJS {
 
     if (this.player.dash) {
       delete this.player.dash;
+    }
+
+    if (this.ttmlContainer_) {
+      this.ttmlContainer_.dispose();
+      this.player.removeChild('TTMLTextTrackDisplay');
     }
   }
 

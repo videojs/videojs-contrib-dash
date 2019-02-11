@@ -37,6 +37,10 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
 
     // Add track to videojs track list
     .map(({trackConfig, dashTrack}) => {
+      if (dashTrack.isTTML && !player.getChild('TTMLTextTrackDisplay')) {
+        return null;
+      }
+
       const remoteTextTrack = player.addRemoteTextTrack(trackConfig, false);
 
       trackDictionary.push({textTrack: remoteTextTrack.track, dashTrack});
@@ -49,6 +53,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
 
       return remoteTextTrack;
     })
+    .filter(el => el !== null)
 
   ;
 

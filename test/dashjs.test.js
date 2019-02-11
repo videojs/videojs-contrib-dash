@@ -74,6 +74,8 @@ const testHandleSource = function(assert, source, expectedKeySystemOptions, conf
             startupCalled = true;
           },
 
+          attachTTMLRenderingDiv() {
+          },
           attachView() {
             attachViewCalled = true;
           },
