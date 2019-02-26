@@ -60,7 +60,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
       label = dashTrack.lang;
 
       if (dashTrack.roles && dashTrack.roles.length) {
-        label += ` (${dashTrack.roles.join(', ')})`;
+        label += ' (' + dashTrack.roles.join(', ') + ')';
       }
     }
 
