@@ -21,6 +21,7 @@ Drop by our slack channel (#playback) on the [Video.js slack](http://slack.video
 - [Getting Started](#getting-started)
 - [Protected Content](#protected-content)
 - [Captions](#captions)
+- [Multi-Language Labels](#multi-language-labels)
 - [Passing options to Dash.js](#passing-options-to-dashjs)
   - [Deprecation Warning](#deprecation-warning)
 - [Initialization Hook](#initialization-hook)
@@ -109,6 +110,10 @@ videojs('example-video', {
 ```
 
 A warning will be logged if this setting is not applied.
+
+## Multi-Language Labels
+
+When labels in a playlist file are in multiple languages, the 2-character language code should be used if it exists; this allows the player to auto-select the appropriate label.
 
 ## Passing options to Dash.js
 
