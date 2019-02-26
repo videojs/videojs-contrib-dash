@@ -3,6 +3,7 @@ CHANGELOG
 
 ## Unreleased
 * Fix bug where VTT captions wouldn't show
+* Support for human-readable track labels
 
 ## 2.10.1 (2018-12-18)
 * Change main to be `dist/videojs-dash.cjs.js`
@@ -76,4 +77,3 @@ CHANGELOG
 
 ## 2.0.0 (2015-10-16)
 * Update project to be compatible with video.js 5.0
-

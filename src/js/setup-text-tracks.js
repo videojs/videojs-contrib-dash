@@ -25,15 +25,42 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
   const tracksAttached = tracks
     // Map input data to match HTMLTrackElement spec
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement
-    .map((track) => ({
-      dashTrack: track,
-      trackConfig: {
-        label: track.lang,
-        language: track.lang,
-        srclang: track.lang,
-        kind: track.kind
+    .map((track) => {
+      let localizedLabel;
+
+      if (Array.isArray(track.labels)) {
+        for (let i = 0; i < track.labels.length; i++) {
+          if (
+            track.labels[i].lang &&
+            player.language().indexOf(track.labels[i].lang.toLowerCase()) !== -1
+          ) {
+            localizedLabel = track.labels[i];
+
+            break;
+          }
+        }
       }
-    }))
+
+      let label;
+
+      if (localizedLabel) {
+        label = localizedLabel.text;
+      } else if (Array.isArray(track.labels) && track.labels.length === 1) {
+        label = track.labels[0].text;
+      } else {
+        label = track.lang || track.label;
+      }
+
+      return {
+        dashTrack: track,
+        trackConfig: {
+          label,
+          language: track.lang,
+          srclang: track.lang,
+          kind: track.kind
+        }
+      };
+    })
 
     // Add track to videojs track list
     .map(({trackConfig, dashTrack}) => {
