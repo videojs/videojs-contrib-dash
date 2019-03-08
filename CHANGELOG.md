@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-## Unreleased
+## 2.11.0 (2019-03-08)
 * Fix bug where VTT captions wouldn't show
 * Support for human-readable track labels
 
