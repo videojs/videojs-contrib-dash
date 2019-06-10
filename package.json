@@ -57,7 +57,7 @@
   ],
   "dependencies": {
     "dashjs": "2.9.3",
-    "global": "^4.3.2",
+    "global": "4.3.2",
     "video.js": "^5.18.0 || ^6 || ^7"
   },
   "devDependencies": {
