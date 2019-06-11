@@ -254,6 +254,11 @@ class Html5DashJS {
     // Setup text tracks
     setupTextTracks.call(null, this.player, tech, options);
 
+    // Allows to use the currentTime function with a value expressed in seconds instead of a timestamp in DVR live streams
+    this.tech_.seekable = this.seekable.bind(this);
+    this.tech_.setCurrentTime = this.setCurrentTime.bind(this);
+    this.tech_.currentTime = this.currentTime.bind(this);
+
     // Attach the source with any protection data
     this.mediaPlayer_.setProtectionData(this.keySystemOptions_);
     this.mediaPlayer_.attachSource(manifestSource);
@@ -289,6 +294,15 @@ class Html5DashJS {
     return output;
   }
 
+  currentTime() {
+    // Livestream
+    if (this.mediaPlayer_.isDynamic()) {
+      return this.mediaPlayer_.time() + this.timeDiffFromStart(this.startTime());
+    }
+
+    return this.mediaPlayer_.time();
+  }
+
   dispose() {
     if (this.mediaPlayer_) {
       this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
@@ -312,6 +326,64 @@ class Html5DashJS {
     }
     return this.mediaPlayer_.duration();
 
+  }
+
+  seekable() {
+    const duration = this.duration();
+
+    if (!this.mediaPlayer_.isReady() || duration === 0) {
+      return videojs.createTimeRange();
+    }
+
+    // Livestream
+    if (this.mediaPlayer_.isDynamic()) {
+      const dvrWindowSize = this.mediaPlayer_.getDVRWindowSize();
+      const start = this.timeDiffFromStart(this.startTime());
+      const end = start + dvrWindowSize;
+
+      return videojs.createTimeRange(
+        start,
+        end
+      );
+    }
+
+    // VOD
+    return videojs.createTimeRange(0, duration);
+  }
+
+  setCurrentTime(time) {
+    const seekable = this.tech_.seekable();
+
+    // Livestream
+    if (seekable.length && this.mediaPlayer_.isDynamic()) {
+      this.mediaPlayer_.seek(time - this.timeDiffFromStart(this.startTime()));
+    } else {
+      this.mediaPlayer_.seek(time);
+    }
+  }
+
+  /**
+   * Timestamp in seconds. Used to create the time range
+   *
+   * @return {number}
+   */
+  startTime() {
+    if (!this.startTime_) {
+      this.startTime_ = (Date.now() / 1000) | 0;
+    }
+
+    return this.startTime_;
+  }
+
+  /**
+   * Diff between now and startTime
+   *
+   * @param {number} startTime timestamp in seconds
+   *
+   * @return {number}
+   */
+  timeDiffFromStart(startTime) {
+    return (Date.now() / 1000 - startTime) | 0;
   }
 
   /**
