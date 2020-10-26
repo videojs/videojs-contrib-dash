@@ -26,6 +26,7 @@ QUnit.module('Webpack/Browserify Integration', {
     videoEl.setAttribute('controls', '');
     videoEl.setAttribute('width', '600');
     videoEl.setAttribute('height', '300');
+    videoEl.setAttribute('muted', 'true');
     videoEl.className = 'video-js vjs-default-skin';
     this.fixture.appendChild(videoEl);
 
