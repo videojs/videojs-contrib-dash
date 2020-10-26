@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 3.0.0 (2020-10-26)
+* BREAKING CHANGE: Update Dash.js to 3.1.3 (major version 3)
+
 ## 2.11.0 (2019-03-08)
 * Fix bug where VTT captions wouldn't show
 * Support for human-readable track labels
