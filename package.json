@@ -43,7 +43,6 @@
     "widevine"
   ],
   "browserify-shim": {
-    "dashjs": "global:dashjs",
     "video.js": "global:videojs"
   },
   "files": [

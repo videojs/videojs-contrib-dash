@@ -5,14 +5,7 @@ const generate = require('videojs-generate-rollup-config');
 const options = {
   input: 'src/js/videojs-dash.js',
   distName: 'videojs-dash',
-  exportName: 'videojsDash',
-  globals(defaults) {
-    Object.keys(defaults).forEach(function(type) {
-      defaults[type].dashjs = 'dashjs';
-    });
-
-    return defaults;
-  }
+  exportName: 'videojsDash'
 };
 const config = generate(options);
 
