@@ -1,3 +1,10 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/videojs/videojs-contrib-dash/compare/v3.0.0...v4.0.0) (2020-11-05)
+
+### Features
+
+* include dash.js in build ([#351](https://github.com/videojs/videojs-contrib-dash/issues/351)) ([6879286](https://github.com/videojs/videojs-contrib-dash/commit/6879286))
+
 CHANGELOG
 =========
 
