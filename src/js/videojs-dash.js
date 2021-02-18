@@ -308,7 +308,7 @@ class Html5DashJS {
    * Get a list of hooks for a specific lifecycle
    *
    * @param {string} type the lifecycle to get hooks from
-   * @param {Function=|Function[]=} hook Optionally add a hook tothe lifecycle
+   * @param {Function|Function[]} [hook] Optionally add a hook tothe lifecycle
    * @return {Array} an array of hooks or epty if none
    * @method hooks
    */
