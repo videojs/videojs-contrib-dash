@@ -1,3 +1,15 @@
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/videojs/videojs-contrib-dash/compare/v4.0.0...v4.0.1) (2021-02-18)
+
+### Bug Fixes
+
+* rollup plugins should be dev dependencies ([#352](https://github.com/videojs/videojs-contrib-dash/issues/352)) ([9d09a60](https://github.com/videojs/videojs-contrib-dash/commit/9d09a60))
+
+### Chores
+
+* setup github ci ([#355](https://github.com/videojs/videojs-contrib-dash/issues/355)) ([e28dbc4](https://github.com/videojs/videojs-contrib-dash/commit/e28dbc4))
+* update deps to resolve all audit issues ([#354](https://github.com/videojs/videojs-contrib-dash/issues/354)) ([c4585b8](https://github.com/videojs/videojs-contrib-dash/commit/c4585b8))
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/videojs/videojs-contrib-dash/compare/v3.0.0...v4.0.0) (2020-11-05)
 
