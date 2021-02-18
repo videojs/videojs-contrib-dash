@@ -1,5 +1,5 @@
 const generate = require('videojs-generate-rollup-config');
-const nodeBuiltinsPlugin = require('rollup-plugin-node-builtins');
+const nodeBuiltinsPlugin = require('@gkatsev/rollup-plugin-node-builtins');
 const nodeGlobalsPlugin = require('rollup-plugin-node-globals');
 
 // see https://github.com/videojs/videojs-generate-rollup-config
