@@ -14,7 +14,7 @@ module.exports = function(config) {
     },
     browsers(browsers) {
       // only run on firefox and chrome
-      return ['ChromeHeadlessWithFlags', 'FirefoxHeadless'];
+      return ['ChromeHeadlessWithFlags', 'Firefox'];
     },
     customLaunchers(defaults) {
       // add no-user-gesture-require variant of chrome
