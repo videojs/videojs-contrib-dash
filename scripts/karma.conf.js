@@ -1,4 +1,5 @@
 const generate = require('videojs-generate-karma-config');
+const isCI = require('is-ci');
 
 module.exports = function(config) {
   const options = {
@@ -12,9 +13,15 @@ module.exports = function(config) {
 
       return defaults;
     },
-    browsers(browsers) {
-      // only run on firefox and chrome
-      return ['ChromeHeadlessWithFlags', 'FirefoxHeadless'];
+    browsers(_browsers) {
+      // only run on chrome
+      const browsers = ['ChromeHeadlessWithFlags'];
+
+      if (!isCI) {
+        browsers.push('FirefoxHeadless');
+      }
+
+      return browsers;
     },
     customLaunchers(defaults) {
       // add no-user-gesture-require variant of chrome
