@@ -31,8 +31,6 @@ const testHandleSource = function(assert, source, expectedKeySystemOptions, conf
   let attachViewCalled = false;
   let setLimitBitrateByPortalCalled = false;
   let setLimitBitrateByPortalValue = null;
-  let setTextDefaultEnabledCalled = false;
-  let setTextDefaultEnabledValue = null;
   const el = document.createElement('div');
   const fixture = document.querySelector('#qunit-fixture');
 
@@ -42,7 +40,7 @@ const testHandleSource = function(assert, source, expectedKeySystemOptions, conf
 
   const origVJSXHR = videojs.xhr;
 
-  assert.expect(9);
+  assert.expect(7);
 
   // Default limitBitrateByPortal to false
   const limitBitrateByPortal = config.limitBitrateByPortal || false;
@@ -91,10 +89,6 @@ const testHandleSource = function(assert, source, expectedKeySystemOptions, conf
               'MediaPlayer.setLimitBitrateByPortal was called');
             assert.strictEqual(setLimitBitrateByPortalValue, limitBitrateByPortal,
               'MediaPlayer.setLimitBitrateByPortal was called with the correct value');
-            assert.strictEqual(setTextDefaultEnabledCalled, true,
-              'MediaPlayer.setTextDefaultEnabled was called');
-            assert.strictEqual(setTextDefaultEnabledValue, false,
-              'MediaPlayer.setTextDefaultEnabled was called with the correct value');
             assert.strictEqual(startupCalled, true, 'MediaPlayer.startup was called');
             assert.strictEqual(attachViewCalled, true, 'MediaPlayer.attachView was called');
 
@@ -126,13 +120,7 @@ const testHandleSource = function(assert, source, expectedKeySystemOptions, conf
             eventHandlers[event].forEach(function(handler) {
               handler(data);
             });
-          },
-
-          setTextDefaultEnabled(value) {
-            setTextDefaultEnabledCalled = true;
-            setTextDefaultEnabledValue = value;
           }
-
         };
       }
     };
@@ -282,7 +270,7 @@ QUnit.test('registers hook callbacks correctly', function(assert) {
 
   testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
 
-  assert.expect(11);
+  assert.expect(9);
 
   assert.equal(cb1Count, 2,
     'registered first callback and called');
@@ -334,7 +322,7 @@ QUnit.test('removes callbacks with removeInitializationHook correctly', function
 
   testHandleSource(assert, sampleSrc, mergedKeySystemOptions, {limitBitrateByPortal: true});
 
-  assert.expect(20);
+  assert.expect(18);
 
   assert.equal(cb1Count, 1, 'called cb1');
   assert.equal(cb2Count, 1, 'called cb2');
@@ -348,7 +336,7 @@ QUnit.test('attaches dash.js error handler', function(assert) {
   const eventHandlers = {};
   const sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null, {eventHandlers});
 
-  assert.expect(10);
+  assert.expect(8);
   assert.equal(eventHandlers[dashjs.MediaPlayer.events.ERROR][0],
     sourceHandler.retriggerError_);
 });
@@ -450,7 +438,7 @@ QUnit.test('handles various errors', function(assert) {
   const sourceHandler = testHandleSource(assert, sampleSrcNoDRM, null,
     {eventHandlers, resetCallback});
 
-  assert.expect(9 + (errors.length * 2));
+  assert.expect(7 + (errors.length * 2));
 
   let i;
 
@@ -485,6 +473,6 @@ QUnit.test('ignores unknown errors', function(assert) {
     assert.notOk(resetCalled, 'MediaPlayer has not been reset');
     done();
   }, 20);
-  assert.expect(11);
+  assert.expect(9);
 });
 
