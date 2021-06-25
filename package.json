@@ -29,7 +29,7 @@
     "version": "is-prerelease || npm run update-changelog && git add CHANGELOG.md",
     "watch": "npm-run-all -p watch:*",
     "watch:js": "npm run build:js -- -w",
-    "prepublishOnly": "npm run build && vjsverify"
+    "prepublishOnly": "npm run build && vjsverify --skip-require"
   },
   "keywords": [
     "MPEG-DASH",
