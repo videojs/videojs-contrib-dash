@@ -1,3 +1,24 @@
+<a name="5.0.0"></a>
+# [5.0.0](https://github.com/videojs/videojs-contrib-dash/compare/v4.1.0...v5.0.0) (2021-06-25)
+
+### Features
+
+* Dash.js 4.0.0 ([#363](https://github.com/videojs/videojs-contrib-dash/issues/363)) ([a9d76fc](https://github.com/videojs/videojs-contrib-dash/commit/a9d76fc))
+
+### Chores
+
+* skip require in vjsverify ([10488f6](https://github.com/videojs/videojs-contrib-dash/commit/10488f6))
+
+### Documentation
+
+* Update README to show support for Dash 3.x ([#361](https://github.com/videojs/videojs-contrib-dash/issues/361)) ([3854c61](https://github.com/videojs/videojs-contrib-dash/commit/3854c61)), closes [#336](https://github.com/videojs/videojs-contrib-dash/issues/336)
+
+
+### BREAKING CHANGES
+
+* no longer able to be required in nodejs.
+* update to DASH.js 4.0
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/videojs/videojs-contrib-dash/compare/v4.0.1...v4.1.0) (2021-02-18)
 
