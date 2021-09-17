@@ -21,6 +21,7 @@ Drop by our slack channel (#playback) on the [Video.js slack](http://slack.video
 - [Getting Started](#getting-started)
 - [Protected Content](#protected-content)
 - [Captions](#captions)
+  - [Using TTML Captions](#using-ttml-captions)
 - [Multi-Language Labels](#multi-language-labels)
 - [Passing options to Dash.js](#passing-options-to-dashjs)
   - [Deprecation Warning](#deprecation-warning)
@@ -110,6 +111,22 @@ videojs('example-video', {
 ```
 
 A warning will be logged if this setting is not applied.
+
+### Using TTML Captions
+
+TTML captions require special rendering by dash.js. To enable this rendering, you must set option `useTTML` to `true`, like so:
+
+```javascript
+videojs('example-video', {
+  html5: {
+    dash: {
+      useTTML: true
+    }
+  }
+});
+```
+
+This option is not `true` by default because it will also render CEA608 captions in the same method, and there may be some errors in their display. However, it does enable styling captions via the captions settings dialog.
 
 ## Multi-Language Labels
 
