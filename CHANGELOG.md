@@ -1,3 +1,19 @@
+<a name="5.1.0"></a>
+# [5.1.0](https://github.com/videojs/videojs-contrib-dash/compare/v5.0.0...v5.1.0) (2021-09-17)
+
+### Features
+
+* ttml support ([#319](https://github.com/videojs/videojs-contrib-dash/issues/319)) ([3859998](https://github.com/videojs/videojs-contrib-dash/commit/3859998))
+
+### Bug Fixes
+
+* **package:** update dash.js to 4.0.1 ([#369](https://github.com/videojs/videojs-contrib-dash/issues/369)) ([3a7b4a6](https://github.com/videojs/videojs-contrib-dash/commit/3a7b4a6))
+
+### Chores
+
+* add example that uses TTML subtitles ([#368](https://github.com/videojs/videojs-contrib-dash/issues/368)) ([563aac6](https://github.com/videojs/videojs-contrib-dash/commit/563aac6))
+* don't run tests on version ([6b15e7e](https://github.com/videojs/videojs-contrib-dash/commit/6b15e7e))
+
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/videojs/videojs-contrib-dash/compare/v4.1.0...v5.0.0) (2021-06-25)
 
