@@ -8,7 +8,7 @@
 
 A video.js source handler for supporting MPEG-DASH playback through a video.js player on browsers with support for Media Source Extensions.
 
-__Supported Dash.js version: 2.x__
+__Supported Dash.js version: 4.x__
 
 Maintenance Status: Stable
 
@@ -22,6 +22,7 @@ Drop by our slack channel (#playback) on the [Video.js slack](http://slack.video
 - [Protected Content](#protected-content)
 - [Captions](#captions)
   - [Using TTML Captions](#using-ttml-captions)
+- [Multi-Language Labels](#multi-language-labels)
 - [Passing options to Dash.js](#passing-options-to-dashjs)
   - [Deprecation Warning](#deprecation-warning)
 - [Initialization Hook](#initialization-hook)
@@ -126,6 +127,10 @@ videojs('example-video', {
 ```
 
 This option is not `true` by default because it will also render CEA608 captions in the same method, and there may be some errors in their display. However, it does enable styling captions via the captions settings dialog.
+
+## Multi-Language Labels
+
+When labels in a playlist file are in multiple languages, the 2-character language code should be used if it exists; this allows the player to auto-select the appropriate label.
 
 ## Passing options to Dash.js
 

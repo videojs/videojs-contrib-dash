@@ -8,11 +8,20 @@
   <meta name="viewport" content="width=device-width">
 
   <link rel="stylesheet" href="node_modules/video.js/dist/video-js.css">
-  <script src="node_modules/video.js/dist/ie8/videojs-ie8.js"></script>
 </head>
 
 <body>
+  <p>BBB</p>
   <video id="player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
+  <p>BBB - oceans track</p>
+  <video id="player-ocean" width=600 height=300 class="video-js vjs-default-skin" controls crossorigin="anonymous">
+    <track default kind="captions" src="https://vjs.zencdn.net/v/oceans.vtt" srclang="en" label="Oceans">
+  </video>
+  <p>Angel One - broken subs</p>
+  <video id="angel-one" width=600 height=300 class="video-js vjs-default-skin" controls></video>
+  <p>Angel One - DRM</p>
+  <video id="angel-one-drm" width=600 height=300 class="video-js vjs-default-skin" controls></video>
+  <p>Livesim</p>
   <video id="live-player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
   <script src="node_modules/video.js/dist/video.js"></script>
   <script src="node_modules/dashjs/dist/dash.all.debug.js"></script>
@@ -27,6 +36,9 @@
           }
         }
       }),
+      playerOcean = videojs('player-ocean'),
+      angelOne = videojs('angel-one'),
+      angelOneDrm = videojs('angel-one-drm'),
       livePlayer = videojs('live-player');
 
     player.ready(function() {
@@ -36,9 +48,38 @@
       });
     });
 
+    playerOcean.ready(function() {
+      playerOcean.src({
+        src: 'http://dash.edgesuite.net/akamai/bbb_30fps/bbb_30fps.mpd',
+        type: 'application/dash+xml'
+      });
+    });
+
+    angelOne.ready(function(){
+      angelOne.src({
+        src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
+        type: 'application/dash+xml'
+      });
+    });
+
+    angelOneDrm.ready(function(){
+      angelOneDrm.src({
+        src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one-widevine/dash.mpd',
+        type: 'application/dash+xml',
+        keySystemOptions: [
+          {
+            name: 'com.widevine.alpha',
+            options: {
+              serverURL: 'https://cwip-shaka-proxy.appspot.com/no_auth'
+            }
+          }
+        ]
+      });
+    });
+
     livePlayer.ready(function(){
       livePlayer.src({
-        src: 'http://vm2.dashif.org/livesim/mup_30/testpic_2s/Manifest.mpd',
+        src: 'http://livesim.dashif.org/livesim/mup_30/testpic_2s/Manifest.mpd',
         type: 'application/dash+xml'
       });
     });
