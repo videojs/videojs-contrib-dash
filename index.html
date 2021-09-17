@@ -23,6 +23,8 @@
   <video id="angel-one-drm" width=600 height=300 class="video-js vjs-default-skin" controls></video>
   <p>Livesim</p>
   <video id="live-player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
+  <p>Livesim - multi-subs</p>
+  <video id="live-subs-player" width=600 height=300 class="video-js vjs-default-skin" controls></video>
   <script src="node_modules/video.js/dist/video.js"></script>
   <script src="node_modules/dashjs/dist/dash.all.debug.js"></script>
   <script src="dist/videojs-dash.js"></script>
@@ -39,7 +41,14 @@
       playerOcean = videojs('player-ocean'),
       angelOne = videojs('angel-one'),
       angelOneDrm = videojs('angel-one-drm'),
-      livePlayer = videojs('live-player');
+      livePlayer = videojs('live-player'),
+      liveSubsPlayer = videojs('live-subs-player', {
+        html5: {
+          dash: {
+            useTTML: true
+          }
+        }
+      });
 
     player.ready(function() {
       player.src({
@@ -80,6 +89,13 @@
     livePlayer.ready(function(){
       livePlayer.src({
         src: 'http://livesim.dashif.org/livesim/mup_30/testpic_2s/Manifest.mpd',
+        type: 'application/dash+xml'
+      });
+    });
+
+    liveSubsPlayer.ready(function(){
+      liveSubsPlayer.src({
+        src: 'https://livesim.dashif.org/dash/vod/testpic_2s/multi_subs.mpd',
         type: 'application/dash+xml'
       });
     });
