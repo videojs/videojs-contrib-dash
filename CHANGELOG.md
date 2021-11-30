@@ -1,3 +1,10 @@
+<a name="5.1.1"></a>
+## [5.1.1](https://github.com/videojs/videojs-contrib-dash/compare/v5.1.0...v5.1.1) (2021-11-30)
+
+### Bug Fixes
+
+* update dashjs to 4.2.0 ([#372](https://github.com/videojs/videojs-contrib-dash/issues/372)) ([2f83f71](https://github.com/videojs/videojs-contrib-dash/commit/2f83f71))
+
 <a name="5.1.0"></a>
 # [5.1.0](https://github.com/videojs/videojs-contrib-dash/compare/v5.0.0...v5.1.0) (2021-09-17)
 
