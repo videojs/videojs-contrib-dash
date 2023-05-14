@@ -26,6 +26,37 @@ function handlePlaybackMetadataLoaded(player, tech) {
     );
   }
 
+  /**
+   * Determines the audio track type
+   *
+   * Specification reference:
+   *
+   * Dash @see https://dashif-documents.azurewebsites.net/DASH-IF-IOP/master/DASH-IF-IOP.html#ref-for-audio-adaptation-set%E2%91%A1
+   * Media Element @see https://html.spec.whatwg.org/multipage/media.html#dom-audiotrack-kind
+   *
+   * @param {Object} dashAudioTrack
+   *
+   * @return {string}
+   */
+  function determineAudioTrackKind(dashAudioTrack) {
+    const hasMain = dashAudioTrack.roles.includes('main');
+    const hasDescription = dashAudioTrack.accessibility.includes('description');
+
+    if (hasMain && !hasDescription) {
+      return 'main';
+    }
+
+    if (hasMain && hasDescription) {
+      return 'main-desc';
+    }
+
+    if (hasDescription) {
+      return 'descriptions';
+    }
+
+    return 'alternative';
+  }
+
   // Safari creates a single native `AudioTrack` (not `videojs.AudioTrack`) when loading. Clear all
   // automatically generated audio tracks so we can create them all ourself.
   if (videojsAudioTracks.length) {
@@ -69,7 +100,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
       new videojs.AudioTrack({
         enabled: dashTrack === currentAudioTrack,
         id: generateIdFromTrackIndex(dashTrack.index),
-        kind: dashTrack.kind || 'main',
+        kind: determineAudioTrackKind(dashTrack),
         label,
         language: dashTrack.lang
       })
