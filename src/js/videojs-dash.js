@@ -82,11 +82,82 @@ class Html5DashJS {
     // - manifestError
     // - mediaSourceError
     // - mediaKeySessionError
+    // - DashJSErrors listed below
     // Not handled:
     // - timedTextError (video can still play)
     // - mediaKeyMessageError (only fires under 'might not work' circumstances)
+    // - TIMED_TEXT_ERROR_ID_PARSE_CODE
     this.retriggerError_ = (event) => {
-      if (event.error === 'capability' && event.event === 'mediasource') {
+      const errorCodes = videojs.mergeOptions(
+        dashjs.MediaPlayer.errors,
+        dashjs.Protection.errors
+      );
+
+      // some errors aren't reachable, so we have to manually reproduce them here
+      errorCodes.MSS_NO_TFRF_CODE = 200;
+      errorCodes.MSS_UNSUPPORTED_CODEC_CODE = 201;
+
+      if (typeof event.error === 'object') {
+        const sourceErrors = [
+          errorCodes.MANIFEST_LOADER_PARSING_FAILURE_ERROR_CODE,
+          errorCodes.MANIFEST_ERROR_ID_PARSE_CODE,
+          errorCodes.MANIFEST_ERROR_ID_NOSTREAMS_CODE,
+          errorCodes.MANIFEST_ERROR_ID_MULTIPLEXED_CODE,
+          errorCodes.MEDIASOURCE_TYPE_UNSUPPORTED_CODE,
+          errorCodes.MANIFEST_ERROR_ID_CODEC_CODE,
+          errorCodes.MANIFEST_ERROR_ID_PARSE_CODE,
+          errorCodes.MSS_NO_TFRF_CODE,
+          errorCodes.MSS_UNSUPPORTED_CODEC_CODE
+        ];
+        const networkErrors = [
+          errorCodes.MANIFEST_LOADER_LOADING_FAILURE_ERROR_CODE,
+          errorCodes.XLINK_LOADER_LOADING_FAILURE_ERROR_CODE,
+          errorCodes.DOWNLOAD_ERROR_ID_MANIFEST_CODE,
+          errorCodes.DOWNLOAD_ERROR_ID_SIDX_CODE,
+          errorCodes.DOWNLOAD_ERROR_ID_CONTENT_CODE,
+          errorCodes.DOWNLOAD_ERROR_ID_INITIALIZATION_CODE,
+          errorCodes.DOWNLOAD_ERROR_ID_XLINK_CODE
+        ];
+        const emeErrors = [
+          errorCodes.MEDIA_KEYERR_CODE,
+          errorCodes.MEDIA_KEYERR_UNKNOWN_CODE,
+          errorCodes.MEDIA_KEYERR_CLIENT_CODE,
+          errorCodes.MEDIA_KEYERR_SERVICE_CODE,
+          errorCodes.MEDIA_KEYERR_OUTPUT_CODE,
+          errorCodes.MEDIA_KEYERR_HARDWARECHANGE_CODE,
+          errorCodes.MEDIA_KEYERR_DOMAIN_CODE,
+          errorCodes.MEDIA_KEY_MESSAGE_ERROR_CODE,
+          errorCodes.MEDIA_KEY_MESSAGE_NO_CHALLENGE_ERROR_CODE,
+          errorCodes.SERVER_CERTIFICATE_UPDATED_ERROR_CODE,
+          errorCodes.KEY_STATUS_CHANGED_EXPIRED_ERROR_CODE,
+          errorCodes.MEDIA_KEY_MESSAGE_NO_LICENSE_SERVER_URL_ERROR_CODE,
+          errorCodes.KEY_SYSTEM_ACCESS_DENIED_ERROR_CODE,
+          errorCodes.KEY_SESSION_CREATED_ERROR_CODE,
+          errorCodes.MEDIA_KEY_MESSAGE_LICENSER_ERROR_CODE
+        ];
+
+        let rethrowCode = null;
+
+        if (sourceErrors.indexOf(event.error.code) !== -1) {
+          rethrowCode = 4;
+        } else if (networkErrors.indexOf(event.error.code) !== -1) {
+          rethrowCode = 2;
+        } else if (emeErrors.indexOf(event.error.code) !== -1) {
+          rethrowCode = 5;
+        }
+
+        if (rethrowCode) {
+          this.player.error({
+            code: rethrowCode,
+            message: event.error.message,
+            data: event.error.data
+          });
+        }
+
+      }
+
+      if ((event.error === 'capability' && event.event === 'mediasource') ||
+          (event.error.code === errorCodes.CAPABILITY_MEDIASOURCE_ERROR_CODE)) {
         // No support for MSE
         this.player.error({
           code: 4,
@@ -140,7 +211,8 @@ class Html5DashJS {
           this.player.error({code: 4, message: event.event});
         }
 
-      } else if (event.error === 'capability' && event.event === 'encryptedmedia') {
+      } else if ((event.error === 'capability' && event.event === 'encryptedmedia') ||
+          (event.error.code === errorCodes.CAPABILITY_MEDIAKEYS_ERROR_CODE)) {
         // Browser doesn't support EME
         this.player.error({
           code: 5,
@@ -169,16 +241,15 @@ class Html5DashJS {
           message: event.event
         });
 
-      } else {
-        // ignore the error
-        return;
       }
 
-      // only reset the dash player in 10ms async, so that the rest of the
-      // calling function finishes
-      setTimeout(() => {
-        this.mediaPlayer_.reset();
-      }, 10);
+      if (this.player.error()) {
+        // only reset the dash player in 10ms async, so that the rest of the
+        // calling function finishes
+        setTimeout(() => {
+          this.mediaPlayer_.reset();
+        }, 10);
+      }
     };
 
     this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
