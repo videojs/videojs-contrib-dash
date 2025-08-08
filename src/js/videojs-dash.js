@@ -1,6 +1,6 @@
 import window from 'global/window';
 import videojs from 'video.js';
-import dashjs from 'dashjs';
+import { MediaPlayer } from 'dashjs';
 import setupAudioTracks from './setup-audio-tracks';
 import setupTextTracks from './setup-text-tracks';
 import document from 'global/document';
@@ -49,7 +49,7 @@ class Html5DashJS {
 
     this.keySystemOptions_ = Html5DashJS.buildDashJSProtData(source.keySystemOptions);
 
-    this.player.dash.mediaPlayer = dashjs.MediaPlayer().create();
+    this.player.dash.mediaPlayer = MediaPlayer().create();
 
     this.mediaPlayer_ = this.player.dash.mediaPlayer;
 
@@ -181,10 +181,10 @@ class Html5DashJS {
       }, 10);
     };
 
-    this.mediaPlayer_.on(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
+    this.mediaPlayer_.on(MediaPlayer.events.ERROR, this.retriggerError_);
 
     this.getDuration_ = (event) => {
-      const periods = event.data.Period_asArray;
+      const periods = event.data.Period;
       const oldHasFiniteDuration = this.hasFiniteDuration_;
 
       if (event.data.mediaPresentationDuration || periods[periods.length - 1].duration) {
@@ -200,7 +200,7 @@ class Html5DashJS {
       }
     };
 
-    this.mediaPlayer_.on(dashjs.MediaPlayer.events.MANIFEST_LOADED, this.getDuration_);
+    this.mediaPlayer_.on(MediaPlayer.events.MANIFEST_LOADED, this.getDuration_);
 
     // Apply all dash options that are set
     if (options.dash) {
@@ -291,8 +291,8 @@ class Html5DashJS {
 
   dispose() {
     if (this.mediaPlayer_) {
-      this.mediaPlayer_.off(dashjs.MediaPlayer.events.ERROR, this.retriggerError_);
-      this.mediaPlayer_.off(dashjs.MediaPlayer.events.MANIFEST_LOADED, this.getDuration_);
+      this.mediaPlayer_.off(MediaPlayer.events.ERROR, this.retriggerError_);
+      this.mediaPlayer_.off(MediaPlayer.events.MANIFEST_LOADED, this.getDuration_);
       this.mediaPlayer_.reset();
     }
 

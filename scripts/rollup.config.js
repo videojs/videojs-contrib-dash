@@ -24,6 +24,21 @@ const options = {
         nodeGlobalsPlugin()
       ])
     };
+  },
+  babel() {
+    return {
+      babelHelpers: 'runtime',
+      skipPreflightCheck: true,
+      presets: [
+        ['@babel/preset-env', {
+          targets: {
+            esmodules: true
+          },
+          modules: false
+        }]
+      ],
+      plugins: ['@babel/plugin-transform-runtime']
+    };
   }
 };
 const config = generate(options);

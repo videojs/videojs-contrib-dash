@@ -1,6 +1,5 @@
-import dashjs from 'dashjs';
 import videojs from 'video.js';
-
+import { MediaPlayer } from 'dashjs';
 /**
  * Setup audio tracks. Take the tracks from dash and add the tracks to videojs. Listen for when
  * videojs changes tracks and apply that to the dash player because videojs doesn't do this
@@ -60,7 +59,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
       label = dashTrack.lang;
 
       if (dashTrack.roles && dashTrack.roles.length) {
-        label += ' (' + dashTrack.roles.join(', ') + ')';
+        label += ' (' + (dashTrack.roles.map((role)=>role.value)).join(', ') + ')';
       }
     }
 
@@ -94,7 +93,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
   };
 
   videojsAudioTracks.addEventListener('change', audioTracksChangeHandler);
-  player.dash.mediaPlayer.on(dashjs.MediaPlayer.events.STREAM_TEARDOWN_COMPLETE, () => {
+  player.dash.mediaPlayer.on(MediaPlayer.events.STREAM_TEARDOWN_COMPLETE, () => {
     videojsAudioTracks.removeEventListener('change', audioTracksChangeHandler);
   });
 }
@@ -106,7 +105,7 @@ function handlePlaybackMetadataLoaded(player, tech) {
 export default function setupAudioTracks(player, tech) {
   // When `dashjs` finishes loading metadata, create audio tracks for `video.js`.
   player.dash.mediaPlayer.on(
-    dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED,
+    MediaPlayer.events.PLAYBACK_METADATA_LOADED,
     handlePlaybackMetadataLoaded.bind(null, player, tech)
   );
 }

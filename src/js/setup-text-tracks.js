@@ -1,6 +1,6 @@
-import dashjs from 'dashjs';
 import videojs from 'video.js';
 import window from 'global/window';
+import { MediaPlayer } from 'dashjs';
 
 function find(l, f) {
   for (let i = 0; i < l.length; i++) {
@@ -126,7 +126,7 @@ function attachDashTextTracksToVideojs(player, tech, tracks) {
   player.textTracks().on('change', updateActiveDashTextTrack);
 
   // Cleanup event listeners whenever we start loading a new source
-  player.dash.mediaPlayer.on(dashjs.MediaPlayer.events.STREAM_TEARDOWN_COMPLETE, () => {
+  player.dash.mediaPlayer.on(MediaPlayer.events.STREAM_TEARDOWN_COMPLETE, () => {
     player.textTracks().off('change', updateActiveDashTextTrack);
   });
 
@@ -172,7 +172,7 @@ export default function setupTextTracks(player, tech, options) {
 
   function handleTextTracksAdded({index, tracks}) {
     // Stop listening for this event. We only want to hear it once.
-    mediaPlayer.off(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
+    mediaPlayer.off(MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
 
     // Cleanup old tracks
     clearDashTracks();
@@ -187,13 +187,13 @@ export default function setupTextTracks(player, tech, options) {
   }
 
   // Attach dash text tracks whenever we dash emits `TEXT_TRACKS_ADDED`.
-  mediaPlayer.on(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
+  mediaPlayer.on(MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
 
   // When the player can play, remove the initialization events. We might not have received
   // TEXT_TRACKS_ADDED` so we have to stop listening for it or we'll get errors when we load new
   // videos and are listening for the same event in multiple places, including cleaned up
   // mediaPlayers.
-  mediaPlayer.on(dashjs.MediaPlayer.events.CAN_PLAY, () => {
-    mediaPlayer.off(dashjs.MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
+  mediaPlayer.on(MediaPlayer.events.CAN_PLAY, () => {
+    mediaPlayer.off(MediaPlayer.events.TEXT_TRACKS_ADDED, handleTextTracksAdded);
   });
 }
